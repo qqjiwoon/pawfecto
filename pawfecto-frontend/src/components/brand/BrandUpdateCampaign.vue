@@ -87,46 +87,47 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, computed } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { campaigns } from "@/stores/campaign"
+import { updateCampaign as updateCampaignAPI } from "@/api/campaign"
 
 // 라우터 정보
 const route = useRoute()
 const router = useRouter()
 const campaignId = Number(route.params.campaign_id)
+const brandId = Number(route.params.brand_id)
 
-// 1) 캠페인 데이터 찾기 (campaign_id로 검색해야 함!!)
+// 1) 캠페인 데이터 찾기
 const originalCampaign = computed(() =>
   campaigns.value.find(c => c.campaign_id === campaignId)
 )
 
-// 빈 객체 생성 → 나중에 원본 복사해서 사용
+// 수정용 캠페인 객체
 const campaign = ref({})
 
 // 스타일 태그 목록
 const allTags = [
-  'outdoor','energetic','no_preference','minimal',
-  'aesthetic','heartfelt','cozy','wholesome','funny','calm'
+  "outdoor", "energetic", "no_preference", "minimal",
+  "aesthetic", "heartfelt", "cozy", "wholesome", "funny", "calm"
 ]
 
-// 2) originalCampaign을 deep copy해서 campaign에 로드
+// 2) originalCampaign deep copy
 if (originalCampaign.value) {
   campaign.value = JSON.parse(JSON.stringify(originalCampaign.value))
 
-  // ⭐ 문자열로 저장된 style_tags를 배열로 변환
   if (typeof campaign.value.style_tags === "string") {
     campaign.value.style_tags = [campaign.value.style_tags]
   }
 
-  // ⭐ null/undefined일 경우 빈 배열로 초기화
   if (!Array.isArray(campaign.value.style_tags)) {
     campaign.value.style_tags = []
   }
 }
 
-// 3) 스타일 태그 토글 함수 수정
+// 3) 스타일 태그 토글
 function toggleStyle(tag) {
   if (!campaign.value.style_tags) {
     campaign.value.style_tags = []
@@ -150,25 +151,42 @@ function onFileChange(event) {
   }
 }
 
-// 5) 업데이트 저장
-function updateCampaign() {
-  const index = campaigns.value.findIndex(c => c.campaign_id === campaignId)
+// 5) 캠페인 업데이트 (axios 연동)
+async function updateCampaign() {
+  try {
+    const payload = {
+      product_name: campaign.value.product_name,
+      product_description: campaign.value.product_description,
+      product_image_url: campaign.value.product_image_url,
 
-  if (index !== -1) {
-    campaigns.value[index] = JSON.parse(JSON.stringify(campaign.value))
-  }
+      target_pet_type: campaign.value.pet_type,
+      min_follower_count: campaign.value.min_follower_count,
+      required_creator_count: campaign.value.required_creator_count,
 
-  alert("캠페인이 수정되었습니다!")
+      posting_start_at: campaign.value.posting_start_at,
+      posting_end_at: campaign.value.posting_end_at,
 
-  router.push({
-    name: "campaign-recommendations",
-    params: {
-      brand_id: route.params.brand_id,
-      campaign_id: campaignId
+      style_tag: campaign.value.style_tags.join(",")
     }
-  })
+
+    await updateCampaignAPI(brandId, campaignId, payload)
+
+    alert("캠페인이 수정되었습니다.")
+
+    router.push({
+      name: "campaign-recommendations",
+      params: {
+        brand_id: brandId,
+        campaign_id: campaignId
+      }
+    })
+  } catch (error) {
+    console.error(error)
+    alert("캠페인 수정에 실패했습니다.")
+  }
 }
 </script>
+
 
 <style scoped>
 .update-wrapper {

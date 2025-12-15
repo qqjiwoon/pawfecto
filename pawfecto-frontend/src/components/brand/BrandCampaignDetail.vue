@@ -18,12 +18,12 @@
             <div class="pet-type">
               <button 
                 class="pet-btn" 
-                :class="{ active: campaign.pet_type === 'cat' }">
+                :class="{ active: campaign.target_pet_type === 'cat' }">
                 Cat
               </button>
               <button 
                 class="pet-btn" 
-                :class="{ active: campaign.pet_type === 'dog' }">
+                :class="{ active: campaign.target_pet_type === 'dog' }">
                 Dog
               </button>
             </div>
@@ -65,48 +65,54 @@
 
 
 <script setup>
-import { computed } from 'vue'
+/* ================================
+   캠페인 상세 조회
+================================ */
+
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { campaigns } from "@/stores/campaign"
+import { fetchCampaignDetail } from '@/api/campaign'
 
 const route = useRoute()
 const router = useRouter()
 
-// URL의 campaign_id 가져오기
+// URL 파라미터
+const brandId = Number(route.params.brand_id)
 const campaignId = Number(route.params.campaign_id)
 
-// 캠페인 데이터 찾기
-const campaign = computed(() =>
-  campaigns.value.find(c => c.campaign_id === campaignId)
-)
+// 캠페인 상태
+const campaign = ref(null)
 
-// style_tags 문자열 → 배열로 변환
+/* -------------------------------
+   상세 데이터 로드
+-------------------------------- */
+onMounted(async () => {
+  const res = await fetchCampaignDetail(brandId, campaignId)
+  campaign.value = res.data
+})
+
+/* -------------------------------
+   스타일 태그 파싱
+-------------------------------- */
 const parsedStyles = computed(() => {
-  const styles = campaign.value?.style_tags
-
+  const styles = campaign.value?.style_tag
   if (!styles) return []
 
-  // 문자열인 경우 → 배열로 변환
-  if (typeof styles === "string") {
-    return styles.split(",")
-  }
-
-  // 배열인 경우 → 그대로 반환
-  if (Array.isArray(styles)) {
-    return styles
-  }
-
+  if (typeof styles === 'string') return styles.split(',')
+  if (Array.isArray(styles)) return styles
   return []
 })
 
-// 업데이트 버튼
+/* -------------------------------
+   수정 페이지 이동
+-------------------------------- */
 function goUpdate() {
   router.push({
-    name: "brand-update-campaign",
+    name: 'brand-update-campaign',
     params: {
-      brand_id: route.params.brand_id,
-      campaign_id: route.params.campaign_id
-    }
+      brand_id: brandId,
+      campaign_id: campaignId,
+    },
   })
 }
 </script>
