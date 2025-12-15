@@ -13,19 +13,25 @@
 import { computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import BrandCampaignList from '@/components/brand/BrandCampaignList.vue'
-import { campaigns, loadBrandCampaigns, isCampaignLoaded } from '@/stores/campaign'
-
+import { useCampaignStore } from '@/stores/campaign'
 
 const route = useRoute()
 const brandId = Number(route.params.brand_id)
+
+// ✅ Pinia store 사용
+const campaignStore = useCampaignStore()
 
 // 페이지네이션
 const currentPage = ref(1)
 const itemsPerPage = 6
 
 onMounted(() => {
-  loadBrandCampaigns(brandId)
+  campaignStore.fetchBrandCampaigns(brandId)
 })
+
+// ✅ store state를 computed로 노출
+const campaigns = computed(() => campaignStore.campaigns)
+const isCampaignLoaded = computed(() => !campaignStore.loading)
 
 // 전체 페이지 수
 const totalPages = computed(() =>

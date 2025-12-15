@@ -82,17 +82,18 @@
 
 
 <script setup>
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { campaigns } from "@/stores/campaign"
+import { useCampaignStore } from "@/stores/campaign"
 
-// ========== 1) 라우터에서 brand_id 가져오기 ==========
 const route = useRoute()
 const router = useRouter()
 const brandId = Number(route.params.brand_id)
 
+// ✅ Pinia store
+const campaignStore = useCampaignStore()
 
-// ========== 2) 입력 상태 관리 ==========
+// 입력 상태
 const productName = ref("")
 const productDescription = ref("")
 const petType = ref("dog")
@@ -101,7 +102,7 @@ const requiredCreators = ref(1)
 const startDate = ref("")
 const endDate = ref("")
 
-// 이미지 파일
+// 이미지
 const imageFile = ref(null)
 const imageUrl = ref(null)
 
@@ -113,12 +114,11 @@ function onImageSelect(e) {
   }
 }
 
-// ========== 3) 스타일 태그 ==========
+// 스타일 태그
 const styleTags = [
-  'outdoor','energetic','no_preference','minimal',
-  'aesthetic','heartfelt','cozy','wholesome','funny','calm'
+  "outdoor","energetic","no_preference","minimal",
+  "aesthetic","heartfelt","cozy","wholesome","funny","calm"
 ]
-
 const selectedTags = ref([])
 
 function toggleTag(tag) {
@@ -129,40 +129,36 @@ function toggleTag(tag) {
   }
 }
 
-
-// ========== 4) SAVE → store에 push ==========
-function saveCampaign() {
-  // 새로운 campaign_id 생성
-  const newId = campaigns.value.length
-    ? Math.max(...campaigns.value.map(c => c.campaign_id)) + 1
-    : 1
-
+// ✅ 저장 (더 이상 campaigns.value.push ❌)
+async function saveCampaign() {
   const newCampaign = {
-    campaign_id: newId,
     brand_id: brandId,
     product_name: productName.value,
-    product_image_url: imageUrl.value || "/assets/default.jpg",
     product_description: productDescription.value,
     pet_type: petType.value,
     min_follower_count: minFollower.value,
     required_creator_count: requiredCreators.value,
     posting_start_at: startDate.value,
     posting_end_at: endDate.value,
-    style_tags: [...selectedTags.value], 
-    requested_at: new Date().toISOString(),
-    application_deadline_at: endDate.value
+    style_tags: [...selectedTags.value],
   }
 
-  campaigns.value.push(newCampaign)
+  try {
+    await campaignStore.createCampaign(brandId, newCampaign)
 
-  alert("캠페인이 생성되었습니다!")
+    alert("캠페인이 생성되었습니다!")
 
-  router.push({
-    name: "brand-dashboard",
-    params: { brand_id: brandId }
-  })
+    router.push({
+      name: "brand-campaign-list",
+      params: { brand_id: brandId },
+    })
+  } catch (err) {
+    console.error(err)
+    alert("캠페인 생성에 실패했습니다.")
+  }
 }
 </script>
+
 
 <style scoped>
 .create-campaign-page {

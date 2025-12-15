@@ -156,16 +156,14 @@ const offers = computed(() =>
       const campaign = campaigns.value.find(
         c => c.campaign_id === acc.campaign_id
       )
-      const brand = brands.value.find(
-        b => b.id === campaign?.brand_id
-      )
 
       return {
         id: acc.campaign_acceptance_id,
         campaign,
 
-        brand_name: brand?.name ?? '',
-        brand_image: brand?.profile_image_url ?? '',
+        // ✅ 브랜드 정보는 campaign 안에 있는 값만 사용
+        brand_name: campaign?.brand_name ?? '',
+        brand_image: campaign?.brand_image_url ?? '',
 
         product_name: campaign?.product_name ?? '',
         min_follower_count: campaign?.min_follower_count ?? 0,
@@ -181,6 +179,7 @@ const offers = computed(() =>
       }
     })
 )
+
 
 /* 검색 필터 */
 const filteredOffers = computed(() => {

@@ -89,99 +89,94 @@
 
 
 <script setup>
-import { ref, computed } from "vue"
+import { ref, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { campaigns } from "@/stores/campaign"
-import { updateCampaign as updateCampaignAPI } from "@/api/campaign"
+import { useCampaignStore } from "@/stores/campaign"
 
-// 라우터 정보
 const route = useRoute()
 const router = useRouter()
+
 const campaignId = Number(route.params.campaign_id)
 const brandId = Number(route.params.brand_id)
 
-// 1) 캠페인 데이터 찾기
-const originalCampaign = computed(() =>
-  campaigns.value.find(c => c.campaign_id === campaignId)
-)
+// ✅ Pinia store
+const campaignStore = useCampaignStore()
 
-// 수정용 캠페인 객체
-const campaign = ref({})
+// 수정용 캠페인
+const campaign = ref(null)
 
-// 스타일 태그 목록
+// 스타일 태그
 const allTags = [
-  "outdoor", "energetic", "no_preference", "minimal",
-  "aesthetic", "heartfelt", "cozy", "wholesome", "funny", "calm"
+  "outdoor","energetic","no_preference","minimal",
+  "aesthetic","heartfelt","cozy","wholesome","funny","calm"
 ]
 
-// 2) originalCampaign deep copy
-if (originalCampaign.value) {
-  campaign.value = JSON.parse(JSON.stringify(originalCampaign.value))
+// 최초 진입 시 캠페인 단건 조회
+onMounted(async () => {
+  try {
+    await campaignStore.fetchCampaign(campaignId)
 
-  if (typeof campaign.value.style_tags === "string") {
-    campaign.value.style_tags = [campaign.value.style_tags]
+    // deep copy (수정용)
+    campaign.value = JSON.parse(
+      JSON.stringify(campaignStore.campaignDetail)
+    )
+
+    if (!Array.isArray(campaign.value.style_tags)) {
+      campaign.value.style_tags = []
+    }
+  } catch (err) {
+    console.error(err)
+    alert("캠페인 정보를 불러오지 못했습니다.")
   }
+})
 
-  if (!Array.isArray(campaign.value.style_tags)) {
-    campaign.value.style_tags = []
-  }
-}
-
-// 3) 스타일 태그 토글
+// 스타일 태그 토글
 function toggleStyle(tag) {
-  if (!campaign.value.style_tags) {
-    campaign.value.style_tags = []
-  }
-
   if (campaign.value.style_tags.includes(tag)) {
-    campaign.value.style_tags = campaign.value.style_tags.filter(t => t !== tag)
+    campaign.value.style_tags =
+      campaign.value.style_tags.filter(t => t !== tag)
   } else {
     campaign.value.style_tags.push(tag)
   }
 }
 
-// 4) 이미지 파일 처리
+// 이미지
 const imageFile = ref(null)
-
-function onFileChange(event) {
-  const file = event.target.files[0]
+function onFileChange(e) {
+  const file = e.target.files[0]
   if (file) {
     imageFile.value = file
     campaign.value.product_image_url = URL.createObjectURL(file)
   }
 }
 
-// 5) 캠페인 업데이트 (axios 연동)
+// 업데이트
 async function updateCampaign() {
   try {
-    const payload = {
-      product_name: campaign.value.product_name,
-      product_description: campaign.value.product_description,
-      product_image_url: campaign.value.product_image_url,
-
-      target_pet_type: campaign.value.pet_type,
-      min_follower_count: campaign.value.min_follower_count,
-      required_creator_count: campaign.value.required_creator_count,
-
-      posting_start_at: campaign.value.posting_start_at,
-      posting_end_at: campaign.value.posting_end_at,
-
-      style_tag: campaign.value.style_tags.join(",")
-    }
-
-    await updateCampaignAPI(brandId, campaignId, payload)
+    await campaignStore.updateCampaign(
+      brandId,
+      campaignId,
+      {
+        product_name: campaign.value.product_name,
+        product_description: campaign.value.product_description,
+        product_image_url: campaign.value.product_image_url,
+        pet_type: campaign.value.pet_type,
+        min_follower_count: campaign.value.min_follower_count,
+        required_creator_count: campaign.value.required_creator_count,
+        posting_start_at: campaign.value.posting_start_at,
+        posting_end_at: campaign.value.posting_end_at,
+        style_tags: campaign.value.style_tags,
+      }
+    )
 
     alert("캠페인이 수정되었습니다.")
 
     router.push({
-      name: "campaign-recommendations",
-      params: {
-        brand_id: brandId,
-        campaign_id: campaignId
-      }
+      name: "brand-campaign-detail",
+      params: { brand_id: brandId, campaign_id: campaignId }
     })
-  } catch (error) {
-    console.error(error)
+  } catch (err) {
+    console.error(err)
     alert("캠페인 수정에 실패했습니다.")
   }
 }
