@@ -53,7 +53,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { login } from '@/api/auth'
+import axios from 'axios' 
 
 const router = useRouter()
 
@@ -61,50 +61,29 @@ const username = ref('')
 const password = ref('')
 
 const handleLogin = async () => {
-  if (!username.value.trim()) {
-    alert('아이디를 입력해주세요.')
-    return
-  }
-
-  if (!password.value.trim()) {
-    alert('비밀번호를 입력해주세요.')
-    return
-  }
-
   try {
-    // 1️⃣ 로그인 (JWT 발급)
-    const loginRes = await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/accounts/login/`,
+    const res = await axios.post(
+      "http://127.0.0.1:8000/accounts/login/",
       {
         username: username.value,
         password: password.value,
-      }
-    )
-
-    // 2️⃣ access 토큰 저장
-    localStorage.setItem('access', loginRes.data.access)
-
-    // 3️⃣ (선택) 내 정보 조회 — 지금은 유지해도 되고, 없어도 됨
-    const meRes = await axios.get(
-      `${import.meta.env.VITE_API_BASE_URL}/accounts/me/`,
+      },
       {
         headers: {
-          Authorization: `Bearer ${loginRes.data.access}`,
+          "Content-Type": "application/json",
         },
       }
     )
 
-    console.log('login user:', meRes.data)
+    // 토큰 저장
+    localStorage.setItem("access", res.data.access)
+    localStorage.setItem("refresh", res.data.refresh)
 
-    // ✅ 로그인 성공 → 메인 페이지로 이동
-    router.push('/')
-
+    // 로그인 성공 → 메인
+    router.push("/")
   } catch (err) {
     console.error(err)
-    alert(
-      err.response?.data?.detail ||
-      '로그인에 실패했습니다. 아이디/비밀번호를 확인해주세요.'
-    )
+    alert("아이디 또는 비밀번호가 올바르지 않습니다.")
   }
 }
 
