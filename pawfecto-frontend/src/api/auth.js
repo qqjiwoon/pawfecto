@@ -1,4 +1,5 @@
-import api from "./axios"
+// src/api/auth.js
+import api from "@/plugins/axios"
 
 // 로그인
 export function login(data) {

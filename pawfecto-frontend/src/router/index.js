@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignupBrandView from '../views/SignupBrandView.vue'
 import SignupCreatorView from '../views/SignupCreatorView.vue'
+import api from "@/plugins/axios"
 
 // Brand
 import BrandDashboardLayout from '@/views/brand/BrandDashboardLayout.vue'
@@ -158,6 +159,36 @@ const router = createRouter({
       ]
     },
   ],
+})
+
+router.beforeEach(async (to, from, next) => {
+  // dashboard 경로만 검사
+  if (!to.path.startsWith('/dashboard')) {
+    return next()
+  }
+
+  try {
+    const res = await api.get('/accounts/me/')
+    const accountType = res.data.account_type
+
+    if (
+      to.path.startsWith('/dashboard/brand') &&
+      accountType !== 'brand'
+    ) {
+      return next('/login')
+    }
+
+    if (
+      to.path.startsWith('/dashboard/creator') &&
+      accountType !== 'creator'
+    ) {
+      return next('/login')
+    }
+
+    next()
+  } catch (err) {
+    next('/login')
+  }
 })
 
 

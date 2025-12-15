@@ -89,7 +89,7 @@ Content-Type: application/json
 
 ### ------------------------------------------------------------
 ### 4-1) 캠페인 수정
-### PUT /api/campaigns/{campaign_id}/update/
+### PUT /api/v1/brand/{brand_id}/campaign/{campaign_id}/update/
 ### ------------------------------------------------------------
 PUT http://127.0.0.1:8000/api/v1/brand/1/campaign/2/update/
 Content-Type: application/json
