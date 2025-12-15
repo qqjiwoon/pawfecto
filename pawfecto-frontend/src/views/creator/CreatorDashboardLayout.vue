@@ -21,8 +21,45 @@
   </div>
 </template>
 
-
 <script setup>
+import { computed, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+import CreatorProfileHeader from '@/components/creator/CreatorProfileHeader.vue'
+import CreatorDashboardButtons from '@/components/creator/CreatorDashboardButtons.vue'
+import CreatorDashboardTabs from '@/components/creator/CreatorDashboardTabs.vue'
+
+import { useCreatorStore } from '@/stores/creator'
+
+const route = useRoute()
+const creatorStore = useCreatorStore()
+
+// URL 파라미터
+const creatorId = computed(() => Number(route.params.creator_id))
+
+// ⭐ store에서 creator를 꺼내서 정의
+const creator = computed(() => creatorStore.creator)
+
+// creator_id가 생기면 데이터 요청
+onMounted(() => {
+  creatorStore.fetchCreator(creatorId.value)
+})
+
+// creator_id 변경 대응 (선택이지만 권장)
+watch(creatorId, (newId) => {
+  creatorStore.fetchCreator(newId)
+})
+
+// 탭 노출 여부
+const showSubTabs = computed(() =>
+  route.path.includes('/campaign-offers') ||
+  route.path.includes('/campaign-progress')
+)
+</script>
+
+
+
+<!-- <script setup>
 import { computed } from "vue"
 import { useRoute } from "vue-router"
 
@@ -49,7 +86,7 @@ const showSubTabs = computed(() =>
   route.path.includes('/campaign-offers') ||
   route.path.includes('/campaign-progress')
 )
-</script>
+</script> -->
 
 
 <style scoped>

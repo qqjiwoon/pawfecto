@@ -72,33 +72,42 @@ const handleLogin = async () => {
   }
 
   try {
-    const res = await axios.post(
+    // 1️⃣ 로그인 (JWT 발급)
+    const loginRes = await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/accounts/login/`,
       {
         username: username.value,
         password: password.value,
-      },
-      {
-        withCredentials: true,
       }
     )
 
-    console.log('login success:', res.data)
+    // 2️⃣ access 토큰 저장
+    localStorage.setItem('access', loginRes.data.access)
 
-    // TODO: 토큰 / 유저정보 저장 (다음 단계)
-    // localStorage.setItem('access', res.data.access)
+    // 3️⃣ (선택) 내 정보 조회 — 지금은 유지해도 되고, 없어도 됨
+    const meRes = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/accounts/me/`,
+      {
+        headers: {
+          Authorization: `Bearer ${loginRes.data.access}`,
+        },
+      }
+    )
 
-    // 로그인 성공 → 홈 이동
+    console.log('login user:', meRes.data)
+
+    // ✅ 로그인 성공 → 메인 페이지로 이동
     router.push('/')
+
   } catch (err) {
     console.error(err)
-
     alert(
-      err.response?.data?.error ||
+      err.response?.data?.detail ||
       '로그인에 실패했습니다. 아이디/비밀번호를 확인해주세요.'
     )
   }
 }
+
 </script>
 
 

@@ -90,4 +90,10 @@ urlpatterns = [
         views.creator_progress,
         name='creator_progress'
     ),
+    # 11) 기본 정보 조회
+    path(
+    'creator/<int:creator_id>/',
+    views.creator_detail,
+    name='creator_detail'
+    ),
 ]
