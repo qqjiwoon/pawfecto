@@ -1,5 +1,6 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -110,6 +111,7 @@ def brand_profile(request, brand_id):
 # 6) 크리에이터 프로필 조회
 # ============================================
 @api_view(['GET'])
+@authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def creator_profile(request, creator_id):
     qs = User.objects.filter(id=creator_id, account_type="creator")
@@ -174,3 +176,4 @@ def update_style_tags(request, creator_id):
         },
         status=200
     )
+

@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from accounts.models import User
 
 from .models import Campaign, CampaignAcceptance, Deliverable
 from .serializers import (
@@ -273,3 +275,12 @@ def creator_progress(request, creator_id):
 
     serializer = DeliverableSerializer(deliverables, many=True)
     return Response(serializer.data, status=200)
+
+def creator_detail(request, creator_id):
+    creator = get_object_or_404(
+        User,
+        id=creator_id,
+        account_type="creator"
+    )
+    serializer = CreatorSerializer(creator)
+    return JsonResponse(serializer.data, status=200)

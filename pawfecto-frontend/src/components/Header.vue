@@ -1,10 +1,12 @@
 <template>
     <header class="pf-header">
-      <!-- <div class="pf-container"> -->
         <nav class="pf-left-menu">
             <router-link to="/brand">Brand</router-link>
             <router-link to="/creator">Creator</router-link>
-            <router-link to="/dashboard">Dashboard</router-link>
+            <router-link to="/dashboard" @click.prevent="goDashboard">
+              Dashboard
+            </router-link>
+
         </nav>
       
 
@@ -16,12 +18,78 @@
         <nav class="pf-right=menu">
             <router-link to="/login">Login</router-link>
         </nav>
-      <!-- </div> -->
+
     </header>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
+
+const router = useRouter()
+
+const me = ref(null)
+
+// 로그인한 사용자 정보 가져오기
+onMounted(async () => {
+  const token = localStorage.getItem('access')
+  if (!token) return
+
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/accounts/me/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    me.value = res.data
+  } catch (err) {
+    localStorage.removeItem('access')
+    me.value = null
+  }
+})
+
+// Dashboard 클릭 시 동작
+const goDashboard = async () => {
+  const token = localStorage.getItem('access')
+
+  // 토큰 자체가 없으면 로그인 페이지
+  if (!token) {
+    router.push('/login')
+    return
+  }
+
+  try {
+    // ⭐️ 클릭 시점에 다시 me 조회
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/accounts/me/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+
+    const user = res.data
+
+    if (user.account_type === 'creator') {
+      router.push(`/dashboard/creator/${user.id}`)
+    } else if (user.account_type === 'brand') {
+      router.push(`/dashboard/brand/${user.id}`)
+    }
+
+  } catch (err) {
+    // 토큰 만료 / 인증 실패
+    localStorage.removeItem('access')
+    router.push('/login')
+  }
+}
+
 </script>
+
 
 <style scoped>
 .pf-header {
