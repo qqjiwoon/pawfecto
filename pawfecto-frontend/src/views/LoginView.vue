@@ -52,8 +52,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter, RouterLink } from 'vue-router'
-import axios from 'axios'
+import { useRouter } from 'vue-router'
+import { login } from '@/api/auth'
 
 const router = useRouter()
 
@@ -72,30 +72,21 @@ const handleLogin = async () => {
   }
 
   try {
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/accounts/login/`,
-      {
-        username: username.value,
-        password: password.value,
-      },
-      {
-        withCredentials: true,
-      }
-    )
+    const res = await login({
+      username: username.value,
+      password: password.value,
+    })
 
-    console.log('login success:', res.data)
-
-    // TODO: 토큰 / 유저정보 저장 (다음 단계)
-    // localStorage.setItem('access', res.data.access)
+    // JWT 저장 (핵심)
+    localStorage.setItem('access', res.data.access)
+    localStorage.setItem('refresh', res.data.refresh)
 
     // 로그인 성공 → 홈 이동
     router.push('/')
   } catch (err) {
-    console.error(err)
-
     alert(
-      err.response?.data?.error ||
-      '로그인에 실패했습니다. 아이디/비밀번호를 확인해주세요.'
+      err.response?.data?.detail ||
+      '로그인에 실패했습니다. 아이디 또는 비밀번호를 확인해주세요.'
     )
   }
 }
