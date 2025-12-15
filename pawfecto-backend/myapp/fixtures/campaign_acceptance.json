@@ -1,0 +1,134 @@
+[
+  {
+    "model": "myapp.campaignacceptance",
+    "pk": 1,
+    "fields": {
+      "creator": 6,
+      "campaign": 1,
+      "acceptance_status": "accepted",
+      "applied_at": "2025-02-02T10:00:00Z",
+      "accepted_at": "2025-02-03T09:00:00Z"
+    }
+  },
+  {
+    "model": "myapp.campaignacceptance",
+    "pk": 2,
+    "fields": {
+      "creator": 8,
+      "campaign": 1,
+      "acceptance_status": "pending",
+      "applied_at": "2025-02-02T11:00:00Z",
+      "accepted_at": null
+    }
+  },
+  {
+    "model": "myapp.campaignacceptance",
+    "pk": 3,
+    "fields": {
+      "creator": 6,
+      "campaign": 2,
+      "acceptance_status": "rejected",
+      "applied_at": "2025-02-04T10:30:00Z",
+      "accepted_at": null
+    }
+  },
+  {
+    "model": "myapp.campaignacceptance",
+    "pk": 4,
+    "fields": {
+      "creator": 9,
+      "campaign": 3,
+      "acceptance_status": "accepted",
+      "applied_at": "2025-02-03T12:00:00Z",
+      "accepted_at": "2025-02-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "myapp.campaignacceptance",
+    "pk": 5,
+    "fields": {
+      "creator": 9,
+      "campaign": 4,
+      "acceptance_status": "pending",
+      "applied_at": "2025-02-05T09:30:00Z",
+      "accepted_at": null
+    }
+  },
+  {
+    "model": "myapp.campaignacceptance",
+    "pk": 6,
+    "fields": {
+      "creator": 7,
+      "campaign": 5,
+      "acceptance_status": "accepted",
+      "applied_at": "2025-02-02T15:00:00Z",
+      "accepted_at": "2025-02-03T14:00:00Z"
+    }
+  },
+  {
+    "model": "myapp.campaignacceptance",
+    "pk": 7,
+    "fields": {
+      "creator": 10,
+      "campaign": 6,
+      "acceptance_status": "pending",
+      "applied_at": "2025-02-04T16:00:00Z",
+      "accepted_at": null
+    }
+  },
+  {
+    "model": "myapp.campaignacceptance",
+    "pk": 8,
+    "fields": {
+      "creator": 6,
+      "campaign": 7,
+      "acceptance_status": "accepted",
+      "applied_at": "2025-02-06T10:00:00Z",
+      "accepted_at": "2025-02-07T09:30:00Z"
+    }
+  },
+  {
+    "model": "myapp.campaignacceptance",
+    "pk": 9,
+    "fields": {
+      "creator": 8,
+      "campaign": 7,
+      "acceptance_status": "rejected",
+      "applied_at": "2025-02-06T11:00:00Z",
+      "accepted_at": null
+    }
+  },
+  {
+    "model": "myapp.campaignacceptance",
+    "pk": 10,
+    "fields": {
+      "creator": 9,
+      "campaign": 8,
+      "acceptance_status": "pending",
+      "applied_at": "2025-02-07T10:30:00Z",
+      "accepted_at": null
+    }
+  },
+  {
+    "model": "myapp.campaignacceptance",
+    "pk": 11,
+    "fields": {
+      "creator": 6,
+      "campaign": 9,
+      "acceptance_status": "accepted",
+      "applied_at": "2025-02-03T13:00:00Z",
+      "accepted_at": "2025-02-04T12:00:00Z"
+    }
+  },
+  {
+    "model": "myapp.campaignacceptance",
+    "pk": 12,
+    "fields": {
+      "creator": 8,
+      "campaign": 9,
+      "acceptance_status": "pending",
+      "applied_at": "2025-02-03T14:00:00Z",
+      "accepted_at": null
+    }
+  }
+]

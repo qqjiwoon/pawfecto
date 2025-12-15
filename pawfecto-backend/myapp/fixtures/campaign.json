@@ -1,0 +1,182 @@
+[
+  {
+    "model": "myapp.campaign",
+    "pk": 1,
+    "fields": {
+      "brand": 1,
+      "product_name": "힐스 초이스 홀리스틱 - 닭고기 & 렌틸콩 어덜트 독 사료",
+      "product_image_url": "https://cdn.pawfecto.kr/products/fresh_chicken_dog.jpg",
+      "product_description": "엄선된 휴먼 그레이드 닭고기와 소화에 좋은 렌틸콩을 주원료로 합니다. 관절 건강을 위한 글루코사민과 콘드로이틴을 강화하여 활동량이 많은 반려견의 데일리 관절 케어에 도움을 줍니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 5000,
+      "style_tag": "energetic",
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 2,
+    "fields": {
+      "brand": 1,
+      "product_name": "펫오브네이처 싱글 프로틴 오리 져키 트릿",
+      "product_image_url": "https://cdn.pawfecto.kr/products/duck_snack.jpg",
+      "product_description": "98% 오리 단일 단백질로 알러지 반응을 최소화한 간식입니다. 무곡물(Grain-Free) 레시피로 민감한 반려견에게도 안심하고 급여할 수 있으며, 훈련 및 보상용으로 최적화된 소프트 져키 타입입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 3000,
+      "style_tag": "funny",
+      "requested_at": "2025-02-03T10:00:00Z",
+      "application_deadline_at": "2025-02-12",
+      "posting_start_at": "2025-02-18",
+      "posting_end_at": "2025-03-02",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 3,
+    "fields": {
+      "brand": 2,
+      "product_name": "내추럴 밸런스 오가닉 연어 & 해조류 레시피",
+      "product_image_url": "https://cdn.pawfecto.kr/products/salmon_omega.jpg",
+      "product_description": "유기농 인증 연어와 해조류에서 추출한 고농축 오메가3(EPA/DHA) 성분을 담았습니다. 건조하고 푸석한 피부를 개선하고 윤기나는 모질 관리에 특화된 프리미엄 기능성 사료입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 8000,
+      "style_tag": "wholesome",
+      "requested_at": "2025-02-02T11:00:00Z",
+      "application_deadline_at": "2025-02-11",
+      "posting_start_at": "2025-02-16",
+      "posting_end_at": "2025-03-01",
+      "required_creator_count": 4
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 4,
+    "fields": {
+      "brand": 2,
+      "product_name": "라이트컷 헬시 에그 타르트 (저칼로리)",
+      "product_image_url": "https://cdn.pawfecto.kr/products/lowcal_snack.jpg",
+      "product_description": "닭고기 대신 저지방 계란을 사용하여 칼로리 부담을 줄인 다이어트용 간식입니다. 1개당 10kcal 미만으로 체중 조절이 필요한 반려견에게 포만감을 주며, 인공 향료/색소/방부제가 들어있지 않습니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 4000,
+      "style_tag": "calm",
+      "requested_at": "2025-02-04T09:30:00Z",
+      "application_deadline_at": "2025-02-13",
+      "posting_start_at": "2025-02-19",
+      "posting_end_at": "2025-03-05",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 5,
+    "fields": {
+      "brand": 3,
+      "product_name": "마이캣 라이프 실내 케어 주식 캔 (참치 & 치킨 무스)",
+      "product_image_url": "https://cdn.pawfecto.kr/products/indoor_cat_can.jpg",
+      "product_description": "활동량이 적은 실내 고양이의 요로 건강을 위해 미네랄 함량을 조절했습니다. 부드러운 무스 타입으로 음수량 증가에 도움을 주며, 편식하는 고양이의 뛰어난 기호성을 자랑합니다.",
+      "target_pet_type": "cat",
+      "min_follower_count": 6000,
+      "style_tag": "calm",
+      "requested_at": "2025-02-01T14:00:00Z",
+      "application_deadline_at": "2025-02-09",
+      "posting_start_at": "2025-02-14",
+      "posting_end_at": "2025-02-27",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 6,
+    "fields": {
+      "brand": 3,
+      "product_name": "캣타임 츄르 - 생참치 & 콜라겐 (프리미엄)",
+      "product_image_url": "https://cdn.pawfecto.kr/products/cat_churu_tuna.jpg",
+      "product_description": "참치 살코기 함량 60%로 영양과 기호성을 모두 잡은 액상 간식입니다. 저분자 콜라겐을 첨가하여 피부와 털 건강을 함께 관리할 수 있으며, 고양이의 폭발적인 반응을 유도하여 릴스 등 반응형 영상 콘텐츠에 활용하기에 좋습니다.",
+      "target_pet_type": "cat",
+      "min_follower_count": 7000,
+      "style_tag": "funny",
+      "requested_at": "2025-02-03T15:00:00Z",
+      "application_deadline_at": "2025-02-12",
+      "posting_start_at": "2025-02-17",
+      "posting_end_at": "2025-03-03",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 7,
+    "fields": {
+      "brand": 4,
+      "product_name": "닥터 펫케어 퓨어 허브 발밤",
+      "product_image_url": "https://cdn.pawfecto.kr/products/paw_balm.jpg",
+      "product_description": "쉐어버터와 천연 허브 오일을 주성분으로 하여 산책 후 건조해진 발바닥 각질과 보습 관리에 효과적입니다. 미끌거림 없이 빠르게 흡수되는 제형으로 반려견이 핥아도 안전합니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 5000,
+      "style_tag": "outdoor",
+      "requested_at": "2025-02-05T10:00:00Z",
+      "application_deadline_at": "2025-02-14",
+      "posting_start_at": "2025-02-20",
+      "posting_end_at": "2025-03-06",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 8,
+    "fields": {
+      "brand": 4,
+      "product_name": "저자극 pH 밸런싱 순한 강아지 샴푸 (무향)",
+      "product_image_url": "https://cdn.pawfecto.kr/products/dog_shampoo.jpg",
+      "product_description": "반려견 피부의 pH 밸런스에 맞춰 개발된 순한 저자극 포뮬러 샴푸입니다. 코코넛 유래 세정 성분을 사용하여 거품은 풍성하고 헹굼은 빠르며, 민감성 피부의 데일리 목욕 케어에 적합합니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 6000,
+      "style_tag": "calm",
+      "requested_at": "2025-02-06T11:00:00Z",
+      "application_deadline_at": "2025-02-15",
+      "posting_start_at": "2025-02-21",
+      "posting_end_at": "2025-03-07",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 9,
+    "fields": {
+      "brand": 5,
+      "product_name": "시티워크 - 에어 메시 하네스 (베이직 라인)",
+      "product_image_url": "https://cdn.pawfecto.kr/products/dog_harness.jpg",
+      "product_description": "가슴 전체를 감싸는 인체공학적 디자인으로 당김을 최소화한 하네스입니다. 가볍고 통기성이 좋은 에어 메시 소재로 제작되어 도심 산책 및 봄/여름 야외 활동에 적합합니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 9000,
+      "style_tag": "outdoor",
+      "requested_at": "2025-02-02T13:00:00Z",
+      "application_deadline_at": "2025-02-11",
+      "posting_start_at": "2025-02-16",
+      "posting_end_at": "2025-03-01",
+      "required_creator_count": 4
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 10,
+    "fields": {
+      "brand": 5,
+      "product_name": "모던펫 세라믹 푸드볼 (높이조절 가능)",
+      "product_image_url": "https://cdn.pawfecto.kr/products/pet_bowl_set.jpg",
+      "product_description": "반려동물의 식도와 관절에 부담이 적도록 각도와 높이 조절이 가능한 디자인 식기 세트입니다. 위생적인 세라믹 소재로 제작되었으며, 모던한 디자인으로 인테리어를 해치지 않습니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 7000,
+      "style_tag": "aesthetic",
+      "requested_at": "2025-02-04T16:00:00Z",
+      "application_deadline_at": "2025-02-13",
+      "posting_start_at": "2025-02-18",
+      "posting_end_at": "2025-03-04",
+      "required_creator_count": 5
+    }
+  }
+]
