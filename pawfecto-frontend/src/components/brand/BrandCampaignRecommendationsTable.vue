@@ -37,7 +37,7 @@
             <img :src="creator.profileImg" class="profile-img" />
             <div>
               <p class="name">{{ creator.name }}</p>
-              <p class="handle">@{{ creator.handle }}</p>
+              <p class="handle">{{ creator.handle }}</p>
             </div>
           </td>
 
@@ -72,107 +72,73 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import Pagination from './Pagination.vue'
-import defaultImg from '@/assets/profile1.jpg'
+// 크리에이터 신청 현황 조회 (캠페인별)
+import { ref, computed, onMounted } from "vue"
+import { useRoute } from "vue-router"
+import api from "@/plugins/axios"
+import Pagination from "./Pagination.vue"
+import defaultImg from "@/assets/profile1.jpg"
 
-const creators = ref([
-  {
-    id: 1,
-    name: "Mochi the Cat",
-    handle: "mochi_cat",
-    profileImg: defaultImg,
-    petType: "Cat",
-    followers: 5200,
-    styleTags: ["감성적인", "차분한"],
-    status: "Accepted"
-  },
-  {
-    id: 2,
-    name: "Bobby & Me",
-    handle: "bobby_love",
-    profileImg: defaultImg,
-    petType: "Dog",
-    followers: 8800,
-    styleTags: ["활발한", "웃긴"],
-    status: "Pending"
-  },
-  {
-    id: 3,
-    name: "Coco Studio",
-    handle: "coco_daily",
-    profileImg: defaultImg,
-    petType: "Dog",
-    followers: 12000,
-    styleTags: ["야외감성", "힐링되는"],
-    status: "Rejected"
-  },
-  {
-    id: 4,
-    name: "Nabi Life",
-    handle: "nabi_home",
-    profileImg: defaultImg,
-    petType: "Cat",
-    followers: 3400,
-    styleTags: ["포근한", "감성적인"],
-    status: "Completed"
-  },
-  {
-    id: 5,
-    name: "Sunny Paw",
-    handle: "sunny_paw",
-    profileImg: defaultImg,
-    petType: "Dog",
-    followers: 7600,
-    styleTags: ["활발한", "야외감성"],
-    status: "Accepted"
-  },
-  {
-    id: 6,
-    name: "Milk & Bread",
-    handle: "milk_bread",
-    profileImg: defaultImg,
-    petType: "Cat",
-    followers: 2900,
-    styleTags: ["차분한", "깔끔한"],
-    status: "Pending"
-  },
-  {
-    id: 7,
-    name: "Daisy’s World",
-    handle: "daisy_flower",
-    profileImg: defaultImg,
-    petType: "Dog",
-    followers: 5400,
-    styleTags: ["힐링되는", "야외감성"],
-    status: "Accepted"
-  },
-  {
-    id: 8,
-    name: "Mango House",
-    handle: "mango_house",
-    profileImg: defaultImg,
-    petType: "Cat",
-    followers: 4100,
-    styleTags: ["감동적인", "포근한"],
-    status: "Rejected"
-  },
-  {
-    id: 9,
-    name: "Pudding Time",
-    handle: "pudding_time",
-    profileImg: defaultImg,
-    petType: "Dog",
-    followers: 6100,
-    styleTags: ["활발한", "웃긴"],
-    status: "Completed"
-  }
-])
+const route = useRoute()
 
+const brandId = Number(route.params.brand_id)
+const campaignId = Number(route.params.campaign_id)
 
+// 원본 응답
+const acceptances = ref([])
+
+// 테이블용 가공 데이터
+const creators = ref([])
+
+// 검색
 const keyword = ref("")
-const filteredCreators = ref([...creators.value]) // 초기 목록
+const filteredCreators = ref([])
 
+// 페이지네이션
+const currentPage = ref(1)
+const itemsPerPage = 5
+
+// 상태 포맷
+function formatStatus(status) {
+  if (!status) return ""
+  return status.charAt(0).toUpperCase() + status.slice(1)
+}
+
+// 스타일 태그 표시용 변환
+function toKoreanTag(t) {
+  const raw = typeof t === "string" ? t : (t?.name_ko || t?.label || t?.name || "")
+  const m = raw.match(/\(([^)]+)\)/)   // "Calm (차분한)" -> "차분한"
+  return m ? m[1] : raw               // 괄호 없으면 원문
+}
+
+// 데이터 조회
+onMounted(async () => {
+  try {
+    const res = await api.get(
+      `/api/v1/brand/${brandId}/campaign/${campaignId}/acceptances/`
+    )
+
+    acceptances.value = res.data
+
+    creators.value = res.data.map(a => ({
+      id: a.campaign_acceptance_id,
+      name: a.creator.name,
+      handle: a.creator.sns_handle || a.creator.username,
+      profileImg: a.creator.profile_image_url || defaultImg,
+      petType: a.creator.pet_type,
+      followers: a.creator.follower_count ?? 0,
+      styleTags: (a.creator.style_tags || []).map(toKoreanTag),
+      status: formatStatus(a.acceptance_status),
+    }))
+
+    filteredCreators.value = [...creators.value]
+  } catch (err) {
+    console.error(err)
+    filteredCreators.value = []
+  }
+})
+
+// 검색 필터
 function filterCreators() {
   const k = keyword.value.toLowerCase()
   filteredCreators.value = creators.value.filter(c =>
@@ -181,9 +147,7 @@ function filterCreators() {
   )
 }
 
-const currentPage = ref(1)
-const itemsPerPage = 5
-
+// 페이지네이션 계산
 const totalPages = computed(() =>
   Math.ceil(filteredCreators.value.length / itemsPerPage)
 )
@@ -196,9 +160,8 @@ const paginatedCreators = computed(() => {
 function goToPage(page) {
   currentPage.value = page
 }
-
-
 </script>
+
 
 <style scoped>
 .recommend-wrapper {

@@ -92,14 +92,25 @@ onMounted(async () => {
 })
 
 /* -------------------------------
-   스타일 태그 파싱
+   스타일 태그 파싱 (한국어 표시)
 -------------------------------- */
 const parsedStyles = computed(() => {
   const styles = campaign.value?.style_tag
   if (!styles) return []
 
-  if (typeof styles === 'string') return styles.split(',')
-  if (Array.isArray(styles)) return styles
+  const toKorean = (raw) => {
+    const m = raw.match(/\(([^)]+)\)/)
+    return m ? m[1] : raw
+  }
+
+  if (typeof styles === 'string') {
+    return styles.split(',').map(s => toKorean(s.trim()))
+  }
+
+  if (Array.isArray(styles)) {
+    return styles.map(s => toKorean(String(s)))
+  }
+
   return []
 })
 
