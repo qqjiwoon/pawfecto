@@ -30,7 +30,7 @@ class CampaignSerializer(serializers.ModelSerializer):
             'product_description',
             'target_pet_type',
             'min_follower_count',
-            'style_tag',              # 단일 스타일 태그
+            'style_tags',
             'requested_at',
             'application_deadline_at',
             'posting_start_at',

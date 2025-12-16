@@ -53,10 +53,10 @@ class Campaign(models.Model):
 
     required_creator_count = models.IntegerField()
 
-    # 캠페인 스타일 태그 (StyleTag.code 값 1개 저장)
-    style_tag = models.CharField(
-        max_length=50,
-        null=True,
+    # 캠페인 스타일 태그 (StyleTag M2M 통일)
+    style_tags = models.ManyToManyField(
+        StyleTag,
+        related_name="campaigns",
         blank=True
     )
 
