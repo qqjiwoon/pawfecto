@@ -5,10 +5,14 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import { useRoute } from "vue-router"
+
 import CreatorSettings from "@/components/creator/CreatorSettings.vue"
 
-const route = useRoute()
-const creatorId = computed(() => Number(route.params.creator_id))
+// const route = useRoute()
+const props = defineProps({
+  creatorId: {
+    type: Number,
+    required: true,
+  },
+})
 </script>

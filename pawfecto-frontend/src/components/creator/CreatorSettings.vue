@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-container">
+  <div v-if="user" class="settings-container">
 
     <!-- 아이디 -->
     <div class="form-group">
@@ -35,7 +35,11 @@
     <div class="form-group">
       <label>반려동물 종류</label>
       <p class="readonly-field">
-        {{ user.pet_type === 'dog' ? '강아지' : '고양이' }}
+        {{ user.pet_type === 'dog'
+          ? '강아지'
+          : user.pet_type === 'cat'
+            ? '고양이'
+            : '-' }}
       </p>
     </div>
 
@@ -59,7 +63,9 @@
           v-for="tag in styleOptions"
           :key="tag.value"
           class="tag-chip"
-          :class="{ selected: user.style_tags.includes(tag.value) }"
+          :class="{
+            selected: user.style_tags.some(t => t.code === tag.value)
+          }"
         >
           #{{ tag.label }}
         </span>
@@ -70,7 +76,11 @@
     <div class="form-group">
       <label>프로필 이미지</label>
       <p class="readonly-field">
-        {{ user.profileImageName || '등록된 이미지 없음' }}
+        <img
+          v-if="user.profile_image_url"
+          :src="user.profile_image_url"
+          class="profile-img"
+        />
       </p>
     </div>
 
@@ -84,25 +94,30 @@
 
 
 <script setup>
-import { computed } from "vue"
+import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
+import api from "@/plugins/axios"
 
 const props = defineProps({
-  creatorId: Number
+  creatorId: {
+    type: Number,
+    required: true,
+  },
 })
 
 const router = useRouter()
+const user = ref(null)
 
-// store에서 creator 찾기
-const user = computed(() =>
-  creators.value.find(c => c.id === props.creatorId)
-)
+onMounted(async () => {
+  const res = await api.get('/accounts/me/')
+  user.value = res.data
+})
 
 // UPDATE 이동
 const goToUpdate = () => {
   router.push({
     name: "creator-settings-update",
-    params: { creator_id: props.creatorId }
+    params: { creator_id: props.creatorId },
   })
 }
 
@@ -117,13 +132,9 @@ const styleOptions = [
   { value: "aesthetic", label: "감각적인" },
   { value: "minimal", label: "깔끔한" },
   { value: "outdoor", label: "야외감성" },
-  { value: "no_preference", label: "상관없음" }
+  { value: "no_preference", label: "상관없음" },
 ]
 </script>
-
-
-
-
 
 <style scoped>
 .settings-container {

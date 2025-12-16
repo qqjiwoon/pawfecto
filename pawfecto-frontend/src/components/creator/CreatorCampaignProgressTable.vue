@@ -28,23 +28,33 @@
           <td>
             <div class="campaign-info">
               <img :src="item.campaign_image" class="campaign-img" />
-              <span class="campaign-name">{{ item.campaign_name }}</span>
+              <!-- 이미지 나중에 아래 것으로 고치기 -->
+              <!-- <img
+                :src="item.campaign_acceptance.campaign.product_image_url"
+                class="campaign-img"
+              /> -->
+              <span class="campaign-name">
+                {{ item.campaign_acceptance.campaign.product_name }}
+              </span>
             </div>
           </td>
 
           <!-- 업로드 일시 -->
-          <td>{{ item.upload_date || '-' }}</td>
+          <td>
+            {{ item.posted_at ? item.posted_at.slice(0, 10) : '-' }}
+          </td>
+
 
           <!-- 포스팅 링크 -->
           <td>
             <div class="link-wrapper">
               <a
-                v-if="item.post_link"
-                :href="item.post_link"
+                v-if="item.post_url"
+                :href="item.post_url"
                 target="_blank"
                 class="link-text"
               >
-                {{ item.post_link }}
+                {{ item.post_url }}
               </a>
               <span v-else class="empty-dash">-</span>
             </div>
@@ -56,9 +66,9 @@
               class="status-badge"
               @click="openEditModal(item)"
             >
-              <span :class="['dot', item.status]"></span>
+              <span :class="['dot', item.deliverable_status]"></span>
               <span class="status-text">
-                {{ toKoreanStatus(item.status) }}
+                {{ toKoreanStatus(item.deliverable_status) }}
               </span>
             </div>
           </td>
@@ -110,14 +120,24 @@
 
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import api from '@/plugins/axios'
 import ProgressEditModal from '@/components/creator/ProgressEditModal.vue'
 
 const props = defineProps({
-  items: {
-    type: Array,
+  creatorId: {
+    type: Number,
     required: true,
-  }
+  },
+})
+
+const items = ref([])
+
+onMounted(async () => {
+  const res = await api.get(
+    `/api/v1/creator/${props.creatorId}/progress/`
+  )
+  items.value = res.data
 })
 
 const emit = defineEmits(['save', 'close'])
@@ -133,9 +153,9 @@ const editingItem = ref(null)
 
 /* 검색 필터 */
 const filteredData = computed(() => {
-  if (!searchQuery.value) return props.items
-  return props.items.filter(item =>
-    item.campaign_name
+  if (!searchQuery.value) return items.value
+  return items.value.filter(item =>
+    item.campaign_acceptance.campaign.product_name
       .toLowerCase()
       .includes(searchQuery.value.toLowerCase())
   )
@@ -180,6 +200,7 @@ const toKoreanStatus = (status) => {
   if (status === 'incomplete') return '미완료'
   return status
 }
+
 </script>
 
 <style scoped>
