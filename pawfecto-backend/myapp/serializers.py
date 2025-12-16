@@ -19,6 +19,7 @@ class StyleTagSerializer(serializers.ModelSerializer):
 
 class CampaignSerializer(serializers.ModelSerializer):
     brand = BrandSerializer(read_only=True)
+    style_tags = StyleTagSerializer(many=True, read_only=True)
 
     class Meta:
         model = Campaign
@@ -38,15 +39,15 @@ class CampaignSerializer(serializers.ModelSerializer):
             'required_creator_count',
         ]
 
-    def validate_style_tag(self, value):
-        if value is None:
-            return value
+    # def validate_style_tag(self, value):
+    #     if value is None:
+    #         return value
 
-        # StyleTag.code 유효성만 검증
-        if not StyleTag.objects.filter(code=value).exists():
-            raise serializers.ValidationError("Invalid style_tag value.")
+    #     # StyleTag.code 유효성만 검증
+    #     if not StyleTag.objects.filter(code=value).exists():
+    #         raise serializers.ValidationError("Invalid style_tag value.")
 
-        return value
+    #     return value
 
 
 

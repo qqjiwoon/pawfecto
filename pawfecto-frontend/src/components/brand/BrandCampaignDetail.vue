@@ -89,29 +89,22 @@ const campaign = ref(null)
 onMounted(async () => {
   const res = await fetchCampaignDetail(brandId, campaignId)
   campaign.value = res.data
+  console.log("style_tags:", res.data.style_tags)
 })
 
 /* -------------------------------
    스타일 태그 파싱 (한국어 표시)
 -------------------------------- */
 const parsedStyles = computed(() => {
-  const styles = campaign.value?.style_tag
-  if (!styles) return []
+  const tags = campaign.value?.style_tags
+  if (!Array.isArray(tags)) return []
 
-  const toKorean = (raw) => {
-    const m = raw.match(/\(([^)]+)\)/)
-    return m ? m[1] : raw
-  }
-
-  if (typeof styles === 'string') {
-    return styles.split(',').map(s => toKorean(s.trim()))
-  }
-
-  if (Array.isArray(styles)) {
-    return styles.map(s => toKorean(String(s)))
-  }
-
-  return []
+  return tags
+    .filter(tag => tag && tag.name)   // 핵심
+    .map(tag => {
+      const m = tag.name.match(/\(([^)]+)\)/)
+      return m ? m[1] : tag.name
+    })
 })
 
 /* -------------------------------
