@@ -10,8 +10,14 @@
     <!-- My Campaigns에서만 보이는 탭 -->
     <CreatorDashboardTabs v-if="showSubTabs" />
 
-    <!-- 하위 라우트 출력 -->
-    <router-view />
+    <!-- 하위 라우트 출력 (정상) -->
+    <router-view v-slot="{ Component }">
+      <component
+        :is="Component"
+        :offers="acceptanceStore.acceptances"
+        :items="acceptanceStore.acceptances"
+      />
+    </router-view>
 
   </div>
 
@@ -29,25 +35,29 @@ import CreatorProfileHeader from '@/components/creator/CreatorProfileHeader.vue'
 import CreatorDashboardButtons from '@/components/creator/CreatorDashboardButtons.vue'
 import CreatorDashboardTabs from '@/components/creator/CreatorDashboardTabs.vue'
 
+import { useCampaignAcceptanceStore } from '@/stores/campaignAcceptance'
 import { useCreatorStore } from '@/stores/creator'
 
 const route = useRoute()
 const creatorStore = useCreatorStore()
+const acceptanceStore = useCampaignAcceptanceStore()
 
 // URL 파라미터
 const creatorId = computed(() => Number(route.params.creator_id))
 
-// ⭐ store에서 creator를 꺼내서 정의
+// creator 정보
 const creator = computed(() => creatorStore.creator)
 
-// creator_id가 생기면 데이터 요청
+// 최초 로드
 onMounted(() => {
   creatorStore.fetchCreator(creatorId.value)
+  acceptanceStore.fetchCreatorAcceptances(creatorId.value)
 })
 
-// creator_id 변경 대응 (선택이지만 권장)
+// creator_id 변경 시 대응
 watch(creatorId, (newId) => {
   creatorStore.fetchCreator(newId)
+  acceptanceStore.fetchCreatorAcceptances(newId)
 })
 
 // 탭 노출 여부
@@ -56,38 +66,6 @@ const showSubTabs = computed(() =>
   route.path.includes('/campaign-progress')
 )
 </script>
-
-
-
-<!-- <script setup>
-import { computed } from "vue"
-import { useRoute } from "vue-router"
-
-import CreatorProfileHeader from "@/components/creator/CreatorProfileHeader.vue"
-import CreatorDashboardButtons from "@/components/creator/CreatorDashboardButtons.vue"
-import CreatorDashboardTabs from "@/components/creator/CreatorDashboardTabs.vue"
-
-// stores/creator.js에서 creators 배열 불러오기
-import { creators } from "@/stores/creator"
-
-// 현재 라우트 정보
-const route = useRoute()
-
-// URL의 :creator_id → 숫자로 변환
-const creatorId = computed(() => Number(route.params.creator_id))
-
-// creators 배열에서 해당 id를 가진 creator 찾기
-const creator = computed(() =>
-  creators.value.find(c => c.id === creatorId.value)
-)
-
-// 특정 페이지에서만 탭 노출
-const showSubTabs = computed(() =>
-  route.path.includes('/campaign-offers') ||
-  route.path.includes('/campaign-progress')
-)
-</script> -->
-
 
 <style scoped>
 .creator-layout {

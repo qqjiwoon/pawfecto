@@ -15,7 +15,6 @@ import BrandUpdateCampaignView from '@/views/brand/BrandUpdateCampaignView.vue'
 // Creator
 import CreatorDashboardLayout from '@/views/creator/CreatorDashboardLayout.vue'
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [

@@ -25,8 +25,10 @@
       </thead>
 
       <tbody>
-        <tr v-for="offer in paginatedOffers" :key="offer.id">
-
+        <tr
+          v-for="offer in paginatedOffers"
+          :key="offer.campaign_acceptance_id ?? offer.campaign?.id"
+        >
           <!-- 브랜드 정보 -->
           <td>
             <div class="brand-col">
@@ -36,8 +38,11 @@
           </td>
 
           <!-- 상품명 (상세 모달 오픈) -->
-          <td class="product-name" @click="openDetail(offer.campaign)">
-            {{ offer.product_name }}
+          <td
+            class="product-name"
+            @click="openDetail(offer.campaign)"
+          >
+            {{ offer.campaign.product_name }}
           </td>
 
           <!-- 최소 팔로워 수 -->
@@ -125,6 +130,8 @@ const props = defineProps({
   }
 })
 
+const safeOffers = computed(() => props.offers ?? [])
+
 
 /* 검색 / 페이지 상태 */
 const searchQuery = ref('')
@@ -146,11 +153,10 @@ const toKoreanStatus = (status) => {
   return map[status] || status
 }
 
-
 /* 검색 필터 */
 const filteredOffers = computed(() => {
-  if (!searchQuery.value) return offers.value
-  return offers.value.filter(o =>
+  if (!searchQuery.value) return safeOffers.value
+  return safeOffers.value.filter(o =>
     o.product_name.includes(searchQuery.value) ||
     o.brand_name.includes(searchQuery.value)
   )
