@@ -33,7 +33,12 @@
           <td>
             <div class="brand-col">
               <img :src="offer.brand_image" class="brand-img" />
-              <span>{{ offer.brand_name }}</span>
+              <!-- 나중에 브랜드 이미지 이렇게 불러오기!!! -->
+              <!-- <img
+                :src="offer.campaign.brand.profile_image_url"
+                class="brand-img"
+              /> -->
+              <span>{{ offer.campaign.brand.name }}</span>
             </div>
           </td>
 
@@ -46,31 +51,32 @@
           </td>
 
           <!-- 최소 팔로워 수 -->
-          <td>{{ offer.min_follower_count }}</td>
+          <td>{{ offer.creator.follower_count.toLocaleString() }}</td>
 
           <!-- 스타일 태그 -->
           <td>
             <div class="style-col">
               <span
-                v-for="style in offer.styles"
-                :key="style"
+                v-for="tag in offer.creator.style_tags"
+                :key="tag.id"
                 class="style-tag"
               >
-                #{{ style }}
+                #{{ tag.code }}
               </span>
+
             </div>
           </td>
 
           <!-- 시작일 -->
-          <td>{{ offer.start_date }}</td>
+          <td>{{ offer.campaign.requested_at.slice(0, 10) }}</td>
 
           <!-- 마감일 -->
-          <td>{{ offer.end_date }}</td>
+          <td>{{ offer.campaign.application_deadline_at }}</td>
 
           <!-- 상태 -->
           <td>
-            <span :class="['status', offer.status]">
-              {{ toKoreanStatus(offer.status) }}
+            <span :class="['status', offer.acceptance_status]">
+              {{ toKoreanStatus(offer.acceptance_status) }}
             </span>
           </td>
 
@@ -119,19 +125,30 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { onMounted, ref, computed } from 'vue'
+import api from '@/plugins/axios'
+
 import CreatorCampaignDetailModal from '@/components/creator/CreatorCampaignDetailModal.vue'
 
 /* Props */
 const props = defineProps({
-  offers: {
-    type: Array,
-    required: true
-  }
+  creatorId: {
+    type: Number,
+    required: true,
+  },
 })
 
-const safeOffers = computed(() => props.offers ?? [])
+const offers = ref([])
 
+const safeOffers = computed(() => offers.value ?? [])
+
+
+onMounted(async () => {
+  const res = await api.get(
+    `/api/v1/creator/${props.creatorId}/offers/`
+  )
+  offers.value = res.data
+})
 
 /* 검색 / 페이지 상태 */
 const searchQuery = ref('')
@@ -156,9 +173,10 @@ const toKoreanStatus = (status) => {
 /* 검색 필터 */
 const filteredOffers = computed(() => {
   if (!searchQuery.value) return safeOffers.value
+
   return safeOffers.value.filter(o =>
-    o.product_name.includes(searchQuery.value) ||
-    o.brand_name.includes(searchQuery.value)
+    o.campaign.product_name.includes(searchQuery.value) ||
+    o.campaign.brand.name.includes(searchQuery.value)
   )
 })
 

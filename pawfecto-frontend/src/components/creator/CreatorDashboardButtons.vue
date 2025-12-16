@@ -5,7 +5,7 @@
     <router-link
       :to="{
         name: 'creator-campaign-offers',
-        params: { creator_id }
+        params: { creator_id: creatorId }
       }"
       class="toggle-btn"
       :class="{ active: isMyCampaignsActive }"
@@ -17,7 +17,7 @@
     <router-link
       :to="{
         name: 'creator-settings',
-        params: { creator_id }
+        params: { creator_id: creatorId }
       }"
       class="toggle-btn"
       :class="{ active: isSettingsActive }"
@@ -28,27 +28,26 @@
   </div>
 </template>
 
+
 <script setup>
 import { computed } from "vue"
 import { useRoute } from "vue-router"
 
 const route = useRoute()
 
-// 라우트 파라미터에서 creator_id 추출
-const creator_id = computed(() => route.params.creator_id)
+const creatorId = computed(() => Number(route.params.creator_id))
 
 // My Campaigns 활성 여부 (offers + progress 포함)
-const isMyCampaignsActive = computed(() => {
-  return (
-    route.name === "creator-campaign-offers" ||
-    route.name === "creator-campaign-progress"
-  )
-})
+const isMyCampaignsActive = computed(() =>
+  route.name === "creator-campaign-offers" ||
+  route.name === "creator-campaign-progress"
+)
 
 // Settings 활성 여부
-const isSettingsActive = computed(() => {
-  return route.name === "creator-settings"
-})
+const isSettingsActive = computed(() =>
+  route.name === "creator-settings" ||
+  route.name === "creator-settings-update"
+)
 </script>
 
 <style scoped>

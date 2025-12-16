@@ -136,6 +136,7 @@ const router = createRouter({
         {
           path: 'campaign-progress',
           name: 'creator-campaign-progress',
+          props: route => ({ creatorId: Number(route.params.creator_id) }),
           component: () =>
                 import(
                   "@/components/creator/CreatorCampaignProgressTable.vue"
@@ -146,14 +147,18 @@ const router = createRouter({
           name: 'creator-settings',
           component: () =>
             import('@/views/creator/CreatorSettingsView.vue'),
-          props: true
+          props: route => ({
+            creatorId: Number(route.params.creator_id)
+          })
         },
         {
           path: 'creator-settings-update',
           name: 'creator-settings-update',
           component: () =>
             import('@/views/creator/CreatorUpdateSettingsView.vue'),
-          props: true
+          props: route => ({
+            creatorId: Number(route.params.creator_id)
+          })
         }
       ]
     },

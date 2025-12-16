@@ -102,8 +102,8 @@
 
 
 <script setup>
-import { ref, computed } from "vue"
-import { useRouter } from "vue-router"
+import api from "@/plugins/axios"
+import { onMounted, ref } from "vue"
 
 const props = defineProps({
   creatorId: Number
@@ -111,10 +111,6 @@ const props = defineProps({
 
 const router = useRouter()
 
-// store에서 creator 찾기
-const currentCreator = computed(() =>
-  creators.value.find(c => c.id === props.creatorId)
-)
 
 // 폼 초기값 설정
 const form = ref({
@@ -133,6 +129,22 @@ const form = ref({
     : [],
   profileImage: null
 })
+
+onMounted(async () => {
+  const res = await api.get("/accounts/me/")
+  const u = res.data
+
+  form.value.loginId = u.username
+  form.value.name = u.name
+  form.value.email = u.email
+  form.value.phoneNumber = u.phone_number
+  form.value.address = u.address
+  form.value.petType = u.pet_type
+  form.value.snsHandle = u.sns_handle
+  form.value.snsUrl = u.sns_url
+  form.value.styleTags = u.style_tags.map(t => t.code)
+})
+
 
 // 스타일 옵션 그대로
 const styleOptions = [
@@ -161,25 +173,35 @@ const handleFileUpload = (e) => {
 }
 
 // 저장
-const handleSave = () => {
-  const target = creators.value.find(c => c.id === props.creatorId)
-  if (target) {
-    target.name = form.value.name
-    target.email = form.value.email
-    target.phone_number = form.value.phoneNumber
-    target.address = form.value.address
-    target.pet_type = form.value.petType
-    target.sns_handle = form.value.snsHandle
-    target.sns_url = form.value.snsUrl
-    target.style_tags = [...form.value.styleTags]
+const handleSave = async () => {
+  if (form.value.password && form.value.password !== form.value.passwordConfirm) {
+    alert("비밀번호가 일치하지 않습니다.")
+    return
   }
 
-  alert("저장되었습니다.")
+  const payload = {
+    name: form.value.name,
+    email: form.value.email,
+    phone_number: form.value.phoneNumber,
+    address: form.value.address,
+    pet_type: form.value.petType,
+    sns_handle: form.value.snsHandle,
+    sns_url: form.value.snsUrl,
+  }
+
+  if (form.value.password) {
+    payload.password = form.value.password
+  }
+
+  await api.put("/accounts/profile/", payload)
+
+  alert("수정되었습니다.")
   router.push({
     name: "creator-settings",
-    params: { creator_id: props.creatorId }
+    params: { creator_id: props.creatorId },
   })
 }
+
 </script>
 
 
