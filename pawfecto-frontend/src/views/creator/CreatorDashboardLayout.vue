@@ -44,14 +44,13 @@ const acceptanceStore = useCampaignAcceptanceStore()
 
 // URL 파라미터
 const creatorId = computed(() => Number(route.params.creator_id))
-
 // creator 정보
 const creator = computed(() => creatorStore.creator)
 
 // 최초 로드
-onMounted(() => {
-  creatorStore.fetchCreator(creatorId.value)
-  acceptanceStore.fetchCreatorAcceptances(creatorId.value)
+onMounted(async () => {
+  await creatorStore.loadCreator()
+  await acceptanceStore.fetchCreatorAcceptances(creatorId.value)
 })
 
 // creator_id 변경 시 대응

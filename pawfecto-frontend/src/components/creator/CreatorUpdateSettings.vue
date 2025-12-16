@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-container">
+  <div v-if="isLoaded" class="settings-container">
 
     <!-- 아이디 (읽기 전용) -->
     <div class="form-group">
@@ -96,83 +96,68 @@
 
     <!-- 저장 버튼 -->
     <button class="save-btn" @click="handleSave">SAVE</button>
-
+  </div>
+  <div v-else class="settings-container">
+    <p>불러오는 중...</p>
   </div>
 </template>
-
 
 <script setup>
 import api from "@/plugins/axios"
 import { onMounted, ref } from "vue"
-
-const props = defineProps({
-  creatorId: Number
-})
+import { useRouter, useRoute } from "vue-router"
+import { useCreatorStore } from "@/stores/creator"
 
 const router = useRouter()
+const route = useRoute()
 
+const creatorStore = useCreatorStore()
+const isLoaded = ref(false)
 
-// 폼 초기값 설정
 const form = ref({
-  loginId: currentCreator.value?.username || "",
+  loginId: "",
   password: "",
   passwordConfirm: "",
-  name: currentCreator.value?.name || "",
-  email: currentCreator.value?.email || "",
-  phoneNumber: currentCreator.value?.phone_number || "",
-  address: currentCreator.value?.address || "",
-  petType: currentCreator.value?.pet_type || "dog",
-  snsHandle: currentCreator.value?.sns_handle || "",
-  snsUrl: currentCreator.value?.sns_url || "",
-  styleTags: currentCreator.value?.style_tags
-    ? [...currentCreator.value.style_tags]
-    : [],
-  profileImage: null
+  name: "",
+  email: "",
+  phoneNumber: "",
+  address: "",
+  petType: "dog",
+  snsHandle: "",
+  snsUrl: "",
+  styleTags: [],
 })
 
+/* 최초 로드 */
 onMounted(async () => {
-  const res = await api.get("/accounts/me/")
-  const u = res.data
+  await creatorStore.loadCreator()
 
-  form.value.loginId = u.username
-  form.value.name = u.name
-  form.value.email = u.email
-  form.value.phoneNumber = u.phone_number
-  form.value.address = u.address
-  form.value.petType = u.pet_type
-  form.value.snsHandle = u.sns_handle
-  form.value.snsUrl = u.sns_url
-  form.value.styleTags = u.style_tags.map(t => t.code)
+  const data = creatorStore.creator
+  if (!data) return
+
+  Object.assign(form.value, {
+    loginId: data.username,
+    name: data.name,
+    email: data.email,
+    phoneNumber: data.phone_number,
+    address: data.address,
+    petType: data.pet_type,
+    snsHandle: data.sns_handle,
+    snsUrl: data.sns_url,
+    styleTags: data.style_tags.map(t => t.code),
+  })
+
+  isLoaded.value = true
 })
 
-
-// 스타일 옵션 그대로
-const styleOptions = [
-  { value: "energetic", label: "활발한" },
-  { value: "calm", label: "차분한" },
-  { value: "funny", label: "웃긴" },
-  { value: "wholesome", label: "힐링되는" },
-  { value: "cozy", label: "포근한" },
-  { value: "heartfelt", label: "감동적인" },
-  { value: "aesthetic", label: "감각적인" },
-  { value: "minimal", label: "깔끔한" },
-  { value: "outdoor", label: "야외감성" },
-  { value: "no_preference", label: "상관없음" }
-]
-
-// 태그 선택/해제
-const toggleTag = (tagValue) => {
-  const idx = form.value.styleTags.indexOf(tagValue)
-  if (idx === -1) form.value.styleTags.push(tagValue)
+/* 스타일 토글 */
+const toggleTag = (tag) => {
+  const idx = form.value.styleTags.indexOf(tag)
+  if (idx === -1) form.value.styleTags.push(tag)
   else form.value.styleTags.splice(idx, 1)
 }
 
-// 파일 업로드
-const handleFileUpload = (e) => {
-  form.value.profileImage = e.target.files[0]
-}
-
-// 저장
+/* 저장 */
 const handleSave = async () => {
   if (form.value.password && form.value.password !== form.value.passwordConfirm) {
     alert("비밀번호가 일치하지 않습니다.")
@@ -187,25 +172,25 @@ const handleSave = async () => {
     pet_type: form.value.petType,
     sns_handle: form.value.snsHandle,
     sns_url: form.value.snsUrl,
+    style_tags: form.value.styleTags,
   }
 
   if (form.value.password) {
     payload.password = form.value.password
   }
 
-  await api.put("/accounts/profile/", payload)
+  await api.put("/accounts/me/", payload)
 
-  alert("수정되었습니다.")
+  // 👉 수정 후 store 갱신
+  creatorStore.isLoaded = false
+  await creatorStore.loadCreator()
+
   router.push({
     name: "creator-settings",
-    params: { creator_id: props.creatorId },
+    params: { creator_id: Number(route.params.creator_id) },
   })
 }
-
 </script>
-
-
-
 
 <style scoped>
 .settings-container {
