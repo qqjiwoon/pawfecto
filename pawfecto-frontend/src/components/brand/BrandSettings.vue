@@ -58,7 +58,6 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { brands } from "@/stores/brand"
 
 const props = defineProps({
   brandId: Number

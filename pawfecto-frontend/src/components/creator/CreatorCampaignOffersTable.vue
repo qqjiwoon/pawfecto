@@ -116,17 +116,15 @@
 <script setup>
 import { ref, computed } from 'vue'
 import CreatorCampaignDetailModal from '@/components/creator/CreatorCampaignDetailModal.vue'
-import { campaignAcceptances } from '@/stores/campaignAcceptance'
-import { campaigns } from '@/stores/campaign'
-import { brands } from '@/stores/brand'
 
 /* Props */
 const props = defineProps({
-  creatorId: {
-    type: Number,
+  offers: {
+    type: Array,
     required: true
   }
 })
+
 
 /* 검색 / 페이지 상태 */
 const searchQuery = ref('')
@@ -147,38 +145,6 @@ const toKoreanStatus = (status) => {
   }
   return map[status] || status
 }
-
-/* 캠페인 오퍼 데이터 가공 */
-const offers = computed(() =>
-  campaignAcceptances.value
-    .filter(acc => acc.creator_id === props.creatorId)
-    .map(acc => {
-      const campaign = campaigns.value.find(
-        c => c.campaign_id === acc.campaign_id
-      )
-
-      return {
-        id: acc.campaign_acceptance_id,
-        campaign,
-
-        // ✅ 브랜드 정보는 campaign 안에 있는 값만 사용
-        brand_name: campaign?.brand_name ?? '',
-        brand_image: campaign?.brand_image_url ?? '',
-
-        product_name: campaign?.product_name ?? '',
-        min_follower_count: campaign?.min_follower_count ?? 0,
-
-        styles: campaign?.style_tags
-          ? campaign.style_tags.split(',')
-          : [],
-
-        start_date: campaign?.posting_start_at ?? '',
-        end_date: campaign?.posting_end_at ?? '',
-
-        status: acc.acceptance_status
-      }
-    })
-)
 
 
 /* 검색 필터 */

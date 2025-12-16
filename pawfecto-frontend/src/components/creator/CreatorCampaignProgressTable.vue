@@ -112,7 +112,6 @@
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { campaigns } from '@/stores/campaign'
 import { campaignAcceptances } from '@/stores/campaignAcceptance'
 import { deliverables } from '@/stores/deliverable'
 

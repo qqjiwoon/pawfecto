@@ -86,7 +86,6 @@
 <script setup>
 import { computed } from "vue"
 import { useRouter } from "vue-router"
-import { creators } from "@/stores/creator"
 
 const props = defineProps({
   creatorId: Number
