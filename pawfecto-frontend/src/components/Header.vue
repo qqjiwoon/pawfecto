@@ -15,26 +15,35 @@
         </router-link>
 
 
-        <nav class="pf-right=menu">
-            <router-link to="/login">Login</router-link>
+        <nav class="pf-right-menu">
+          <!-- 로그인 안 된 상태 -->
+          <router-link v-if="!me" to="/login">Login</router-link>
+
+          <!-- 로그인 된 상태 -->
+          <a v-else href="#" @click.prevent="logout">Logout</a>
         </nav>
 
     </header>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+// 로그인 상태 동기화 (Header 전용)
+import { ref, onMounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
 
 const router = useRouter()
+const route = useRoute()
 
 const me = ref(null)
 
-// 로그인한 사용자 정보 가져오기
-onMounted(async () => {
+// 로그인 사용자 정보 조회
+const fetchMe = async () => {
   const token = localStorage.getItem('access')
-  if (!token) return
+  if (!token) {
+    me.value = null
+    return
+  }
 
   try {
     const res = await axios.get(
@@ -50,20 +59,33 @@ onMounted(async () => {
     localStorage.removeItem('access')
     me.value = null
   }
-})
+}
 
-// Dashboard 클릭 시 동작
+// 최초 마운트 시 로그인 상태 확인
+onMounted(fetchMe)
+
+// 라우트 변경 시 로그인 상태 재확인
+watch(
+  () => route.fullPath,
+  () => fetchMe()
+)
+
+// 로그아웃
+const logout = () => {
+  localStorage.removeItem('access')
+  me.value = null
+  router.push('/login')
+}
+
+// Dashboard 이동
 const goDashboard = async () => {
   const token = localStorage.getItem('access')
-
-  // 토큰 자체가 없으면 로그인 페이지
   if (!token) {
     router.push('/login')
     return
   }
 
   try {
-    // ⭐️ 클릭 시점에 다시 me 조회
     const res = await axios.get(
       `${import.meta.env.VITE_API_BASE_URL}/accounts/me/`,
       {
@@ -80,15 +102,14 @@ const goDashboard = async () => {
     } else if (user.account_type === 'brand') {
       router.push(`/dashboard/brand/${user.id}`)
     }
-
   } catch (err) {
-    // 토큰 만료 / 인증 실패
     localStorage.removeItem('access')
+    me.value = null
     router.push('/login')
   }
 }
-
 </script>
+
 
 
 <style scoped>
