@@ -9,8 +9,8 @@
           <div class="profile-image-wrap">
             <img
               class="profile-img"
-              :src="brand.profile_image_url"
-              alt="brand profile"
+              :src="brand.profile_image_url || defaultProfileImage"
+              alt="profile image"
               @click="goDashboard"
             />
           </div>
@@ -30,6 +30,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import defaultProfileImage from '@/assets/defalut-profile-image.jpg'
 
 const props = defineProps({
   brand: {
@@ -73,18 +74,23 @@ const goDashboard = () => {
 /* Hero 하단에 정확히 걸쳐지는 프로필 이미지 */
 .profile-image-wrap {
   position: absolute;
-  bottom: -70px;       /* 걸쳐 보이도록 음수 */
+  bottom: -70px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-}
 
-.profile-img {
   width: clamp(90px, 18vw, 160px);
   height: clamp(90px, 18vw, 160px);
   border-radius: 50%;
-  object-fit: cover;
+  overflow: hidden;
   border: 5px solid #5D4B3E;
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .text-wrap {
