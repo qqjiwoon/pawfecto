@@ -24,8 +24,8 @@ POST http://127.0.0.1:8000/accounts/login/
 Content-Type: application/json
 
 {
-  "username": "pawfecto_brand02",
-  "password": "Pawfecto!2025"
+  "username": "naturapet_brand",
+  "password": "test1234"
 }
 
 
@@ -33,13 +33,29 @@ Content-Type: application/json
 ### ------------------------------------------------------------
 ### 0) 공통 설정 – 토큰 입력
 ### ------------------------------------------------------------
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1ODU0OTI2LCJpYXQiOjE3NjU4NTQ2MjYsImp0aSI6ImExN2NlM2VlNjQ4ODQ3MTFiZTE0MTRhYmI3NmQ2ZGE4IiwidXNlcl9pZCI6IjExIn0.NPN2TToyjNQaEZzQYH1RX8XFteLmuZjnKQ_Qo3NzPcQ
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1ODgwMjg5LCJpYXQiOjE3NjU4Nzk5ODksImp0aSI6ImMyNTJhMDk0Njk0YzQyZjQ4YWVmY2IxNGJhYzNkN2JlIiwidXNlcl9pZCI6IjIifQ.-6sK8Uv9G8CIAZe8vC74lBhUbMsSMNCQ_IgzEpSv9w0
 
 
 
 ### 브랜드 정보 조회  ===> ok
 GET http://127.0.0.1:8000/accounts/me/
 Authorization: Bearer {{token}}
+
+
+
+### ------------------------------------------------------------
+### 0. 프로필 수정 (update_settings)
+### PUT /accounts/update-profile/
+### ------------------------------------------------------------
+PUT http://127.0.0.1:8000/accounts/update-profile/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "네추라펫 공식몰(수정 테스트)",
+  "phone_number": "02-6000-1234",
+  "profile_image_url": "https://cdn.pawfecto.kr/brands/naturapet_updated.png"
+}
 
 
 
