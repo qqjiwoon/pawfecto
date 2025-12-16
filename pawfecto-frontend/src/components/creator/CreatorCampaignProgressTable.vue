@@ -108,18 +108,19 @@
   />
 </template>
 
+
 <script setup>
 import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
-
-import { campaignAcceptances } from '@/stores/campaignAcceptance'
-import { deliverables } from '@/stores/deliverable'
-
 import ProgressEditModal from '@/components/creator/ProgressEditModal.vue'
 
-/* Route */
-const route = useRoute()
-const creatorId = computed(() => Number(route.params.creator_id))
+const props = defineProps({
+  items: {
+    type: Array,
+    required: true,
+  }
+})
+
+const emit = defineEmits(['save', 'close'])
 
 /* 검색 / 페이지 상태 */
 const searchQuery = ref('')
@@ -130,40 +131,13 @@ const itemsPerPage = 6
 const isModalOpen = ref(false)
 const editingItem = ref(null)
 
-/* 진행 캠페인 데이터 */
-const progressData = computed(() =>
-  campaignAcceptances.value
-    .filter(acc => acc.creator_id === creatorId.value)
-    .map(acc => {
-      const deliverable = deliverables.value.find(
-        d => d.campaign_acceptance_id === acc.campaign_acceptance_id
-      )
-      const campaign = campaigns.value.find(
-        c => c.campaign_id === acc.campaign_id
-      )
-
-      return {
-        campaign_acceptance_id: acc.campaign_acceptance_id,
-
-        campaign_name: campaign?.product_name ?? '캠페인 정보 없음',
-        campaign_image: campaign?.product_image_url ?? '',
-
-        upload_date: deliverable?.posted_at ?? '',
-        post_link: deliverable?.post_url ?? '',
-
-        status:
-          deliverable?.deliverable_status === 'completed'
-            ? 'completed'
-            : 'incomplete'
-      }
-    })
-)
-
 /* 검색 필터 */
 const filteredData = computed(() => {
-  if (!searchQuery.value) return progressData.value
-  return progressData.value.filter(item =>
-    item.campaign_name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  if (!searchQuery.value) return props.items
+  return props.items.filter(item =>
+    item.campaign_name
+      .toLowerCase()
+      .includes(searchQuery.value.toLowerCase())
   )
 })
 
@@ -189,35 +163,18 @@ const nextPage = () => {
   if (currentPage.value < totalPages.value) currentPage.value++
 }
 
-/* 상태 수정 */
+/* 모달 제어 */
 const openEditModal = (item) => {
   editingItem.value = { ...item }
   isModalOpen.value = true
 }
 
 const saveEditedItem = (updated) => {
-  const d = deliverables.value.find(
-    x => x.campaign_acceptance_id === updated.campaign_acceptance_id
-  )
-
-  if (d) {
-    d.posted_at = updated.upload_date
-    d.post_url = updated.post_link
-    d.deliverable_status = updated.status
-  } else {
-    deliverables.value.push({
-      id: Date.now(),
-      campaign_acceptance_id: updated.campaign_acceptance_id,
-      posted_at: updated.upload_date,
-      post_url: updated.post_link,
-      deliverable_status: updated.status
-    })
-  }
-
+  emit('save', updated)
   isModalOpen.value = false
 }
 
-/* 상태 한글 변환 */
+/* 상태 한글 */
 const toKoreanStatus = (status) => {
   if (status === 'completed') return '완료'
   if (status === 'incomplete') return '미완료'
