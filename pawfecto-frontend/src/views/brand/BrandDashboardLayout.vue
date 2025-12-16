@@ -23,26 +23,37 @@
 
 
 <script setup>
-import { onMounted } from "vue"
+// ===============================
+// Brand Dashboard Layout (최소 수정)
+// ===============================
+
+import { onMounted, watch } from "vue"
 import { useRoute } from "vue-router"
 
 import BrandProfileHeader from "@/components/brand/BrandProfileHeader.vue"
 import BrandDashboardButtons from "@/components/brand/BrandDashboardButtons.vue"
 
-// stores/brand.js에서 brands 배열 불러오기
+// stores/brand.js
 import { brand as brandStore, loadBrand } from "@/stores/brand"
 
-// 현재 라우트 정보
 const route = useRoute()
 
-
+// 최초 진입 시 brand 로드
 onMounted(() => {
-  if (!brandStore.value) {
-    loadBrand()
-  }
+  loadBrand(route.params.brandId)
 })
 
+// brandId 변경 시 brand 재로드 (핵심)
+watch(
+  () => route.params.brandId,
+  (newBrandId) => {
+    if (newBrandId) {
+      loadBrand(newBrandId)
+    }
+  }
+)
 </script>
+
 
 
 <style scoped>

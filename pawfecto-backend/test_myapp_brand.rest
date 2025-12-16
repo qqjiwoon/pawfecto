@@ -33,7 +33,7 @@ Content-Type: application/json
 ### ------------------------------------------------------------
 ### 0) 공통 설정 – 토큰 입력
 ### ------------------------------------------------------------
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1NzgwMzM2LCJpYXQiOjE3NjU3ODAwMzYsImp0aSI6ImUzNDIyODc5Y2FhZTQ3Njg4M2FhMTMxYTc2ZmI2NmQ1IiwidXNlcl9pZCI6IjEifQ.QT2yKrndKB8YQhmxYWyditJDtR3TjNGY3Nywnatgoow
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1ODU0OTI2LCJpYXQiOjE3NjU4NTQ2MjYsImp0aSI6ImExN2NlM2VlNjQ4ODQ3MTFiZTE0MTRhYmI3NmQ2ZGE4IiwidXNlcl9pZCI6IjExIn0.NPN2TToyjNQaEZzQYH1RX8XFteLmuZjnKQ_Qo3NzPcQ
 
 
 

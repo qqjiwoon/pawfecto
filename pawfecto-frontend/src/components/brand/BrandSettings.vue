@@ -1,10 +1,12 @@
 <template>
   <div class="settings-container">
 
+    <!-- 브랜드 설정 정보 (읽기 전용) -->
+
     <!-- 아이디 -->
     <div class="form-group">
       <label>아이디</label>
-      <p class="readonly-field">{{ user.loginId }}</p>
+      <p class="readonly-field">{{ user.username }}</p>
     </div>
 
     <!-- 브랜드명 -->
@@ -22,30 +24,24 @@
     <!-- 전화번호 -->
     <div class="form-group">
       <label>전화번호</label>
-      <p class="readonly-field">{{ user.phoneNumber }}</p>
-    </div>
-
-    <!-- 주소 -->
-    <div class="form-group">
-      <label>주소</label>
-      <p class="readonly-field">{{ user.address }}</p>
+      <p class="readonly-field">{{ user.phone_number }}</p>
     </div>
 
     <!-- 주력 동물 종류 -->
     <div class="form-group">
       <label>주력 동물 종류</label>
-      <p class="readonly-field">{{ user.brandPetFocus }}</p>
+      <p class="readonly-field">{{ user.pet_type }}</p>
     </div>
 
     <!-- 프로필 이미지 -->
     <div class="form-group">
       <label>프로필 이미지</label>
       <p class="readonly-field">
-        {{ user.profileImageName || '등록된 이미지 없음' }}
+        {{ user.profile_image_url ?? '등록된 이미지 없음' }}
       </p>
     </div>
 
-    <!-- UPDATE 버튼 -->
+    <!-- 설정 수정 버튼 -->
     <button class="update-btn" @click="goToUpdate">
       UPDATE
     </button>
@@ -53,11 +49,11 @@
   </div>
 </template>
 
-
-
 <script setup>
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+// 브랜드 설정 조회 및 수정 페이지 이동
+import { onMounted, computed } from "vue"
+import { useRouter } from "vue-router"
+import { brand, isBrandLoaded, loadBrand } from "@/stores/brand"
 
 const props = defineProps({
   brandId: Number
@@ -65,24 +61,27 @@ const props = defineProps({
 
 const router = useRouter()
 
-// store에서 brand 찾기
-const user = computed(() =>
-  brands.value.find(b => b.id === props.brandId)
-)
+// 최초 진입 시 브랜드 정보 로드
+onMounted(async () => {
+  if (!isBrandLoaded.value) {
+    await loadBrand()
+  }
+})
 
-// UPDATE 이동
+// 브랜드 정보
+const user = computed(() => brand.value)
+
+// 수정 페이지 이동
 const goToUpdate = () => {
   router.push({
     name: "brand-settings-update",
     params: { brand_id: props.brandId }
   })
 }
-
 </script>
 
-
-
 <style scoped>
+/* 브랜드 설정 페이지 레이아웃 */
 .settings-container {
   max-width: 480px;
   margin: 130px auto;
@@ -101,6 +100,7 @@ const goToUpdate = () => {
   font-weight: 500;
 }
 
+/* 읽기 전용 필드 */
 .readonly-field {
   width: 100%;
   height: 46px;
@@ -116,6 +116,7 @@ const goToUpdate = () => {
   box-sizing: border-box;
 }
 
+/* 수정 버튼 */
 .update-btn {
   display: block;
   width: 60%;
@@ -126,6 +127,6 @@ const goToUpdate = () => {
   font-size: 16px;
   border: none;
   cursor: pointer;
-  margin: 80px auto 80px;
+  margin: 80px auto;
 }
 </style>

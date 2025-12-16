@@ -1,6 +1,8 @@
 <template>
   <div class="campaign-wrapper">
 
+    <h1 class="title">My Campaigns</h1>
+
     <!-- 캠페인 없음 (최상단) -->
     <p
       v-if="campaigns.length === 0"
@@ -81,6 +83,13 @@ defineEmits(['change-page'])
 </script>
 
 <style scoped>
+.title {
+  font-size: 32px;
+  font-weight: Bold;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
 /* 안내 문구 스타일 */
 .empty-message {
   text-align: center;
