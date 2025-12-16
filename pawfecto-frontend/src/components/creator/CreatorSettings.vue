@@ -92,36 +92,30 @@
   </div>
 </template>
 
-
 <script setup>
-import { ref, onMounted } from "vue"
-import { useRouter } from "vue-router"
-import api from "@/plugins/axios"
-
-const props = defineProps({
-  creatorId: {
-    type: Number,
-    required: true,
-  },
-})
+import { onMounted, computed } from "vue"
+import { useRouter, useRoute } from "vue-router"
+import { useCreatorStore } from "@/stores/creator"
 
 const router = useRouter()
-const user = ref(null)
+const route = useRoute()
+
+const creatorStore = useCreatorStore()
+const user = computed(() => creatorStore.creator)
 
 onMounted(async () => {
-  const res = await api.get('/accounts/me/')
-  user.value = res.data
+  await creatorStore.loadCreator()
 })
 
 // UPDATE 이동
 const goToUpdate = () => {
   router.push({
     name: "creator-settings-update",
-    params: { creator_id: props.creatorId },
+    params: { creator_id: Number(route.params.creator_id) },
   })
 }
 
-// 스타일 옵션 그대로 유지
+// 스타일 옵션
 const styleOptions = [
   { value: "energetic", label: "활발한" },
   { value: "calm", label: "차분한" },

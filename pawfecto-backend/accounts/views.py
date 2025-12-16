@@ -89,11 +89,33 @@ def logout_view(request):
 # ============================================
 # 4) 내 정보 조회
 # ============================================
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def me(request):
-    serializer = UserSerializer(request.user)
-    return Response(serializer.data, status=200)
+    user = request.user
+
+    if request.method == 'GET':
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=200)
+
+    elif request.method == 'PUT':
+        serializer = UserSerializer(
+            user,
+            data=request.data,
+            partial=True   # ⭐ 일부 필드만 수정 가능
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+
+        return Response(serializer.errors, status=400)
+
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def me(request):
+#     serializer = UserSerializer(request.user)
+#     return Response(serializer.data, status=200)
 
 
 # ============================================
