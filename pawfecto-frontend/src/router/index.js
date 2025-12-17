@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignupBrandView from '../views/SignupBrandView.vue'
 import SignupCreatorView from '../views/SignupCreatorView.vue'
+import FindIdView from '@/views/FindIdView.vue'
+import FindPasswordView from '@/views/FindPasswordView.vue'
 import api from "@/plugins/axios"
 
 // Brand
@@ -37,6 +39,14 @@ const router = createRouter({
       path: '/signup/creator',
       name: 'signup-creator',
       component: SignupCreatorView,
+    },
+    {
+      path: '/find-id',
+      component: FindIdView,
+    },
+    {
+      path: '/find-password',
+      component: FindPasswordView,
     }, 
      /* ------------------------------------------
       BRAND DASHBOARD 구조
