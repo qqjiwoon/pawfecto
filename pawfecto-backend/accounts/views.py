@@ -151,15 +151,23 @@ def creator_profile(request, creator_id):
 def update_profile(request):
     user = request.user
     data = request.data.copy()
-    data.pop("account_type", None)  # 계정 타입 변경 방지
+    data.pop("account_type", None)
+
+    password = data.pop("password", None)
 
     serializer = UserSerializer(user, data=data, partial=True)
     if serializer.is_valid():
-        serializer.save()
+        user = serializer.save()
+
+        if password:
+            user.set_password(password)
+            user.save(update_fields=["password"])
+
         return Response(
             {"message": "profile updated", "user": serializer.data},
             status=200
         )
+
     return Response(serializer.errors, status=400)
 
 

@@ -6,7 +6,29 @@
     <!-- 아이디 (수정 불가) -->
     <div class="form-group">
       <label>아이디</label>
-      <p class="readonly-field">{{ user.username }}</p>
+      <p class="readonly-field">{{ form.username }}</p>
+    </div>
+
+    <!-- 비밀번호 -->
+    <div class="form-group">
+      <label>비밀번호</label>
+      <input
+        class="input-field"
+        type="password"
+        v-model="form.password"
+        placeholder="새 비밀번호 입력"
+      />
+    </div>
+
+    <!-- 비밀번호 확인 -->
+    <div class="form-group">
+      <label>비밀번호 확인</label>
+      <input
+        class="input-field"
+        type="password"
+        v-model="form.passwordConfirm"
+        placeholder="비밀번호 재입력"
+      />
     </div>
 
     <!-- 브랜드명 -->
@@ -52,54 +74,72 @@
 
 <script setup>
 // 브랜드 설정 수정 (PUT)
-import { onMounted, reactive, computed } from "vue"
+import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 import api from "@/plugins/axios"
-import { brand, isBrandLoaded, loadBrand } from "@/stores/brand"
+import { useBrandStore } from "@/stores/brand"
 
 const router = useRouter()
+const brandStore = useBrandStore()
+ 
+const isLoaded = ref(false)
 
-// 최초 진입 시 브랜드 정보 로드
-onMounted(async () => {
-  if (!isBrandLoaded.value) {
-    await loadBrand()
-  }
-
-  // 초기값 세팅
-  Object.assign(form, {
-    name: brand.value.name,
-    email: brand.value.email,
-    phone_number: brand.value.phone_number,
-    pet_type: brand.value.pet_type,
-    profile_image_url: brand.value.profile_image_url,
-  })
-})
-
-// 브랜드 정보
-const user = computed(() => brand.value)
-
-// 수정 폼
-const form = reactive({
+const form = ref({
+  username: "",
+  password: "",
+  passwordConfirm: "",
   name: "",
   email: "",
   phone_number: "",
-  pet_type: "",
+  pet_type: "dog",
   profile_image_url: "",
 })
 
-// 프로필 수정 요청
+/* 최초 로드 */
+onMounted(async () => {
+  await brandStore.loadBrand()
+
+  const data = brandStore.brand
+  if (!data) return
+
+  Object.assign(form.value, {
+    username: data.username,
+    name: data.name,
+    email: data.email,
+    phone_number: data.phone_number,
+    pet_type: data.pet_type,
+    profile_image_url: data.profile_image_url,
+  })
+
+  isLoaded.value = true
+})
+
+/* 저장 */
 const updateProfile = async () => {
-  try {
-    await api.put("/accounts/update-profile/", form)
-
-    // 최신 정보 다시 로드
-    await loadBrand()
-
-    router.push({ name: "brand-settings" })
-  } catch (err) {
-    console.error(err)
-    alert("프로필 수정에 실패했습니다.")
+  if (form.value.password && form.value.password !== form.value.passwordConfirm) {
+    alert("비밀번호가 일치하지 않습니다.")
+    return
   }
+
+  const payload = {
+    name: form.value.name,
+    email: form.value.email,
+    phone_number: form.value.phone_number,
+    pet_type: form.value.pet_type,
+    profile_image_url: form.value.profile_image_url,
+  }
+
+  if (form.value.password) {
+    payload.password = form.value.password
+  }
+
+  await api.put("/accounts/update-profile/", payload)
+
+  // store 갱신
+  brandStore.isLoaded = false
+  await brandStore.loadBrand()
+
+  router.push({ name: "brand-settings" })
 }
 </script>
 

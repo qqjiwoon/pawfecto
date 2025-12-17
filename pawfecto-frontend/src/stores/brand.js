@@ -1,12 +1,19 @@
-// src/stores/brand.js
-import { ref } from "vue"
+import { defineStore } from "pinia"
 import api from "@/plugins/axios"
 
-export const brand = ref(null)
-export const isBrandLoaded = ref(false)
+export const useBrandStore = defineStore("brand", {
+  state: () => ({
+    brand: null,
+    isLoaded: false,
+  }),
 
-export const loadBrand = async () => {
-  const res = await api.get("/accounts/me/")
-  brand.value = res.data
-  isBrandLoaded.value = true
-}
+  actions: {
+    async loadBrand() {
+      if (this.isLoaded) return
+
+      const res = await api.get("/accounts/me/")
+      this.brand = res.data
+      this.isLoaded = true
+    },
+  },
+})
