@@ -5,6 +5,8 @@
     "fields": {
       "creator": 6,
       "campaign": 1,
+      "brand_decision_status": "approved",
+      "brand_decided_at": "2025-02-02T18:00:00Z",
       "acceptance_status": "accepted",
       "applied_at": "2025-02-02T10:00:00Z",
       "accepted_at": "2025-02-03T09:00:00Z"
@@ -16,6 +18,8 @@
     "fields": {
       "creator": 8,
       "campaign": 1,
+      "brand_decision_status": "pending",
+      "brand_decided_at": null,
       "acceptance_status": "pending",
       "applied_at": "2025-02-02T11:00:00Z",
       "accepted_at": null
@@ -27,6 +31,8 @@
     "fields": {
       "creator": 6,
       "campaign": 2,
+      "brand_decision_status": "rejected",
+      "brand_decided_at": "2025-02-04T12:00:00Z",
       "acceptance_status": "rejected",
       "applied_at": "2025-02-04T10:30:00Z",
       "accepted_at": null
@@ -38,6 +44,8 @@
     "fields": {
       "creator": 9,
       "campaign": 3,
+      "brand_decision_status": "approved",
+      "brand_decided_at": "2025-02-03T18:00:00Z",
       "acceptance_status": "accepted",
       "applied_at": "2025-02-03T12:00:00Z",
       "accepted_at": "2025-02-04T10:00:00Z"
@@ -49,6 +57,8 @@
     "fields": {
       "creator": 9,
       "campaign": 4,
+      "brand_decision_status": "pending",
+      "brand_decided_at": null,
       "acceptance_status": "pending",
       "applied_at": "2025-02-05T09:30:00Z",
       "accepted_at": null
@@ -60,6 +70,8 @@
     "fields": {
       "creator": 7,
       "campaign": 5,
+      "brand_decision_status": "approved",
+      "brand_decided_at": "2025-02-02T20:00:00Z",
       "acceptance_status": "accepted",
       "applied_at": "2025-02-02T15:00:00Z",
       "accepted_at": "2025-02-03T14:00:00Z"
@@ -71,6 +83,8 @@
     "fields": {
       "creator": 10,
       "campaign": 6,
+      "brand_decision_status": "pending",
+      "brand_decided_at": null,
       "acceptance_status": "pending",
       "applied_at": "2025-02-04T16:00:00Z",
       "accepted_at": null
@@ -82,6 +96,8 @@
     "fields": {
       "creator": 6,
       "campaign": 7,
+      "brand_decision_status": "approved",
+      "brand_decided_at": "2025-02-06T18:00:00Z",
       "acceptance_status": "accepted",
       "applied_at": "2025-02-06T10:00:00Z",
       "accepted_at": "2025-02-07T09:30:00Z"
@@ -93,6 +109,8 @@
     "fields": {
       "creator": 8,
       "campaign": 7,
+      "brand_decision_status": "approved",
+      "brand_decided_at": "2025-02-06T18:00:00Z",
       "acceptance_status": "rejected",
       "applied_at": "2025-02-06T11:00:00Z",
       "accepted_at": null
@@ -104,6 +122,8 @@
     "fields": {
       "creator": 9,
       "campaign": 8,
+      "brand_decision_status": "pending",
+      "brand_decided_at": null,
       "acceptance_status": "pending",
       "applied_at": "2025-02-07T10:30:00Z",
       "accepted_at": null
@@ -115,6 +135,8 @@
     "fields": {
       "creator": 6,
       "campaign": 9,
+      "brand_decision_status": "approved",
+      "brand_decided_at": "2025-02-03T18:00:00Z",
       "acceptance_status": "accepted",
       "applied_at": "2025-02-03T13:00:00Z",
       "accepted_at": "2025-02-04T12:00:00Z"
@@ -126,6 +148,8 @@
     "fields": {
       "creator": 8,
       "campaign": 9,
+      "brand_decision_status": "pending",
+      "brand_decided_at": null,
       "acceptance_status": "pending",
       "applied_at": "2025-02-03T14:00:00Z",
       "accepted_at": null
