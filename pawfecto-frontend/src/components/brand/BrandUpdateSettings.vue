@@ -66,7 +66,7 @@
 
     <!-- 저장 버튼 -->
     <button class="update-btn" @click="updateProfile">
-      SAVE
+      저장
     </button>
 
   </div>

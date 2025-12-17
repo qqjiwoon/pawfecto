@@ -1,88 +1,91 @@
 <template>
-  <div class="create-campaign-page">
+  <div class="update-wrapper">
 
-    <h1 class="title">Create Campaign</h1>
+    <h1 class="page-title">Create Campaign</h1>
 
-    <!-- Product Section -->
-    <div class="section">
-      <h2 class="section-title">Product</h2>
+    <!-- 상품 정보 -->
+    <section class="section">
+      <h2>Product</h2>
 
-      <div class="field">
+      <div class="input-group">
         <label>상품명</label>
-        <input v-model="productName" type="text" placeholder="상품 이름을 입력해주세요." />
+        <input v-model="campaign.product_name" type="text" />
       </div>
 
-      <div class="field">
-        <label>사진</label>
-        <input type="file" @change="onImageSelect" />
+      <div class="input-group">
+        <label>상품 이미지</label>
+        <input type="file" @change="onFileChange" />
       </div>
 
-      <div class="field">
-        <label>상품 설명</label>
-        <textarea v-model="productDescription" placeholder="상품 설명을 입력해주세요."></textarea>
+      <div class="input-group">
+        <label>상품 상세</label>
+        <textarea v-model="campaign.product_description"></textarea>
       </div>
-    </div>
+    </section>
 
-    <!-- Guideline Section -->
-    <div class="section">
-      <h2 class="section-title">Guideline details</h2>
+    <!-- 가이드라인 -->
+    <section class="section">
+      <h2>Guideline details</h2>
 
-      <div class="field">
+      <div class="input-group">
         <label>캠페인 대상 동물 종류</label>
-        <select v-model="petType">
+        <select v-model="campaign.target_pet_type">
           <option value="dog">Dog</option>
           <option value="cat">Cat</option>
         </select>
       </div>
 
-      <div class="field">
+      <div class="input-group">
         <label>최소 팔로워 수 조건</label>
-        <input v-model.number="minFollower" type="number" placeholder="최소 팔로워 수" />
+        <input v-model="campaign.min_follower_count" type="number" />
       </div>
 
-      <div class="field">
+      <div class="input-group">
         <label>필요한 크리에이터 수</label>
-        <input v-model.number="requiredCreators" type="number" placeholder="숫자를 입력해주세요." />
+        <input v-model="campaign.required_creator_count" type="number" />
       </div>
 
-      <div class="field">
-        <label>스타일</label>
-        <div class="tag-container">
-          <div
-            v-for="tag in styleTags"
-            :key="tag"
+      <!-- 스타일 태그 -->
+      <div class="style-tags">
+        <label>Style Tags</label>
+        <div class="tag-list">
+          <button
+            v-for="tag in allTags"
+            :key="tag.code"
             class="tag"
-            :class="{ active: selectedTags.includes(tag) }"
-            @click="toggleTag(tag)"
+            :class="{ active: campaign.style_tags.includes(tag.code) }"
+            @click="toggleStyle(tag.code)"
+            type="button"
           >
-            #{{ tag }}
-          </div>
+            #{{ tag.name }}
+          </button>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Duration Section -->
-    <div class="section">
-      <h2 class="section-title">Campaign Duration</h2>
+    <!-- 기간 -->
+    <section class="section">
+      <h2>Campaign Duration</h2>
 
-      <div class="field">
+      <div class="input-group">
         <label>캠페인 시작일</label>
-        <input v-model="startDate" type="date" />
+        <input v-model="campaign.posting_start_at" type="date" />
       </div>
 
-      <div class="field">
+      <div class="input-group">
         <label>캠페인 마감일</label>
-        <input v-model="endDate" type="date" />
+        <input v-model="campaign.posting_end_at" type="date" />
       </div>
-    </div>
+    </section>
 
-    <button class="save-btn" @click="saveCampaign">SAVE</button>
+    <button class="save-btn" @click="createCampaign">
+      생성
+    </button>
   </div>
 </template>
 
-
 <script setup>
-import { ref, computed } from "vue"
+import { ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useCampaignStore } from "@/stores/campaign"
 
@@ -90,128 +93,153 @@ const route = useRoute()
 const router = useRouter()
 const brandId = Number(route.params.brand_id)
 
-// ✅ Pinia store
 const campaignStore = useCampaignStore()
 
-// 입력 상태
-const productName = ref("")
-const productDescription = ref("")
-const petType = ref("dog")
-const minFollower = ref(0)
-const requiredCreators = ref(1)
-const startDate = ref("")
-const endDate = ref("")
+/* -------------------------------
+   생성용 캠페인 상태 (Update와 동일 구조)
+-------------------------------- */
+const campaign = ref({
+  product_name: "",
+  product_description: "",
+  product_image_url: "",
 
-// 이미지
+  target_pet_type: "dog",
+  min_follower_count: 0,
+  required_creator_count: 1,
+
+  posting_start_at: "",
+  posting_end_at: "",
+
+  style_tags: [],
+})
+
+/* -------------------------------
+   스타일 태그 (Update와 동일)
+-------------------------------- */
+const allTags = [
+  { id: 1, code: "energetic", name: "활발한" },
+  { id: 2, code: "calm", name: "차분한" },
+  { id: 3, code: "funny", name: "웃긴" },
+  { id: 4, code: "wholesome", name: "힐링되는" },
+  { id: 5, code: "cozy", name: "포근한" },
+  { id: 6, code: "heartfelt", name: "감동적인" },
+  { id: 7, code: "aesthetic", name: "감각적인" },
+  { id: 8, code: "minimal", name: "깔끔한" },
+  { id: 9, code: "outdoor", name: "야외감성" },
+  { id: 10, code: "no_preference", name: "상관없음" },
+]
+
+
+function toggleStyle(code) {
+  if (campaign.value.style_tags.includes(code)) {
+    campaign.value.style_tags =
+      campaign.value.style_tags.filter(t => t !== code)
+  } else {
+    campaign.value.style_tags.push(code)
+  }
+}
+
+/* -------------------------------
+   이미지
+-------------------------------- */
 const imageFile = ref(null)
-const imageUrl = ref(null)
 
-function onImageSelect(e) {
+function onFileChange(e) {
   const file = e.target.files[0]
   if (file) {
     imageFile.value = file
-    imageUrl.value = URL.createObjectURL(file)
+    campaign.value.product_image_url = URL.createObjectURL(file)
   }
 }
 
-// 스타일 태그
-const styleTags = [
-  "outdoor","energetic","no_preference","minimal",
-  "aesthetic","heartfelt","cozy","wholesome","funny","calm"
-]
-const selectedTags = ref([])
-
-function toggleTag(tag) {
-  if (selectedTags.value.includes(tag)) {
-    selectedTags.value = selectedTags.value.filter(t => t !== tag)
-  } else {
-    selectedTags.value.push(tag)
-  }
-}
-
-// ✅ 저장 (더 이상 campaigns.value.push ❌)
-async function saveCampaign() {
-  const newCampaign = {
-    brand_id: brandId,
-    product_name: productName.value,
-    product_description: productDescription.value,
-    pet_type: petType.value,
-    min_follower_count: minFollower.value,
-    required_creator_count: requiredCreators.value,
-    posting_start_at: startDate.value,
-    posting_end_at: endDate.value,
-    style_tags: [...selectedTags.value],
-  }
-
+/* -------------------------------
+   캠페인 생성
+-------------------------------- */
+async function createCampaign() {
+  console.log("store:", campaignStore)
+  console.log("createCampaign:", campaignStore.createCampaign)
   try {
-    await campaignStore.createCampaign(brandId, newCampaign)
+    const styleTagIds = allTags
+      .filter(tag => campaign.value.style_tags.includes(tag.code))
+      .map(tag => tag.id)
 
-    alert("캠페인이 생성되었습니다!")
+    await campaignStore.createCampaign(brandId, {
+      ...campaign.value,
+      requested_at: new Date().toISOString(),
+      application_deadline_at: campaign.value.posting_start_at,
+      style_tag_ids: styleTagIds,
+    })
 
+    alert("캠페인이 생성되었습니다.")
     router.push({
       name: "brand-campaign-list",
       params: { brand_id: brandId },
     })
   } catch (err) {
-    console.error(err)
     alert("캠페인 생성에 실패했습니다.")
   }
 }
 </script>
 
-
 <style scoped>
-.create-campaign-page {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 20px;
+/* Update Campaign 스타일 재사용 */
+.update-wrapper {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 60px 20px 100px;
 }
 
-.title {
-  font-size: 32px;
-  font-weight: Bold;
-  margin-bottom: 40px;
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 56px;
   text-align: center;
 }
 
 .section {
-  margin-bottom: 50px;
+  margin-bottom: 56px;
 }
 
-.section-title {
-  font-size: 20px;
+.section h2 {
+  font-size: 18px;
   font-weight: 600;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
-.field {
+.input-group {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 }
 
-.field label {
-  font-size: 15px;
+.input-group label {
+  font-size: 14px;
   font-weight: 500;
+  color: #555;
   margin-bottom: 8px;
 }
 
-.field input,
-.field textarea,
-.field select {
-  border: 1px solid #ccc;
-  padding: 12px;
-  border-radius: 8px;
+input,
+select,
+textarea {
+  padding: 12px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
   font-size: 14px;
-  background: #fff;
 }
 
 textarea {
-  height: 120px;
-  resize: none;
+  min-height: 140px;
 }
 
-.tag-container {
+.style-tags label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.tag-list {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -219,33 +247,30 @@ textarea {
 
 .tag {
   padding: 8px 14px;
-  border-radius: 20px;
-  background: #f3f3f3;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 13px;
   cursor: pointer;
-  border: 1px solid transparent;
-  user-select: none;
-  transition: 0.2s;
 }
 
 .tag.active {
-  background: #493629;
-  color: white;
-  border-color: #493629;
+  background: #7e6b5a;
+  color: #fff;
+  border-color: #7e6b5a;
 }
 
 .save-btn {
-  width: 100%;
-  padding: 16px;
-  font-size: 18px;
-  background: #493629;
-  color: white;
-  border-radius: 10px;
+  width: 220px;
+  margin: 0 auto;
+  display: block;
+  background: #3f3f3f;
+  padding: 14px 0;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
   border: none;
   cursor: pointer;
-  margin-top: 20px;
-}
-
-.save-btn:hover {
-  background: #2c2019;
 }
 </style>

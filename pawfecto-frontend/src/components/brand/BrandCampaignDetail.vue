@@ -54,9 +54,12 @@
 
         </div>
 
-        <button class="update-btn" @click="goUpdate">
-          Update
-        </button>
+        <!-- 수정 / 삭제 버튼 -->
+        <div class="button-group">
+          <button class="update-btn" @click="goUpdate">Update</button>
+          <button class="delete-btn" @click="goDelete">Delete</button>
+        </div>
+
       </div>
     </div>
 
@@ -72,6 +75,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { fetchCampaignDetail } from '@/api/campaign'
+import api from "@/plugins/axios"
 
 const route = useRoute()
 const router = useRouter()
@@ -119,6 +123,39 @@ function goUpdate() {
     },
   })
 }
+
+/* -------------------------------
+   캠페인 삭제
+-------------------------------- */
+/* 캠페인 삭제 (백엔드 메시지 그대로 사용) */
+async function goDelete() {
+  const ok = confirm("캠페인을 삭제하시겠습니까?")
+  if (!ok) return
+
+  try {
+    const res = await api.delete(
+      `/api/v1/brand/${brandId}/campaign/${campaignId}/delete/`
+    )
+
+    // 204라도 axios는 성공으로 들어옴
+    const message =
+      res.data?.message || "캠페인이 삭제되었습니다."
+
+    alert(message)
+
+    router.push({
+      name: "brand-campaign-list",
+      params: { brand_id: brandId },
+    })
+  } catch (err) {
+    alert(
+      err.response?.data?.error ||
+      err.response?.data?.message ||
+      "캠페인 삭제에 실패했습니다."
+    )
+  }
+}
+
 </script>
 
 
@@ -199,19 +236,33 @@ function goUpdate() {
   color: #7d6c61;
 }
 
-/* Update button */
-.update-btn {
-  position: absolute;
-  bottom: 0;
-  right: 30;
+/* button */
+.button-group {
+  display: flex;
+  gap: 30px;
+  margin-top: 40px;
+}
 
-  width: 500px;   /* content-box와 동일 */
+.update-btn,
+.delete-btn {
+  position: static;
+  width: 50%;
+  
+  border-radius: 50px;
   padding: 14px;
-  background: #695845;
-  color: white;
   border: none;
-  border-radius: 10px;
+
   font-size: 16px;
   cursor: pointer;
+}
+
+.update-btn {
+  background: #695845;
+  color: white;
+}
+
+.delete-btn {
+  background: #8B3A3A;
+  color: white;
 }
 </style>

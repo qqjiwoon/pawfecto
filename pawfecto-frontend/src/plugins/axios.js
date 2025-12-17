@@ -5,15 +5,10 @@ const api = axios.create({
 })
 
 api.interceptors.request.use(config => {
-  try {
-    const access = localStorage.getItem("access")
-    if (access) {
-      config.headers.Authorization = `Bearer ${access}`
-    }
-  } catch (e) {
-    // storage 접근 불가 컨텍스트에서는 그냥 통과
+  const token = localStorage.getItem("access_token")
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
   }
-
   return config
 })
 

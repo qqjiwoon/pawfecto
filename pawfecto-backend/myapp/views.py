@@ -1,4 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
+from django.views.decorators.cache import never_cache
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -16,8 +17,6 @@ from .serializers import (
     CampaignAcceptanceSerializer,
     DeliverableSerializer,
 )
-from accounts.models import User
-
 
 # ============================================================
 # 브랜드 기능
@@ -66,6 +65,7 @@ def create_campaign(request, brand_id):
 # 3) 캠페인 상세 조회
 # ------------------------------------------------------------
 @api_view(['GET'])
+@never_cache
 @permission_classes([IsAuthenticated])
 def campaign_detail(request, brand_id, campaign_id):
 
@@ -97,13 +97,38 @@ def update_campaign(request, brand_id, campaign_id):
     )
 
     if campaign.brand != request.user:
-        return Response({"error": "본인이 생성한 캠페인만 수정할 수 있습니다."}, status=403)
+        return Response(
+            {"error": "본인이 생성한 캠페인만 수정할 수 있습니다."},
+            status=403
+        )
+
+    # 크리에이터 매칭 여부 확인
+    has_acceptance = CampaignAcceptance.objects.filter(
+        campaign=campaign
+    ).exists()
+
+    if has_acceptance:
+        forbidden_fields = {
+            "target_pet_type",
+            "style_tags",
+            "min_follower_count",
+            "required_creator_count",
+        }
+
+        if forbidden_fields & request.data.keys():
+            return Response(
+                {
+                    "error": "크리에이터가 매칭된 캠페인은 가이드라인을 수정할 수 없습니다."
+                },
+                status=400
+            )
 
     serializer = CampaignSerializer(campaign, data=request.data, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
 
     return Response(serializer.data, status=200)
+
 
 
 

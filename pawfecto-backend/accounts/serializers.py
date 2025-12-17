@@ -134,18 +134,28 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
-    
+
     def update(self, instance, validated_data):
-        style_tag_codes = validated_data.pop('style_tag_codes', None)
+        # 비밀번호 처리
+        password = validated_data.pop("password", None)
+
+        # 스타일 태그 code 배열 처리
+        style_tag_codes = validated_data.pop("style_tag_codes", None)
 
         # 일반 필드 업데이트
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
+
+        # 비밀번호 변경
+        if password:
+            instance.set_password(password)
+
         instance.save()
 
-        # 스타일 태그 실제 반영
+        # 스타일 태그 반영
         if style_tag_codes is not None:
             tags = StyleTag.objects.filter(code__in=style_tag_codes)
             instance.style_tags.set(tags)
 
         return instance
+
