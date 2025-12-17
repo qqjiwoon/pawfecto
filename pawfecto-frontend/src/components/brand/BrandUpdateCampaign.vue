@@ -1,5 +1,5 @@
 <template>
-  <div class="update-wrapper">
+  <div class="update-wrapper" v-if="campaign">
 
     <h1 class="page-title">Update Campaign</h1>
 
@@ -32,7 +32,7 @@
 
       <div class="input-group">
         <label>캠페인 대상 동물 종류</label>
-        <select v-model="campaign.pet_type">
+        <select v-model="campaign.target_pet_type">
           <option value="dog">Dog</option>
           <option value="cat">Cat</option>
         </select>
@@ -50,7 +50,7 @@
 
       <!-- 스타일 태그 -->
       <div class="style-tags">
-        <h2>Style Tags</h2>
+        <label>Style Tags</label>
         <div class="tag-list">
           <button
             v-for="tag in allTags"
@@ -79,10 +79,15 @@
         <label>캠페인 마감일</label>
         <input v-model="campaign.posting_end_at" type="date" />
       </div>
+
+      <div class="input-group">
+        <label>지원 마감일</label>
+        <input v-model="campaign.application_deadline_at" type="date" />
+      </div>
     </section>
 
     <button class="save-btn" @click="updateCampaign">
-      SAVE
+      저장
     </button>
   </div>
 </template>
@@ -92,6 +97,7 @@
 import { ref, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useCampaignStore } from "@/stores/campaign"
+import api from "@/plugins/axios"
 
 const route = useRoute()
 const router = useRouter()
@@ -111,21 +117,20 @@ const allTags = [
   "aesthetic","heartfelt","cozy","wholesome","funny","calm"
 ]
 
-// 최초 진입 시 캠페인 단건 조회
 onMounted(async () => {
   try {
-    await campaignStore.fetchCampaign(campaignId)
-
-    // deep copy (수정용)
-    campaign.value = JSON.parse(
-      JSON.stringify(campaignStore.campaignDetail)
+    const res = await api.get(
+      `/api/v1/brand/${brandId}/campaign/${campaignId}/`
     )
 
-    if (!Array.isArray(campaign.value.style_tags)) {
-      campaign.value.style_tags = []
+    campaign.value = {
+      ...res.data,
+      style_tags: Array.isArray(res.data.style_tags)
+        ? res.data.style_tags.map(t => t.code ?? t)
+        : [],
     }
   } catch (err) {
-    console.error(err)
+    console.error(err.response)
     alert("캠페인 정보를 불러오지 못했습니다.")
   }
 })
@@ -153,104 +158,167 @@ function onFileChange(e) {
 // 업데이트
 async function updateCampaign() {
   try {
-    await campaignStore.updateCampaign(
-      brandId,
-      campaignId,
+    await api.put(
+      `/api/v1/brand/${brandId}/campaign/${campaignId}/update/`,
       {
         product_name: campaign.value.product_name,
         product_description: campaign.value.product_description,
         product_image_url: campaign.value.product_image_url,
-        pet_type: campaign.value.pet_type,
+
+        target_pet_type: campaign.value.target_pet_type,
         min_follower_count: campaign.value.min_follower_count,
         required_creator_count: campaign.value.required_creator_count,
+
+        application_deadline_at: campaign.value.application_deadline_at,
         posting_start_at: campaign.value.posting_start_at,
         posting_end_at: campaign.value.posting_end_at,
+
         style_tags: campaign.value.style_tags,
       }
     )
 
     alert("캠페인이 수정되었습니다.")
-
     router.push({
       name: "brand-campaign-detail",
-      params: { brand_id: brandId, campaign_id: campaignId }
+      params: { brand_id: brandId, campaign_id: campaignId },
     })
   } catch (err) {
-    console.error(err)
-    alert("캠페인 수정에 실패했습니다.")
+    alert(
+      err.response?.data?.error ||
+      "캠페인 수정에 실패했습니다."
+    )
   }
 }
+
 </script>
 
 
 <style scoped>
+/* =========================
+   Update Campaign 스타일
+========================= */
+
 .update-wrapper {
-  max-width: 600px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 60px 20px 100px;
 }
 
+/* 페이지 타이틀 */
 .page-title {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 56px;
   text-align: center;
 }
 
+/* 섹션 공통 */
 .section {
-  margin-bottom: 40px;
+  margin-bottom: 56px;
 }
 
+.section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+/* 입력 그룹 */
 .input-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .input-group label {
-  font-size: 14px;
-  margin-bottom: 6px;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 8px;
 }
 
+/* input / select / textarea */
 input,
 select,
 textarea {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 12px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 14px;
+  background: #fff;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #7e6b5a;
 }
 
 textarea {
-  height: 120px;
+  min-height: 140px;
+  resize: vertical;
 }
 
-/* 태그 스타일 */
+/* =========================
+   스타일 태그
+========================= */
+
+.style-tags label {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 10px;
+  display: block;
+}
+
 .tag-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .tag {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid #aaa;
-  background: #f5f5f5;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 13px;
+  color: #555;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  border-color: #7e6b5a;
+  color: #7e6b5a;
 }
 
 .tag.active {
-  background: #5b4636;
-  color: white;
-  border-color: #5b4636;
+  background: #7e6b5a;
+  color: #fff;
+  border-color: #7e6b5a;
 }
 
+/* =========================
+   저장 버튼
+========================= */
+
 .save-btn {
-  width: 100%;
-  background: #5b4636;
-  padding: 12px 0;
-  border-radius: 8px;
+  width: 220px;
+  margin: 0 auto;
+  display: block;
+  background: #3f3f3f;
+  padding: 14px 0;
+  border-radius: 999px;
   color: #fff;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border: none;
 }
+
+.save-btn:hover {
+  background: #2f2f2f;
+}
+
 </style>

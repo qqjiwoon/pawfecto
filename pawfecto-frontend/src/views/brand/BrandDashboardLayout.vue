@@ -1,14 +1,11 @@
 <template>
-  <div class="brand-layout" v-if="brandStore">
+  <div class="brand-layout" v-if="brand">
 
     <!-- 프로필 헤더 -->
-    <BrandProfileHeader :brand="brandStore" />
+    <BrandProfileHeader :brand="brand" />
 
     <!-- 상단 버튼 -->
     <BrandDashboardButtons />
-
-    <!-- My Campaigns에서만 보이는 탭 -->
-    <!-- <BrandDashboardTabs v-if="showSubTabs" /> -->
 
     <!-- 하위 라우트 출력 -->
     <router-view />
@@ -21,42 +18,28 @@
   </div>
 </template>
 
-
 <script setup>
 // ===============================
-// Brand Dashboard Layout (최소 수정)
+// Brand Dashboard Layout
 // ===============================
-
-import { onMounted, watch } from "vue"
-import { useRoute } from "vue-router"
+import { computed, onMounted } from "vue"
 
 import BrandProfileHeader from "@/components/brand/BrandProfileHeader.vue"
 import BrandDashboardButtons from "@/components/brand/BrandDashboardButtons.vue"
 
-// stores/brand.js
 import { useBrandStore } from "@/stores/brand"
 
+// store
 const brandStore = useBrandStore()
 
-const route = useRoute()
+// brand 정보 (creator와 동일한 패턴)
+const brand = computed(() => brandStore.brand)
 
-// 최초 진입 시 brand 로드
-onMounted(() => {
-  loadBrand(route.params.brandId)
+// 최초 로드
+onMounted(async () => {
+  await brandStore.loadBrand()
 })
-
-// brandId 변경 시 brand 재로드 (핵심)
-watch(
-  () => route.params.brandId,
-  (newBrandId) => {
-    if (newBrandId) {
-      loadBrand(newBrandId)
-    }
-  }
-)
 </script>
-
-
 
 <style scoped>
 .brand-layout {

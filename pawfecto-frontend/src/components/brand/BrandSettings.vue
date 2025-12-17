@@ -1,7 +1,5 @@
 <template>
-  <div class="settings-container">
-
-    <!-- 브랜드 설정 정보 (읽기 전용) -->
+  <div class="settings-container" v-if="user">
 
     <!-- 아이디 -->
     <div class="form-group">
@@ -37,48 +35,47 @@
     <div class="form-group">
       <label>프로필 이미지</label>
       <p class="readonly-field">
-        {{ user.profile_image_url ?? '등록된 이미지 없음' }}
+        {{ user.profile_image_url || "등록된 이미지 없음" }}
       </p>
     </div>
 
     <!-- 설정 수정 버튼 -->
     <button class="update-btn" @click="goToUpdate">
-      UPDATE
+      수정
     </button>
 
   </div>
+
+  <div v-else class="not-found">
+    <p>브랜드 정보를 찾을 수 없습니다.</p>
+  </div>
 </template>
 
+
+
 <script setup>
-// 브랜드 설정 조회 및 수정 페이지 이동
+// 브랜드 설정 조회 (store 통일)
 import { onMounted, computed } from "vue"
 import { useRouter } from "vue-router"
-import { brand, isBrandLoaded, loadBrand } from "@/stores/brand"
-
-const props = defineProps({
-  brandId: Number
-})
+import { useBrandStore } from "@/stores/brand"
 
 const router = useRouter()
-
-// 최초 진입 시 브랜드 정보 로드
-onMounted(async () => {
-  if (!isBrandLoaded.value) {
-    await loadBrand()
-  }
-})
+const brandStore = useBrandStore()
 
 // 브랜드 정보
-const user = computed(() => brand.value)
+const user = computed(() => brandStore.brand)
+
+// 최초 로드
+onMounted(async () => {
+  await brandStore.loadBrand()
+})
 
 // 수정 페이지 이동
 const goToUpdate = () => {
-  router.push({
-    name: "brand-settings-update",
-    params: { brand_id: props.brandId }
-  })
+  router.push({ name: "brand-settings-update" })
 }
 </script>
+
 
 <style scoped>
 /* 브랜드 설정 페이지 레이아웃 */
