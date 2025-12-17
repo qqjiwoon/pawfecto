@@ -151,12 +151,6 @@ def password_reset(request):
         f"http://localhost:5173/reset-password?"
         f"uid={uid}&token={token}"
     )
-
-    # ✅ 개발 단계: 이메일 대신 콘솔 출력
-    print("====== Password Reset Link ======")
-    print(reset_link)
-    print("=================================")
-
     return Response(
         {"message": "password reset email sent"},
         status=status.HTTP_200_OK
@@ -184,12 +178,18 @@ def me(request):
         serializer = UserSerializer(user)
         return Response(serializer.data, status=200)
 
-    serializer = UserSerializer(user, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=200)
+    elif request.method == 'PUT':
+        serializer = UserSerializer(
+            user,
+            data=request.data,
+            partial=True  # 일부 필드만 수정 가능
+        )
 
-    return Response(serializer.errors, status=400)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+
+        return Response(serializer.errors, status=400)
 
 
 # ============================================

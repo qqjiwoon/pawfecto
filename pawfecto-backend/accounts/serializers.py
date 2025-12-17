@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import User
-from myapp.models import StyleTag     # ← StyleTag는 myapp에 위치
+from myapp.models import StyleTag     
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -121,20 +121,41 @@ class CreatorSerializer(serializers.ModelSerializer):
 # 기본 UserSerializer (읽기 전용 뷰 등에서 사용)
 # -----------------------------------------------------------
 class UserSerializer(serializers.ModelSerializer):
+    # 조회용
     style_tags = StyleTagSerializer(many=True, read_only=True)
+
+    # 수정용 (code 배열 받기)
+    style_tag_codes = serializers.ListField(
+        child=serializers.CharField(),
+        write_only=True,
+        required=False
+    )
 
     class Meta:
         model = User
         fields = '__all__'
 
     def update(self, instance, validated_data):
+        # 비밀번호 처리
         password = validated_data.pop("password", None)
 
+        # 스타일 태그 code 배열 처리
+        style_tag_codes = validated_data.pop("style_tag_codes", None)
+
+        # 일반 필드 업데이트
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
+        # 비밀번호 변경
         if password:
             instance.set_password(password)
 
         instance.save()
+
+        # 스타일 태그 반영
+        if style_tag_codes is not None:
+            tags = StyleTag.objects.filter(code__in=style_tag_codes)
+            instance.style_tags.set(tags)
+
         return instance
+

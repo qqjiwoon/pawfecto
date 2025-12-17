@@ -57,7 +57,7 @@
           <td>
             <div class="style-col">
               <span
-                v-for="tag in offer.creator.style_tags"
+                v-for="tag in offer.campaign.style_tags"
                 :key="tag.id"
                 class="style-tag"
               >
@@ -75,11 +75,16 @@
 
           <!-- 상태 -->
           <td>
-            <span :class="['status', offer.acceptance_status]">
-              {{ toKoreanStatus(offer.acceptance_status) }}
-            </span>
-          </td>
-
+          <select
+            v-model="offer.acceptance_status"
+            class="status-select"
+            @change="changeStatus(offer)"
+          >
+            <option value="pending">대기중</option>
+            <option value="accepted">수락함</option>
+            <option value="rejected">거절함</option>
+          </select>
+        </td>
         </tr>
       </tbody>
     </table>
@@ -122,6 +127,12 @@
     :campaign="selectedCampaign"
     @close="closeDetail"
   />
+
+  <!-- Toast -->
+  <div v-if="showToast" class="toast">
+    {{ toastMessage }}
+  </div>
+
 </template>
 
 <script setup>
@@ -139,9 +150,7 @@ const props = defineProps({
 })
 
 const offers = ref([])
-
 const safeOffers = computed(() => offers.value ?? [])
-
 
 onMounted(async () => {
   const res = await api.get(
@@ -159,15 +168,45 @@ const itemsPerPage = 6
 const isDetailOpen = ref(false)
 const selectedCampaign = ref(null)
 
-/* 상태 한글 변환 */
-const toKoreanStatus = (status) => {
-  const map = {
-    pending: '대기중',
-    accepted: '수락됨',
-    rejected: '거절됨',
-    completed: '완료됨'
+// 토스트 상태
+const showToast = ref(false)
+const toastMessage = ref('')
+
+// 토스트 열기
+const openToast = (message) => {
+  toastMessage.value = message
+  showToast.value = true
+
+  setTimeout(() => {
+    showToast.value = false
+  }, 2000)
+}
+
+// 상태 변경 함수
+const changeStatus = async (offer) => {
+  const prevStatus = offer._prevStatus ?? offer.acceptance_status
+
+  try {
+    if (offer.acceptance_status === 'accepted') {
+      await api.post(
+        `/api/v1/creator/offers/${offer.campaign_acceptance_id}/accept/`
+      )
+      openToast('캠페인 상태를 수락함으로 변경하였습니다.')
+    }
+
+    if (offer.acceptance_status === 'rejected') {
+      await api.post(
+        `/api/v1/creator/offers/${offer.campaign_acceptance_id}/reject/`
+      )
+      openToast('캠페인 상태를 거절함으로 변경하였습니다.')
+    }
+
+    offer._prevStatus = offer.acceptance_status
+  } catch (err) {
+    offer.acceptance_status = prevStatus
+    openToast('상태 변경에 실패했습니다.')
+    console.error(err)
   }
-  return map[status] || status
 }
 
 /* 검색 필터 */
@@ -203,8 +242,8 @@ const nextPage = () => {
 }
 
 /* 모달 제어 */
-const openDetail = (campaign) => {
-  selectedCampaign.value = campaign
+const openDetail = (offer) => {
+  selectedCampaign.value = offer
   isDetailOpen.value = true
 }
 
@@ -311,30 +350,23 @@ td {
 }
 
 /* 상태 */
-.status {
-  font-size: 13px;
+.status-select {
+  border: none;
+  background-color: #dedede;
+  border-radius: 5px;
   padding: 6px 14px;
-  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
 }
 
-.status.pending {
-  background-color: #fff5d6;
-  color: #b88a00;
-}
-
-.status.accepted {
+.status-select option[value="accepted"] {
   background-color: #e8e8e8;
   color: #333;
 }
 
-.status.rejected {
+.status-select option[value="rejected"] {
   background-color: #ffe0e0;
   color: #cc0000;
-}
-
-.status.completed {
-  background-color: #daf5df;
-  color: #2e7d32;
 }
 
 /* 페이지네이션 */
@@ -375,4 +407,19 @@ td {
   font-weight: bold;
   color: #000;
 }
+
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-size: 14px;
+  z-index: 3000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
 </style>
