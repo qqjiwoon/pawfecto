@@ -30,7 +30,7 @@ urlpatterns = [
         name='campaign_detail'
     ),
 
-    # 4-1) 캠페인 수정
+    # 4) 캠페인 수정
     path(
         'brand/<int:brand_id>/campaign/<int:campaign_id>/update/',
         views.update_campaign,
@@ -44,14 +44,32 @@ urlpatterns = [
         name='delete_campaign'
     ),
 
-    # 5) 특정 캠페인의 오퍼(신청) 목록 조회
+    # ============================================================
+    # [브랜드] Campaign 진행 관련
+    # ============================================================
+
+    # 1) 특정 캠페인의 오퍼(신청) 목록 조회
     path(
         'brand/<int:brand_id>/campaign/<int:campaign_id>/acceptances/',
         views.campaign_acceptance_list,
         name='campaign_acceptance_list'
     ),
 
-    # 6) 캠페인 진행 상황 조회 (Deliverable)
+    # 2) 브랜드가 크리에이터 승인
+    path(
+        'brand/<int:brand_id>/campaign/<int:campaign_id>/acceptances/<int:acceptance_id>/approve/',
+        views.approve_creator,
+        name='approve_creator'
+    ),
+
+    # 3) 브랜드가 크리에이터 거절
+    path(
+        'brand/<int:brand_id>/campaign/<int:campaign_id>/acceptances/<int:acceptance_id>/reject/',
+        views.reject_creator,
+        name='reject_creator'
+    ),
+
+    # 4) 캠페인 진행 상황 조회 (Deliverable)
     path(
         'brand/<int:brand_id>/campaign/<int:campaign_id>/progress/',
         views.campaign_progress,

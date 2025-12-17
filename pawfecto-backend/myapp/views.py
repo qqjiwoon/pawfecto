@@ -82,7 +82,7 @@ def campaign_detail(request, brand_id, campaign_id):
 
 
 # ------------------------------------------------------------
-# 4-1) 캠페인 수정
+# 4) 캠페인 수정
 # ------------------------------------------------------------
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -106,7 +106,7 @@ def update_campaign(request, brand_id, campaign_id):
 
 
 # ------------------------------------------------------------
-# 4-2) 캠페인 삭제
+# 5) 캠페인 삭제
 # ------------------------------------------------------------
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -126,13 +126,33 @@ def delete_campaign(request, brand_id, campaign_id):
             status=403
         )
 
-    # 3. 삭제 실행
+    # 3. 캠페인에 연결된 크리에이터가 하나라도 있으면 삭제 불가
+    has_acceptance = CampaignAcceptance.objects.filter(
+        campaign=campaign
+    ).exists()
+
+    if has_acceptance:
+        return Response(
+            {
+                "error": "크리에이터가 연결된 캠페인은 삭제할 수 없습니다."
+            },
+            status=400
+        )
+
+    # 4. 삭제 실행
     campaign.delete()
     return Response({"message": "캠페인이 삭제되었습니다."}, status=204)
 
 
+
+
+
+# ============================================================
+# [브랜드] Campaign 진행 관련
+# ============================================================
+
 # ------------------------------------------------------------
-# 5) 브랜드 입장에서 특정 캠페인에 대한 크리에이터 신청 현황 조회
+# 1) 특정 캠페인에 대한 크리에이터 신청 현황 조회
 # ------------------------------------------------------------
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -147,14 +167,93 @@ def campaign_acceptance_list(request, brand_id, campaign_id):
     if campaign.brand != request.user:
         return Response({"error": "본인 캠페인만 조회할 수 있습니다."}, status=403)
 
-    acceptances = CampaignAcceptance.objects.filter(campaign=campaign)
+    acceptances = CampaignAcceptance.objects.filter(campaign=campaign).order_by('-applied_at')
     serializer = CampaignAcceptanceSerializer(acceptances, many=True)
     return Response(serializer.data, status=200)
 
 
+# ------------------------------------------------------------
+# 2) 브랜드가 크리에이터 승인
+# ------------------------------------------------------------
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def approve_creator(request, brand_id, campaign_id, acceptance_id):
+
+    # 캠페인 확인 (본인 소유 캠페인만)
+    campaign = get_object_or_404(
+        Campaign,
+        campaign_id=campaign_id,
+        brand_id=brand_id
+    )
+
+    if campaign.brand != request.user:
+        return Response({"error": "본인 캠페인만 승인할 수 있습니다."}, status=403)
+
+    # CampaignAcceptance 조회
+    acceptance = get_object_or_404(
+        CampaignAcceptance,
+        campaign_acceptance_id=acceptance_id,
+        campaign=campaign
+    )
+
+    # 이미 처리된 경우 방어
+    if acceptance.brand_decision_status != 'pending':
+        return Response(
+            {"error": "이미 승인 또는 거절된 크리에이터입니다."},
+            status=400
+        )
+
+    # 승인 처리
+    acceptance.brand_decision_status = 'approved'
+    acceptance.brand_decided_at = timezone.now()
+    acceptance.save()
+
+    return Response({"message": "크리에이터를 승인했습니다."}, status=200)
+
+
 
 # ------------------------------------------------------------
-# 6) 캠페인 진행 상황(Deliverable) 조회
+# 3) 브랜드가 크리에이터 거절
+# ------------------------------------------------------------
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def reject_creator(request, brand_id, campaign_id, acceptance_id):
+
+    # 캠페인 확인
+    campaign = get_object_or_404(
+        Campaign,
+        campaign_id=campaign_id,
+        brand_id=brand_id
+    )
+
+    if campaign.brand != request.user:
+        return Response({"error": "본인 캠페인만 거절할 수 있습니다."}, status=403)
+
+    # CampaignAcceptance 조회
+    acceptance = get_object_or_404(
+        CampaignAcceptance,
+        campaign_acceptance_id=acceptance_id,
+        campaign=campaign
+    )
+
+    # 이미 처리된 경우 방어
+    if acceptance.brand_decision_status != 'pending':
+        return Response(
+            {"error": "이미 승인 또는 거절된 크리에이터입니다."},
+            status=400
+        )
+
+    # 거절 처리
+    acceptance.brand_decision_status = 'rejected'
+    acceptance.brand_decided_at = timezone.now()
+    acceptance.save()
+
+    return Response({"message": "크리에이터를 거절했습니다."}, status=200)
+
+
+
+# ------------------------------------------------------------
+# 4) 캠페인 진행 상황(Deliverable) 조회
 # ------------------------------------------------------------
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
