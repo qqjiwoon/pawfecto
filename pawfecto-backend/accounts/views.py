@@ -7,6 +7,9 @@ from rest_framework import status
 
 from django.contrib.auth import authenticate, logout, get_user_model
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 from .serializers import (
     UserSerializer,
@@ -15,8 +18,9 @@ from .serializers import (
     StyleTagSerializer
 )
 
-User = get_user_model()
 
+User = get_user_model()
+token_generator = PasswordResetTokenGenerator()
 
 # ============================================
 # 1) 회원가입
@@ -81,6 +85,82 @@ def login_view(request):
         status=status.HTTP_200_OK
     )
 
+
+# ============================================
+# 2-1) 아이디  찾기
+# ============================================
+@api_view(['POST'])
+def find_id(request):
+    email = request.data.get("email")
+
+    if not email:
+        return Response(
+            {"error": "email is required"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    user = User.objects.filter(email=email).first()
+
+    if not user:
+        return Response(
+            {"error": "user not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    username = user.username
+
+    # 아이디 마스킹 (앞 3글자 + *** + 뒤 2글자)
+    if len(username) <= 5:
+        masked = username[0] + "***"
+    else:
+        masked = username[:3] + "***" + username[-2:]
+
+    return Response(
+        {"username_hint": masked},
+        status=status.HTTP_200_OK
+    )
+
+# ============================================
+# 2-2) 패스워드  찾기
+# ============================================
+@api_view(['POST'])
+def password_reset(request):
+    username = request.data.get("username")
+    email = request.data.get("email")
+
+    if not username or not email:
+        return Response(
+            {"error": "username and email are required"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    user = User.objects.filter(username=username, email=email).first()
+
+    if not user:
+        return Response(
+            {"error": "user not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    # uid + token 생성
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    token = token_generator.make_token(user)
+
+    # 프론트 ResetPasswordView 주소
+    reset_link = (
+        f"http://localhost:5173/reset-password?"
+        f"uid={uid}&token={token}"
+    )
+
+    # ✅ 개발 단계: 이메일 대신 콘솔 출력
+    print("====== Password Reset Link ======")
+    print(reset_link)
+    print("=================================")
+
+    return Response(
+        {"message": "password reset email sent"},
+        status=status.HTTP_200_OK
+    )
 
 # ============================================
 # 3) 로그아웃
