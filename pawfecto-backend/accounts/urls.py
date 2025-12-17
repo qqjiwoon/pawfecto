@@ -16,6 +16,10 @@ urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
+    # 아이디/패스워드 찾기
+    path("find-id/", views.find_id),
+    path("password-reset/", views.password_reset),
+
     # 내 정보
     path('me/', views.me, name='me'),
 

@@ -32,6 +32,13 @@
 
         <!-- 로그인 버튼 -->
         <button class="pf-login-submit" @click.prevent="handleLogin">로그인</button>
+        
+        <!-- 아이디 / 비밀번호 찾기 -->
+        <div class="pf-login-find">
+          <router-link to="/find-id">아이디 찾기</router-link>
+          <span>|</span>
+          <router-link to="/find-password">비밀번호 찾기</router-link>
+        </div>
 
         <div class="pf-login-signup">
           계정이 없으신가요?
@@ -211,6 +218,25 @@ const handleLogin = async () => {
 .pf-login-signup a {
   color: #ff7f00;
   text-decoration: none;
+}
+.pf-login-find {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.pf-login-find a {
+  color: #666;
+  text-decoration: none;
+}
+
+.pf-login-find a:hover {
+  text-decoration: underline;
+}
+
+.pf-login-find span {
+  margin: 0 8px;
+  color: #aaa;
 }
 
 /* Instagram 로그인 버튼 */
