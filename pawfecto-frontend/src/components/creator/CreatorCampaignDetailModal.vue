@@ -18,7 +18,7 @@
         <div class="content-box">
 
           <!-- 상품명 -->
-          <h1>{{ campaign.product_name }}</h1>
+          <h2>{{ campaign.product_name }}</h2>
 
           <!-- 상품 설명 -->
           <p class="desc" v-html="campaign.product_description"></p>
@@ -33,13 +33,13 @@
               <div class="pet-type">
                 <button
                   class="pet-btn"
-                  :class="{ active: campaign.pet_type === 'cat' }"
+                  :class="{ active: campaign.target_pet_type === 'cat' }"
                 >
                   Cat
                 </button>
                 <button
                   class="pet-btn"
-                  :class="{ active: campaign.pet_type === 'dog' }"
+                  :class="{ active: campaign.target_pet_type === 'dog' }"
                 >
                   Dog
                 </button>
@@ -71,7 +71,7 @@
                   :key="tag"
                   class="style-tag"
                 >
-                  #{{ tag }}
+                  # {{ tag.code }}
                 </span>
               </div>
             </div>

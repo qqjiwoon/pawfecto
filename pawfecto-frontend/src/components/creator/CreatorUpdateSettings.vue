@@ -76,7 +76,7 @@
           :class="{ selected: form.styleTags.includes(tag.value) }"
           @click="toggleTag(tag.value)"
         >
-          #{{ tag.label }}
+          # {{ tag.label }}
         </span>
       </div>
     </div>
@@ -100,6 +100,11 @@
   <div v-else class="settings-container">
     <p>불러오는 중...</p>
   </div>
+
+  <div v-if="showToast" class="toast">
+    {{ toastMessage }}
+  </div>
+
 </template>
 
 <script setup>
@@ -113,6 +118,21 @@ const route = useRoute()
 
 const creatorStore = useCreatorStore()
 const isLoaded = ref(false)
+
+// 스타일 옵션
+const styleOptions = [
+  { value: "energetic", label: "활발한" },
+  { value: "calm", label: "차분한" },
+  { value: "funny", label: "웃긴" },
+  { value: "wholesome", label: "힐링되는" },
+  { value: "cozy", label: "포근한" },
+  { value: "heartfelt", label: "감동적인" },
+  { value: "aesthetic", label: "감각적인" },
+  { value: "minimal", label: "깔끔한" },
+  { value: "outdoor", label: "야외감성" },
+  { value: "no_preference", label: "상관없음" },
+]
+
 
 const form = ref({
   loginId: "",
@@ -158,7 +178,23 @@ const toggleTag = (tag) => {
 }
 
 /* 저장 */
+const toastMessage = ref('')
+const showToast = ref(false)
+
+const openToast = (message) => {
+  toastMessage.value = message
+  showToast.value = true
+
+  remindTimeout && clearTimeout(remindTimeout)
+  remindTimeout = setTimeout(() => {
+    showToast.value = false
+  }, 2500)
+}
+
+let remindTimeout = null
+
 const handleSave = async () => {
+  console.log("styleTags payload:", form.value.styleTags)
   if (form.value.password && form.value.password !== form.value.passwordConfirm) {
     alert("비밀번호가 일치하지 않습니다.")
     return
@@ -172,7 +208,7 @@ const handleSave = async () => {
     pet_type: form.value.petType,
     sns_handle: form.value.snsHandle,
     sns_url: form.value.snsUrl,
-    style_tags: form.value.styleTags,
+    style_tag_codes: form.value.styleTags,
   }
 
   if (form.value.password) {
@@ -184,11 +220,14 @@ const handleSave = async () => {
   // 👉 수정 후 store 갱신
   creatorStore.isLoaded = false
   await creatorStore.loadCreator()
+  openToast("정보가 성공적으로 수정되었습니다.")
 
-  router.push({
-    name: "creator-settings",
-    params: { creator_id: Number(route.params.creator_id) },
-  })
+  setTimeout(() => {
+    router.push({
+      name: "creator-settings",
+      params: { creator_id: Number(route.params.creator_id) },
+    })
+  }, 1500)
 }
 </script>
 
@@ -317,4 +356,18 @@ input,
 .save-btn:hover {
   background: #3A3A3A;
 }
+.toast {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #3A3A3A;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
 </style>

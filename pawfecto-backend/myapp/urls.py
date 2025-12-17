@@ -88,18 +88,18 @@ urlpatterns = [
         name='creator_campaign_offers'
     ),
 
-    # 8) 수락
+    # 8) 캠페인 오퍼 수락
     path(
-         'creator/<int:creator_id>/campaign/<int:campaign_id>/accept/',
-        views.accept_campaign,
-        name='accept_campaign'
+        'creator/offers/<int:acceptance_id>/accept/',
+        views.accept_offer,
+        name='accept_offer'
     ),
 
-    # 9) 거절
+    # 9) 캠페인 오퍼 거절
     path(
-        'creator/<int:creator_id>/campaign/<int:campaign_id>/reject/',
-        views.reject_campaign,
-        name='reject_campaign'
+        'creator/offers/<int:acceptance_id>/reject/',
+        views.reject_offer,
+        name='reject_offer'
     ),
 
     # 10) 진행상황 조회 (크리에이터 관점)

@@ -83,6 +83,7 @@ class CampaignListSerializer(serializers.ModelSerializer):
         fields = [
             'campaign_id',
             'product_name',
+            'product_description',
             'brand',
             'product_image_url',
             'requested_at',
@@ -97,7 +98,7 @@ class CampaignListSerializer(serializers.ModelSerializer):
 
 class CampaignAcceptanceSerializer(serializers.ModelSerializer):
     creator = UserSerializer(read_only=True)            # 신청한 크리에이터 정보
-    campaign = CampaignListSerializer(read_only=True)   # 신청한 캠페인의 요약 정보
+    campaign = CampaignSerializer(read_only=True)   # 신청한 캠페인의 요약 정보
 
     class Meta:
         model = CampaignAcceptance

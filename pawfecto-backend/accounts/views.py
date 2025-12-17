@@ -142,12 +142,6 @@ def password_reset(request):
         f"http://localhost:5173/reset-password?"
         f"uid={uid}&token={token}"
     )
-
-    # ✅ 개발 단계: 이메일 대신 콘솔 출력
-    print("====== Password Reset Link ======")
-    print(reset_link)
-    print("=================================")
-
     return Response(
         {"message": "password reset email sent"},
         status=status.HTTP_200_OK
@@ -181,7 +175,7 @@ def me(request):
         serializer = UserSerializer(
             user,
             data=request.data,
-            partial=True   # ⭐ 일부 필드만 수정 가능
+            partial=True   # 일부 필드만 수정 가능
         )
 
         if serializer.is_valid():
@@ -189,13 +183,6 @@ def me(request):
             return Response(serializer.data, status=200)
 
         return Response(serializer.errors, status=400)
-
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# def me(request):
-#     serializer = UserSerializer(request.user)
-#     return Response(serializer.data, status=200)
-
 
 # ============================================
 # 5) 브랜드 프로필 조회

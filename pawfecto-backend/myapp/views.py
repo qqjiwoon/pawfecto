@@ -303,61 +303,48 @@ def creator_campaign_offers(request, creator_id):
     return Response(serializer.data, status=200)
 
 
-
 # ------------------------------------------------------------
-# 8) 수락
+# 캠페인 오퍼 수락
 # ------------------------------------------------------------
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def accept_campaign(request, creator_id, campaign_id):
-    if request.user.id != creator_id:
-        return Response(
-            {"error": "본인의 캠페인만 수락할 수 있습니다."},
-            status=403
-        )
+def accept_offer(request, acceptance_id):
 
     acceptance = get_object_or_404(
         CampaignAcceptance,
-        campaign_id=campaign_id,   
-        creator_id=creator_id,
-        # acceptance_status="pending"
+        campaign_acceptance_id=acceptance_id,
+        creator=request.user
     )
 
-    acceptance.acceptance_status = "accepted"
+    acceptance.acceptance_status = 'accepted'
     acceptance.accepted_at = timezone.now()
     acceptance.save()
 
-    serializer = CampaignAcceptanceSerializer(acceptance)
-    return Response(serializer.data, status=200)
-
-
+    return Response(
+        CampaignAcceptanceSerializer(acceptance).data,
+        status=200
+    )
 
 # ------------------------------------------------------------
-# 9) 거절
+# 캠페인 오퍼 거절
 # ------------------------------------------------------------
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def reject_campaign(request, creator_id, campaign_id):
-    if request.user.id != creator_id:
-        return Response(
-            {"error": "본인의 캠페인만 거절할 수 있습니다."},
-            status=403
-        )
+def reject_offer(request, acceptance_id):
 
     acceptance = get_object_or_404(
         CampaignAcceptance,
-        campaign_id=campaign_id,
-        creator_id=creator_id,
-        # acceptance_status="pending"
+        campaign_acceptance_id=acceptance_id,
+        creator=request.user
     )
 
-    acceptance.acceptance_status = "rejected"
+    acceptance.acceptance_status = 'rejected'
     acceptance.save()
 
-    serializer = CampaignAcceptanceSerializer(acceptance)
-    return Response(serializer.data, status=200)
-
-
+    return Response(
+        CampaignAcceptanceSerializer(acceptance).data,
+        status=200
+    )
 
 # ------------------------------------------------------------
 # 10) 크리에이터 진행 상황 조회
