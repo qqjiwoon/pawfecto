@@ -54,13 +54,13 @@
         <div class="tag-list">
           <button
             v-for="tag in allTags"
-            :key="tag"
+            :key="tag.code"
             class="tag"
-            :class="{ active: (campaign.style_tags || []).includes(tag) }"
-            @click="toggleStyle(tag)"
+            :class="{ active: campaign.style_tags.includes(tag.code) }"
+            @click="toggleStyle(tag.code)"
             type="button"
           >
-            #{{ tag }}
+            #{{ getStyleLabel(tag.name) }}
           </button>
         </div>
       </div>
@@ -96,7 +96,6 @@
 <script setup>
 import { ref, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { useCampaignStore } from "@/stores/campaign"
 import api from "@/plugins/axios"
 
 const route = useRoute()
@@ -105,17 +104,27 @@ const router = useRouter()
 const campaignId = Number(route.params.campaign_id)
 const brandId = Number(route.params.brand_id)
 
-// ✅ Pinia store
-const campaignStore = useCampaignStore()
-
 // 수정용 캠페인
 const campaign = ref(null)
 
-// 스타일 태그
+
+// 스타일 태그 (DB styletag 기준, 한국어 표시용)
 const allTags = [
-  "outdoor","energetic","no_preference","minimal",
-  "aesthetic","heartfelt","cozy","wholesome","funny","calm"
+  { id: 1, code: "energetic", name: "활발한" },
+  { id: 2, code: "calm", name: "차분한" },
+  { id: 3, code: "funny", name: "웃긴" },
+  { id: 4, code: "wholesome", name: "힐링되는" },
+  { id: 5, code: "cozy", name: "포근한" },
+  { id: 6, code: "heartfelt", name: "감동적인" },
+  { id: 7, code: "aesthetic", name: "감각적인" },
+  { id: 8, code: "minimal", name: "깔끔한" },
+  { id: 9, code: "outdoor", name: "야외감성" },
+  { id: 10, code: "no_preference", name: "상관없음" },
 ]
+
+
+// code → 한국어 매핑
+const styleLabelMap = ref({})
 
 onMounted(async () => {
   try {
@@ -123,19 +132,30 @@ onMounted(async () => {
       `/api/v1/brand/${brandId}/campaign/${campaignId}/`
     )
 
+    // 기존 로직 유지
     campaign.value = {
       ...res.data,
       style_tags: Array.isArray(res.data.style_tags)
         ? res.data.style_tags.map(t => t.code ?? t)
         : [],
     }
+
+    // 🔹 한국어 라벨만 따로 추출 (최소 추가)
+    if (Array.isArray(res.data.style_tags)) {
+      res.data.style_tags.forEach(t => {
+        if (t?.code && t?.name) {
+          const m = t.name.match(/\(([^)]+)\)/)
+          styleLabelMap.value[t.code] = m ? m[1] : t.name
+        }
+      })
+    }
+
   } catch (err) {
-    console.error(err.response)
     alert("캠페인 정보를 불러오지 못했습니다.")
   }
 })
 
-// 스타일 태그 토글
+// 스타일 태그 토글 (기존 유지)
 function toggleStyle(tag) {
   if (campaign.value.style_tags.includes(tag)) {
     campaign.value.style_tags =
@@ -143,6 +163,11 @@ function toggleStyle(tag) {
   } else {
     campaign.value.style_tags.push(tag)
   }
+}
+
+// 표시용
+function getStyleLabel(code) {
+  return styleLabelMap.value[code] || code
 }
 
 // 이미지
@@ -155,9 +180,13 @@ function onFileChange(e) {
   }
 }
 
-// 업데이트
+// 업데이트 (기존 유지)
 async function updateCampaign() {
   try {
+    const styleTagIds = allTags
+      .filter(tag => campaign.value.style_tags.includes(tag.code))
+      .map(tag => tag.id)
+
     await api.put(
       `/api/v1/brand/${brandId}/campaign/${campaignId}/update/`,
       {
@@ -173,7 +202,7 @@ async function updateCampaign() {
         posting_start_at: campaign.value.posting_start_at,
         posting_end_at: campaign.value.posting_end_at,
 
-        style_tags: campaign.value.style_tags,
+        style_tag_ids: styleTagIds,
       }
     )
 
@@ -191,6 +220,7 @@ async function updateCampaign() {
 }
 
 </script>
+
 
 
 <style scoped>
@@ -231,7 +261,8 @@ async function updateCampaign() {
 }
 
 .input-group label {
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   color: #555;
   margin-bottom: 8px;
 }
@@ -245,6 +276,7 @@ textarea {
   border-radius: 10px;
   font-size: 14px;
   background: #fff;
+  color: #333;
 }
 
 input:focus,
@@ -264,7 +296,8 @@ textarea {
 ========================= */
 
 .style-tags label {
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   color: #555;
   margin-bottom: 10px;
   display: block;

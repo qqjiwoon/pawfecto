@@ -99,13 +99,38 @@ def update_campaign(request, brand_id, campaign_id):
     )
 
     if campaign.brand != request.user:
-        return Response({"error": "본인이 생성한 캠페인만 수정할 수 있습니다."}, status=403)
+        return Response(
+            {"error": "본인이 생성한 캠페인만 수정할 수 있습니다."},
+            status=403
+        )
+
+    # 크리에이터 매칭 여부 확인
+    has_acceptance = CampaignAcceptance.objects.filter(
+        campaign=campaign
+    ).exists()
+
+    if has_acceptance:
+        forbidden_fields = {
+            "target_pet_type",
+            "style_tags",
+            "min_follower_count",
+            "required_creator_count",
+        }
+
+        if forbidden_fields & request.data.keys():
+            return Response(
+                {
+                    "error": "크리에이터가 매칭된 캠페인은 가이드라인을 수정할 수 없습니다."
+                },
+                status=400
+            )
 
     serializer = CampaignSerializer(campaign, data=request.data, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
 
     return Response(serializer.data, status=200)
+
 
 
 
