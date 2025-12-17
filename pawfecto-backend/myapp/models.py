@@ -14,14 +14,11 @@ class StyleTag(models.Model):
 
 
 # -----------------------------------------------------------
-# 2. Campaign (캠페인)
+# 2. Campaign (캠페인) : 브랜드가 생성한 광고 캠페인
 # -----------------------------------------------------------
 
 class Campaign(models.Model):
-    """
-    광고 캠페인 정보 모델입니다.
-    SQL 스키마와 100% 동일하게 반영한 버전입니다.
-    """
+
     campaign_id = models.AutoField(primary_key=True)
 
     brand = models.ForeignKey(
@@ -34,7 +31,7 @@ class Campaign(models.Model):
     product_image_url = models.CharField(max_length=255)
     product_description = models.TextField()
 
-    # ENUM('dog', 'cat') NULL
+    # 타겟 반려동물 : ENUM('dog', 'cat') NULL
     target_pet_type = models.CharField(
         max_length=10,
         choices=[('dog', 'Dog'), ('cat', 'Cat')],
@@ -44,10 +41,9 @@ class Campaign(models.Model):
 
     min_follower_count = models.IntegerField(default=0)
 
+    # 캠페인 일정
     requested_at = models.DateTimeField()
     application_deadline_at = models.DateField()
-
-    # SQL은 DATE 타입 → Django에서는 DateField 그대로 유지
     posting_start_at = models.DateField()
     posting_end_at = models.DateField()
 
@@ -66,14 +62,11 @@ class Campaign(models.Model):
 
 
 # -----------------------------------------------------------
-# 3. CampaignAcceptance (캠페인 신청 / 수락)
+# 3. CampaignAcceptance (브랜드 승인 / 크리에이터 수락)
 # -----------------------------------------------------------
 
 class CampaignAcceptance(models.Model):
-    """
-    크리에이터의 캠페인 신청 및 수락 상태를 관리하는 모델입니다.
-    SQL 스키마 기준으로 정확히 반영했습니다.
-    """
+
     campaign_acceptance_id = models.AutoField(primary_key=True)
 
     creator = models.ForeignKey(
@@ -88,7 +81,21 @@ class CampaignAcceptance(models.Model):
         related_name='acceptances'
     )
 
-    # ENUM('pending', 'accepted', 'rejected', 'completed')
+    # 브랜드 승인 상태 : 브랜드가 크리에이터를 승인/거절
+    brand_decision_status = models.CharField(
+        max_length=10,
+        choices=[
+            ('pending', 'Pending'),
+            ('approved', 'Approved'),
+            ('rejected', 'Rejected'),
+        ],
+        default='pending'
+    )
+
+    # 브랜드 승인/거절 시점
+    brand_decided_at = models.DateTimeField(null=True, blank=True)
+
+    # 크리에이터 수락 상태
     acceptance_status = models.CharField(
         max_length=10,
         choices=[
@@ -100,11 +107,19 @@ class CampaignAcceptance(models.Model):
         default='pending'
     )
 
+    # 상태 변경 시점 기록
     applied_at = models.DateTimeField(null=True, blank=True)  # SQL: DATETIME (auto_now_add 아님)
     accepted_at = models.DateTimeField(null=True, blank=True)  # SQL 스키마와 동일하게 수정
 
+    class Meta:
+        # 동일 캠페인에 동일 크리에이터 중복 방지
+        unique_together = ('campaign', 'creator')
+
     def __str__(self):
-        return f"{self.creator.name} - {self.campaign.product_name} ({self.acceptance_status})"
+        return (
+            f"{self.creator.name} - {self.campaign.product_name} "
+            f"(brand={self.brand_decision_status}, creator={self.acceptance_status})"
+        )
 
 
 # -----------------------------------------------------------
@@ -112,10 +127,7 @@ class CampaignAcceptance(models.Model):
 # -----------------------------------------------------------
 
 class Deliverable(models.Model):
-    """
-    크리에이터가 제출한 포스팅 결과물(납품) 정보 모델입니다.
-    SQL 스키마와 동일하게 구성.
-    """
+
     deliverable_id = models.AutoField(primary_key=True)
 
     campaign_acceptance = models.ForeignKey(
@@ -127,7 +139,7 @@ class Deliverable(models.Model):
     posted_at = models.DateTimeField(null=True, blank=True)  # SQL은 auto_now_add 아님
     post_url = models.CharField(max_length=255, null=True, blank=True)
 
-    # ENUM('incomplete', 'completed')
+    # 결과물 상태 : ENUM('incomplete', 'completed')
     deliverable_status = models.CharField(
         max_length=10,
         choices=[
