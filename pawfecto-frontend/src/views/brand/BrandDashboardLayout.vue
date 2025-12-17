@@ -34,7 +34,9 @@ import BrandProfileHeader from "@/components/brand/BrandProfileHeader.vue"
 import BrandDashboardButtons from "@/components/brand/BrandDashboardButtons.vue"
 
 // stores/brand.js
-import { brand as brandStore, loadBrand } from "@/stores/brand"
+import { useBrandStore } from "@/stores/brand"
+
+const brandStore = useBrandStore()
 
 const route = useRoute()
 
