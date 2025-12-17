@@ -5,7 +5,9 @@ from rest_framework import status
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+
 from accounts.models import User
+from accounts.serializers import CreatorSerializer
 
 from .models import Campaign, CampaignAcceptance, Deliverable
 from .serializers import (
@@ -274,6 +276,8 @@ def campaign_progress(request, brand_id, campaign_id):
 
     serializer = DeliverableSerializer(deliverables, many=True)
     return Response(serializer.data, status=200)
+
+
 
 
 

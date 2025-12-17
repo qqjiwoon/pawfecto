@@ -34,7 +34,7 @@ Content-Type: application/json
 ### ------------------------------------------------------------
 ### 0) 공통 설정 – 토큰 입력
 ### ------------------------------------------------------------
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1OTY2OTM2LCJpYXQiOjE3NjU5NjY2MzYsImp0aSI6IjYwYjcwNDdhOTc3NjQxNjBhMDZjODgzODFhMDU4N2EyIiwidXNlcl9pZCI6IjIifQ.C1jgmj4nSHFTnCpQruK-J8m73d7pJ_gtkKdul1uyK6A
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1OTY3MjAzLCJpYXQiOjE3NjU5NjY5MDMsImp0aSI6ImUzOTY4OGQyNmNkZTQ1MGFhMjA4NDkwY2U5MWQyNjk1IiwidXNlcl9pZCI6IjIifQ.KyG_Hwe4asaueEte0xMfj82SI80dQHrRVA5SdvOGme8
 
 
 
@@ -153,15 +153,19 @@ PATCH http://127.0.0.1:8000/api/v1/brand/2/campaign/13/acceptances/13/approve/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
+### ㄴ> 400 Bad Request 테스트 완료 : "이미 승인 또는 거절된 크리에이터입니다."
+
 
 
 ### ------------------------------------------------------------
 ### 3) 브랜드가 크리에이터 거절
 ### PATCH /api/v1/brand/{brand_id}/campaign/{campaign_id}/acceptances/{acceptance_id}/reject/
 ### ------------------------------------------------------------
-PATCH http://127.0.0.1:8000/api/v1/brand/2/campaign/13/acceptances/14/reject/
+PATCH http://127.0.0.1:8000/api/v1/brand/2/campaign/13/acceptances/15/reject/
 Authorization: Bearer {{token}}
 Content-Type: application/json
+
+### ㄴ> 400 Bad Request 테스트 완료 : "이미 승인 또는 거절된 크리에이터입니다."
 
 
 
