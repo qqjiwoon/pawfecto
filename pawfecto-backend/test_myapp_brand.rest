@@ -34,7 +34,7 @@ Content-Type: application/json
 ### ------------------------------------------------------------
 ### 0) 공통 설정 – 토큰 입력
 ### ------------------------------------------------------------
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1OTY3MjAzLCJpYXQiOjE3NjU5NjY5MDMsImp0aSI6ImUzOTY4OGQyNmNkZTQ1MGFhMjA4NDkwY2U5MWQyNjk1IiwidXNlcl9pZCI6IjIifQ.KyG_Hwe4asaueEte0xMfj82SI80dQHrRVA5SdvOGme8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1OTY4NDg2LCJpYXQiOjE3NjU5NjgxODYsImp0aSI6IjNiNWY4ODFhNjA2YzQ5MmJhNzhkMmFiMWI1N2ZmM2QyIiwidXNlcl9pZCI6IjIifQ.C_dMtwsNl_kS3Z9zLqdpBSK6wvQH4Our-M3zY96VshI
 
 
 
@@ -84,7 +84,7 @@ Authorization: Bearer {{token}}
   "product_description": "국내산 닭고기를 주원료로 한 저알러지 어덜트 독 사료입니다. 합성첨가물을 배제하고 소화 흡수율을 높여 성견의 일상 건강 관리를 돕습니다.",
   "target_pet_type": "dog",
   "min_follower_count": 5000,
-  "style_tag": "cozy",
+  "style_tag_ids": [5],
   "requested_at": "2025-02-01T09:00:00Z",
   "application_deadline_at": "2025-02-15",
   "posting_start_at": "2025-02-20",
@@ -124,7 +124,7 @@ Authorization: Bearer {{token}}
 ### 5) 캠페인 삭제
 ### DELETE /api/v1/brand/{brand_id}/campaign/{campaign_id}/delete/
 ### ------------------------------------------------------------
-DELETE http://127.0.0.1:8000/api/v1/brand/2/campaign/4/delete/
+DELETE http://127.0.0.1:8000/api/v1/brand/2/campaign/14/delete/
 Content-Type: application/json
 Authorization: Bearer {{token}}
 

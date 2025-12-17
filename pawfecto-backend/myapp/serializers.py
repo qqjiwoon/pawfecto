@@ -17,9 +17,20 @@ class StyleTagSerializer(serializers.ModelSerializer):
 # 1. CampaignSerializer (상세 페이지용)
 # -----------------------------------------------------------
 
+# Campaign Serializer (생성/조회 겸용)
+
 class CampaignSerializer(serializers.ModelSerializer):
     brand = BrandSerializer(read_only=True)
+
+    # 조회용
     style_tags = StyleTagSerializer(many=True, read_only=True)
+
+    # 생성/수정용
+    style_tag_ids = serializers.PrimaryKeyRelatedField(
+        queryset=StyleTag.objects.all(),
+        many=True,
+        write_only=True
+    )
 
     class Meta:
         model = Campaign
@@ -31,7 +42,8 @@ class CampaignSerializer(serializers.ModelSerializer):
             'product_description',
             'target_pet_type',
             'min_follower_count',
-            'style_tags',
+            'style_tags',        # GET
+            'style_tag_ids',     # POST / PUT
             'requested_at',
             'application_deadline_at',
             'posting_start_at',
@@ -39,15 +51,23 @@ class CampaignSerializer(serializers.ModelSerializer):
             'required_creator_count',
         ]
 
-    # def validate_style_tag(self, value):
-    #     if value is None:
-    #         return value
+    def create(self, validated_data):
+        style_tags = validated_data.pop('style_tag_ids', [])
+        campaign = Campaign.objects.create(**validated_data)
+        campaign.style_tags.set(style_tags)
+        return campaign
 
-    #     # StyleTag.code 유효성만 검증
-    #     if not StyleTag.objects.filter(code=value).exists():
-    #         raise serializers.ValidationError("Invalid style_tag value.")
+    def update(self, instance, validated_data):
+        style_tags = validated_data.pop('style_tag_ids', None)
 
-    #     return value
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        if style_tags is not None:
+            instance.style_tags.set(style_tags)
+
+        return instance
 
 
 
