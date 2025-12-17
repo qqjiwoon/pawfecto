@@ -1,4 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
+from django.views.decorators.cache import never_cache
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -66,6 +67,7 @@ def create_campaign(request, brand_id):
 # 3) 캠페인 상세 조회
 # ------------------------------------------------------------
 @api_view(['GET'])
+@never_cache
 @permission_classes([IsAuthenticated])
 def campaign_detail(request, brand_id, campaign_id):
 
