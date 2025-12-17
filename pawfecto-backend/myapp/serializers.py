@@ -85,6 +85,12 @@ class CampaignAcceptanceSerializer(serializers.ModelSerializer):
             'campaign_acceptance_id',
             'creator',
             'campaign',
+
+            # 브랜드 승인 단계
+            'brand_decision_status',
+            'brand_decided_at',
+
+            # 크리에이터 수락 단계
             'acceptance_status',
             'applied_at',
             'accepted_at',
