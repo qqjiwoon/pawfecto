@@ -56,8 +56,8 @@
 
         <!-- 수정 / 삭제 버튼 -->
         <div class="button-group">
-          <button class="update-btn" @click="goUpdate">Update</button>
-          <button class="delete-btn" @click="goDelete">Delete</button>
+          <button class="update-btn" @click="goUpdate">수정</button>
+          <button class="delete-btn" @click="goDelete">삭제</button>
         </div>
 
       </div>
@@ -239,30 +239,42 @@ async function goDelete() {
 /* button */
 .button-group {
   display: flex;
-  gap: 30px;
+  gap: 12px;
   margin-top: 40px;
+  width: 100%;
 }
 
 .update-btn,
 .delete-btn {
-  position: static;
-  width: 50%;
-  
   border-radius: 50px;
   padding: 14px;
-  border: none;
-
   font-size: 16px;
+  font-weight: 600;
+  border: none;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .update-btn {
+  flex: 2.5;         /* 삭제 버튼보다 2.5배 더 길어집니다 */
   background: #695845;
   color: white;
 }
 
+.update-btn:hover {
+  background: #564839; /* 마우스 올리면 조금 더 진하게 */
+  border-color: #564839;
+}
+
 .delete-btn {
-  background: #8B3A3A;
-  color: white;
+  flex: 1;           /* 상대적으로 짧은 너비 */
+  background: #f5f1ec; /* 배경을 연하게 해서 심리적 거부감을 줄임 */
+  color: #8B3A3A;    /* 텍스트만 삭제 컬러 사용 */
+  border: 1px solid #e0d6cc;
+}
+
+.delete-btn:hover {
+  background: #ffe7e7;
+  border-color: #8B3A3A;
 }
 </style>

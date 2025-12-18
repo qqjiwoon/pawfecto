@@ -30,13 +30,19 @@
 
       <tbody>
         <tr v-for="creator in paginatedCreators" :key="creator.id">
-          <td class="creator-cell">
+          <td class="creator-cell" @click="openProfile(creator)" style="cursor: pointer;">
             <img :src="creator.profileImg" class="profile-img" />
             <div class="info">
               <p class="name">{{ creator.name }}</p>
-              <p class="handle">{{ creator.handle }}</p>
+              <p class="handle">@{{ creator.handle }}</p>
             </div>
           </td>
+
+          <CreatorProfileModal
+            v-if="isProfileModalOpen && selectedCreator"
+            :creator="selectedCreator"
+            @close="closeProfile"
+          />
 
           <td>{{ creator.petType }}</td>
           <td>{{ creator.followers.toLocaleString() }}</td>
@@ -92,68 +98,49 @@
 </template>
 
 <script setup>
-// 크리에이터 신청 현황 조회 (캠페인별)
-import { ref, computed, onMounted } from "vue"
+import { ref, computed, onMounted, onUnmounted } from "vue"
 import { useRoute } from "vue-router"
-import api from "@/plugins/axios" // axios 인스턴스 (Bearer 토큰 설정 포함 가정)
+import api from "@/plugins/axios"
 import Pagination from "./Pagination.vue"
+import CreatorProfileModal from "./CreatorProfileModal.vue" // 모달 임포트
 import defaultImg from "@/assets/profile1.jpg"
 
 const route = useRoute()
 const brandId = Number(route.params.brand_id)
 const campaignId = Number(route.params.campaign_id)
 
-// 테이블용 가공 데이터
+// 데이터 상태
 const creators = ref([])
-
-// 검색
 const keyword = ref("")
 const filteredCreators = ref([])
 
-// 페이지네이션
+// 페이지네이션 상태
 const currentPage = ref(1)
 const itemsPerPage = 5
 
-// 브랜드 상태 드롭다운 옵션
+// 드롭다운 및 모달 상태
 const openStatusId = ref(null)
 const brandStatusOptions = ["Pending", "Approved", "Rejected"]
+const isProfileModalOpen = ref(false) // 모달 오픈 여부
+const selectedCreator = ref(null)     // 선택된 크리에이터 정보
 
-// 브랜드 심사 상태 한국어 매핑
-const getBrandStatusKor = (status) => {
-  const mapping = {
-    Pending: "검토 중",
-    Approved: "승인",
-    Rejected: "거절",
-  }
-  return mapping[status] || status
-}
+// 한국어 매핑 함수들
+const getBrandStatusKor = (s) => ({ Pending: "검토 중", Approved: "승인", Rejected: "거절" }[s] || s)
+const getCreatorStatusKor = (s) => ({ Pending: "응답 대기", Accepted: "수락", Rejected: "거절", Completed: "완료" }[s] || s)
 
-// 크리에이터 매칭 상태 한국어 매핑
-const getCreatorStatusKor = (status) => {
-  const mapping = {
-    Pending: "응답 대기",
-    Accepted: "수락",
-    Rejected: "거절",
-    Completed: "완료",
-  }
-  return mapping[status] || status
-}
-
-// 상태 포맷 (API 원본 데이터를 TitleCase로 변환)
+// 유틸리티 함수
 const formatStatus = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : ""
-
-// 스타일 태그 표시용 변환
 function toKoreanTag(t) {
   const raw = typeof t === "string" ? t : (t?.name_ko || t?.label || t?.name || "")
   const m = raw.match(/\(([^)]+)\)/)
   return m ? m[1] : raw
 }
 
-// 데이터 조회
+// [핵심] 데이터 로드 및 이벤트 리스너 통합
 onMounted(async () => {
+  window.addEventListener('click', handleOutsideClick)
   try {
     const res = await api.get(`/api/v1/brand/${brandId}/campaign/${campaignId}/acceptances/`)
-    
     creators.value = res.data.map(a => ({
       id: a.campaign_acceptance_id,
       name: a.creator.name,
@@ -165,15 +152,17 @@ onMounted(async () => {
       brandStatus: formatStatus(a.brand_decision_status),
       creatorStatus: formatStatus(a.acceptance_status),
     }))
-
     filteredCreators.value = [...creators.value]
   } catch (err) {
     console.error(err)
-    filteredCreators.value = []
   }
 })
 
-// 검색 필터
+onUnmounted(() => {
+  window.removeEventListener('click', handleOutsideClick)
+})
+
+// 검색 및 페이지네이션 로직
 function filterCreators() {
   const k = keyword.value.toLowerCase()
   filteredCreators.value = creators.value.filter(c =>
@@ -182,52 +171,49 @@ function filterCreators() {
   currentPage.value = 1
 }
 
-// 페이지네이션 계산
 const totalPages = computed(() => Math.ceil(filteredCreators.value.length / itemsPerPage))
-
 const paginatedCreators = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage
   return filteredCreators.value.slice(start, start + itemsPerPage)
 })
+function goToPage(page) { currentPage.value = page }
 
-function goToPage(page) {
-  currentPage.value = page
-}
-
-// 드롭다운 토글 (이미 심사가 끝난 건은 열리지 않도록 방어)
+// 드롭다운 제어
 const toggleStatusMenu = (creator) => {
-  if (creator.brandStatus !== 'Pending') {
-    return // 이미 완료된 상태면 메뉴를 열지 않음
-  }
+  if (creator.brandStatus !== 'Pending') return
   openStatusId.value = openStatusId.value === creator.id ? null : creator.id
 }
 
-// 브랜드 상태 변경 및 DB 저장
-async function changeBrandStatus(creator, status) {
-  // 1. 방어 코드: 백엔드 로직에 맞춰 Pending일 때만 진행
-  if (creator.brandStatus !== 'Pending') {
-    alert("이미 심사가 완료된 크리에이터입니다.")
-    return
+const handleOutsideClick = (event) => {
+  if (openStatusId.value !== null && !event.target.closest('.status-wrapper')) {
+    openStatusId.value = null
   }
+}
 
-  // 2. 선택한 상태에 따른 엔드포인트 액션 결정 (Approved -> approve, Rejected -> reject)
+// [핵심] 브랜드 상태 변경
+async function changeBrandStatus(creator, status) {
+  if (creator.brandStatus !== 'Pending') return
+  if (!confirm("심사 상태를 변경하면 이후 취소나 수정이 불가능합니다.\n그래도 심사를 확정하시겠습니까?")) return
+
   const action = status === "Approved" ? "approve" : "reject"
-  
   try {
-    // 3. API 요청 (백엔드 URL 구조: .../acceptances/{id}/{action}/)
-    const url = `/api/v1/brand/${brandId}/campaign/${campaignId}/acceptances/${creator.id}/${action}/`
-    const res = await api.patch(url)
-    
-    // 4. 성공 시 로컬 데이터 업데이트 및 알림
+    await api.patch(`/api/v1/brand/${brandId}/campaign/${campaignId}/acceptances/${creator.id}/${action}/`)
     creator.brandStatus = status
     openStatusId.value = null
-    alert(res.data.message || `${getBrandStatusKor(status)} 처리가 완료되었습니다.`)
+    alert(`${getBrandStatusKor(status)} 처리가 완료되었습니다.`)
   } catch (err) {
-    console.error(err)
-    // 백엔드에서 보낸 에러 메시지가 있으면 노출 (예: "이미 승인 또는 거절된...")
-    const errorMsg = err.response?.data?.error || "처리 중 오류가 발생했습니다."
-    alert(errorMsg)
+    alert(err.response?.data?.error || "처리 중 오류가 발생했습니다.")
   }
+}
+
+// [핵심] 크리에이터 프로필 모달 제어
+const openProfile = (creator) => {
+  selectedCreator.value = creator
+  isProfileModalOpen.value = true
+}
+const closeProfile = () => {
+  isProfileModalOpen.value = false
+  selectedCreator.value = null
 }
 </script>
 
@@ -276,6 +262,7 @@ async function changeBrandStatus(creator, status) {
   font-weight: 600;
   border-bottom: 2px solid #eee;
   text-align: center;
+  color: #333;
 }
 
 .creator-table td {
@@ -301,8 +288,18 @@ async function changeBrandStatus(creator, status) {
   flex-shrink: 0;
 }
 
-.info .name { font-weight: 600; color: #333; font-size: 15px; }
-.info .handle { font-size: 13px; color: #888; }
+.info .name { 
+  font-weight: 600; 
+  color: #333; 
+  font-size: 15px; 
+  margin: 0;
+}
+
+.info .handle { 
+  font-size: 13px; 
+  color: #888; 
+  margin: 0;
+}
 
 .tag-container {
   display: flex;
@@ -341,7 +338,6 @@ async function changeBrandStatus(creator, status) {
 
 /* 크리에이터 매칭 텍스트 스타일 */
 .status-text {
-  font-weight: 600;
   font-size: 14px;
 }
 
@@ -382,6 +378,12 @@ async function changeBrandStatus(creator, status) {
   z-index: 20;
   list-style: none;
   margin: 0;
+  animation: fadeIn 0.15s ease-out; /* 부드럽게 나타나기 */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 .status-option {

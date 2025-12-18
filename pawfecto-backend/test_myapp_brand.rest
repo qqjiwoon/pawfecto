@@ -34,7 +34,7 @@ Content-Type: application/json
 ### ------------------------------------------------------------
 ### 0) 공통 설정 – 토큰 입력
 ### ------------------------------------------------------------
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1OTkxNzUzLCJpYXQiOjE3NjU5OTE0NTMsImp0aSI6IjhjMzZlYzZmMTM5NDQ5YmRiNWEzNmIzMjgwZGQxZDM1IiwidXNlcl9pZCI6IjIifQ.SqS37BKpJeGKI_MC1fgcDJHpGRiYXoHrwcsNPaoGiYk
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MDY0ODM5LCJpYXQiOjE3NjYwNTc2MzksImp0aSI6ImFlY2JiZmZmMzYyODQzNzc5M2JmZDA2MmIwZTRhZjMyIiwidXNlcl9pZCI6IjIifQ.aZY62w7lsHHUjR5xhATBrYLlD_r6z1goAiZN66WQSSs
 
 
 
@@ -139,7 +139,7 @@ Authorization: Bearer {{token}}
 ###    (캠페인 신청 목록 조회)
 ### GET /api//v1/brand/{brand_id}/campaign/{campaign_id}/acceptances/
 ### ------------------------------------------------------------
-GET http://127.0.0.1:8000/api/v1/brand/2/campaign/13/acceptances/
+GET http://127.0.0.1:8000/api/v1/brand/2/campaign/17/acceptances/
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
