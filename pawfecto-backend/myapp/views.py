@@ -10,13 +10,18 @@ from django.http import JsonResponse
 from accounts.models import User
 from accounts.serializers import CreatorSerializer
 
-from .models import Campaign, CampaignAcceptance, Deliverable
+from .models import Campaign, CampaignAcceptance, Deliverable, StyleTag
 from .serializers import (
     CampaignSerializer,
     CampaignListSerializer,
     CampaignAcceptanceSerializer,
     DeliverableSerializer,
 )
+
+from django.db.models import Q
+
+
+
 
 # ============================================================
 # 브랜드 기능
@@ -55,9 +60,14 @@ def create_campaign(request, brand_id):
         return Response({"error": "본인 브랜드로만 캠페인을 생성할 수 있습니다."}, status=403)
 
     serializer = CampaignSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        serializer.save(brand=request.user)
-        return Response(serializer.data, status=201)
+    serializer.is_valid(raise_exception=True)
+
+    campaign = serializer.save(brand=request.user)
+
+    # 자동 매칭 실행
+    auto_match_creators(campaign)
+
+    return Response(serializer.data, status=201)
 
 
 
@@ -102,12 +112,13 @@ def update_campaign(request, brand_id, campaign_id):
             status=403
         )
 
-    # 크리에이터 매칭 여부 확인
-    has_acceptance = CampaignAcceptance.objects.filter(
-        campaign=campaign
+    # 승인된 크리에이터가 있는지 확인
+    has_approved_acceptance = CampaignAcceptance.objects.filter(
+        campaign=campaign,
+        brand_decision_status="approved"
     ).exists()
 
-    if has_acceptance:
+    if has_approved_acceptance:
         forbidden_fields = {
             "target_pet_type",
             "style_tags",
@@ -118,7 +129,7 @@ def update_campaign(request, brand_id, campaign_id):
         if forbidden_fields & request.data.keys():
             return Response(
                 {
-                    "error": "크리에이터가 매칭된 캠페인은 가이드라인을 수정할 수 없습니다."
+                    "error": "크리에이터가 승인된 이후에는 가이드라인을 수정할 수 없습니다."
                 },
                 status=400
             )
@@ -126,6 +137,12 @@ def update_campaign(request, brand_id, campaign_id):
     serializer = CampaignSerializer(campaign, data=request.data, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
+
+    # 조건 변경에 따른 기존 추천 정리
+    cleanup_invalid_acceptances(campaign)
+
+    # 새 조건에 맞는 크리에이터 추가
+    auto_match_creators(campaign)
 
     return Response(serializer.data, status=200)
 
@@ -399,3 +416,120 @@ def creator_detail(request, creator_id):
     )
     serializer = CreatorSerializer(creator)
     return JsonResponse(serializer.data, status=200)
+
+
+
+
+
+# ============================================================
+# 캠페인 자동 크리에이터 매칭
+# ============================================================-
+
+def auto_match_creators(campaign):
+    """
+    캠페인 조건에 맞는 모든 크리에이터에 대해
+    CampaignAcceptance를 자동 생성한다.
+    (이미 해당 캠페인에 acceptance가 있는 크리에이터는 제외)
+    """
+
+    # --------------------------------------------------------
+    # 1. 캠페인 기본 조건
+    # --------------------------------------------------------
+    target_pet_type = campaign.target_pet_type
+    min_follower_count = campaign.min_follower_count
+
+    campaign_style_tags = campaign.style_tags.all()
+    has_no_preference = campaign_style_tags.filter(
+        code="no_preference"
+    ).exists()
+
+    # --------------------------------------------------------
+    # 2. 크리에이터 기본 필터
+    # --------------------------------------------------------
+    creators = User.objects.filter(
+        account_type="creator",
+        pet_type=target_pet_type,
+        follower_count__gte=min_follower_count
+    )
+
+    # --------------------------------------------------------
+    # 3. 스타일 태그 필터 (no_preference 아닐 때만)
+    # --------------------------------------------------------
+    if not has_no_preference and campaign_style_tags.exists():
+        creators = creators.filter(
+            style_tags__in=campaign_style_tags
+        ).distinct()
+
+    # --------------------------------------------------------
+    # 4. 이미 해당 캠페인에 acceptance가 있는 creator 제외
+    # --------------------------------------------------------
+    existing_creator_ids = CampaignAcceptance.objects.filter(
+        campaign=campaign
+    ).values_list("creator_id", flat=True)
+
+    creators = creators.exclude(id__in=existing_creator_ids)
+
+    # --------------------------------------------------------
+    # 5. CampaignAcceptance 생성
+    # --------------------------------------------------------
+    now = timezone.now()
+    acceptance_list = []
+
+    for creator in creators:
+        acceptance_list.append(
+            CampaignAcceptance(
+                campaign=campaign,
+                creator=creator,
+                brand_decision_status="pending",
+                acceptance_status="pending",
+                applied_at=now
+            )
+        )
+
+    CampaignAcceptance.objects.bulk_create(acceptance_list)
+
+
+
+# ------------------------------------------------------------
+# 캠페인 조건 변경 시 기존 추천 정리
+# ------------------------------------------------------------
+from .models import CampaignAcceptance
+
+
+def cleanup_invalid_acceptances(campaign):
+    """
+    캠페인 조건 변경 시,
+    아직 승인되지 않은 acceptance 중
+    현재 캠페인 조건을 만족하지 않는 것들을 제거한다.
+    """
+
+    # 승인된 acceptance는 절대 건드리지 않음
+    pending_acceptances = CampaignAcceptance.objects.filter(
+        campaign=campaign,
+        brand_decision_status="pending"
+    ).select_related("creator")
+
+    for acceptance in pending_acceptances:
+        creator = acceptance.creator
+
+        # 1. 반려동물 타입
+        if creator.pet_type != campaign.target_pet_type:
+            acceptance.delete()
+            continue
+
+        # 2. 팔로워 수
+        if creator.follower_count < campaign.min_follower_count:
+            acceptance.delete()
+            continue
+
+        # 3. 스타일 태그 (no_preference 아닐 때만)
+        campaign_tags = campaign.style_tags.all()
+
+        if campaign_tags.filter(code="no_preference").exists():
+            continue
+
+        if campaign_tags.exists():
+            if not creator.style_tags.filter(
+                id__in=campaign_tags
+            ).exists():
+                acceptance.delete()
