@@ -2,7 +2,7 @@
   <section class="pf-signup-hero">
     <div class="pf-signup-hero-overlay"></div>
 
-    <h1 class="pf-signup-hero-title">Pawfecto</h1>
+    <h1 class="pf-signup-hero-title pf-logo">Pawfecto</h1>
 
     <div class="pf-signup-breadcrumb">
       <p>Home</p>
@@ -12,7 +12,7 @@
   </section>
   <div class="signup-container">
 
-    <h1>Creator Signup</h1>
+    <!-- <h1>Creator Signup</h1> -->
 
     <h2 class="title">회원 가입</h2>
     <p class="subtitle">
@@ -188,35 +188,40 @@ watch(
   background-size: cover;
   background-position: center;
   position: relative;
+
+  /* 중앙 정렬을 위한 Flexbox 추가 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 세로 중앙 */
+  align-items: center;     /* 가로 중앙 */
+  text-align: center;
 }
 
 .pf-signup-hero-overlay {
   position: absolute;
   inset: 0;
   background-color: rgba(255, 255, 255, 0.25);
+  z-index: 1; /* 오버레이가 아래로 가도록 설정 */
 }
 
 .pf-signup-hero-title {
-  position: absolute;
-  bottom: 110px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative; 
+  z-index: 2; /* 오버레이보다 위로 올림 */
   font-family: 'Rubik Bubbles', sans-serif;
   font-size: 54px;
   color: #fff;
+  margin: 0; /* 기본 마진 제거 */
 }
 
 .pf-signup-breadcrumb {
-  position: absolute;
-  bottom: 70px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  z-index: 2; /* 오버레이보다 위로 올림 */
+  margin-top: 10px; /* 타이틀과의 간격 조절 */
   color: #fff;
   font-size: 14px;
   display: flex;
   gap: 6px;
-
-  font-family: inherit; /* Rubik Bubbles 상속 방지 */
+  font-family: inherit;
 }
 
 .pf-signup-breadcrumb p,

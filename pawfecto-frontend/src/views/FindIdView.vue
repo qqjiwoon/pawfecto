@@ -5,7 +5,7 @@
     <section class="pf-find-id-hero">
       <div class="pf-find-id-hero-overlay"></div>
 
-      <h1 class="pf-find-id-hero-title">Pawfecto</h1>
+      <h1 class="pf-find-id-hero-title pf-logo">Pawfecto</h1>
 
       <div class="pf-find-id-breadcrumb">
         <p>Home</p>
@@ -103,35 +103,40 @@ const handleFindId = async () => {
   background-size: cover;
   background-position: center;
   position: relative;
+
+  /* 중앙 정렬을 위한 Flexbox 추가 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 세로 중앙 */
+  align-items: center;     /* 가로 중앙 */
+  text-align: center;
 }
 
 .pf-find-id-hero-overlay {
   position: absolute;
   inset: 0;
   background-color: rgba(255, 255, 255, 0.25);
+  z-index: 1; /* 오버레이가 아래로 가도록 설정 */
 }
 
 .pf-find-id-hero-title {
-  position: absolute;
-  bottom: 110px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative; 
+  z-index: 2; /* 오버레이보다 위로 올림 */
   font-family: 'Rubik Bubbles', sans-serif;
   font-size: 54px;
   color: #fff;
+  margin: 0; /* 기본 마진 제거 */
 }
 
 .pf-find-id-breadcrumb {
-  position: absolute;
-  bottom: 70px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  z-index: 2; /* 오버레이보다 위로 올림 */
+  margin-top: 10px; /* 타이틀과의 간격 조절 */
   color: #fff;
   font-size: 14px;
   display: flex;
   gap: 6px;
-
-  font-family: inherit; /* Rubik Bubbles 상속 방지 */
+  font-family: inherit;
 }
 
 .pf-find-id-breadcrumb p,
@@ -172,16 +177,18 @@ const handleFindId = async () => {
   border-radius: 6px;
   border: 1px solid #ddd;
   margin-bottom: 20px;
+  box-sizing: border-box;
 }
 
 .pf-find-id-submit {
-  width: 108%;
+  width: 100%;
   padding: 12px;
   background: #222;
   color: #fff;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 .pf-find-id-submit:disabled {
@@ -202,6 +209,8 @@ const handleFindId = async () => {
 .pf-find-id-back {
   margin-top: 30px;
   font-size: 14px;
+  display: flex;
+  justify-content: center;
 }
 
 .pf-find-id-back a {

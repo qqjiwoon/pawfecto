@@ -38,7 +38,7 @@
 .pf-home-hero-overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(255, 255, 255, 0.2); /* 밝기 유지 */
+  background-color: rgba(255, 255, 255, 0.1); /* 밝기 유지 */
   pointer-events: none; /* overlay가 클릭 막지 않도록 */
 }
 </style>
