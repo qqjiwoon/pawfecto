@@ -1,0 +1,24 @@
+/* Google Fonts에서 Rubik Bubbles 불러오기 */
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Bubbles&display=swap');
+
+
+/* 전역 변수 설정 (나중에 유지보수하기 편합니다) */
+:root {
+  --pf-logo-font: 'Rubik Bubbles', sans-serif;
+  /* 깨짐이 없고 가장 가독성 좋은 시스템 폰트 순서입니다 */
+  --pf-main-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  font-family: var(--pf-main-font);
+}
+
+/* 입력창들도 이 변수를 따라가게 해두면 나중에 정말 편합니다 */
+input, button, textarea {
+  font-family: inherit;
+}
+
+.pf-logo {
+  font-family: var(--pf-logo-font);
+  font-weight: 400;
+}
