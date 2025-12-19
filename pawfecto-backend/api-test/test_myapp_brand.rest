@@ -1,6 +1,6 @@
-### myapp 테스트 - [ 브랜드 ]
+### myapp 테스트 - [ 브랜드 ] => 12월 20일 오전 기준 테스트 완료
 
-### 회원가입  ==> ok
+### 회원가입
 POST http://127.0.0.1:8000/accounts/signup/
 Content-Type: application/json
 
@@ -26,7 +26,7 @@ Content-Type: application/json
 
 {
   "username": "naturapet_brand",
-  "password": "123123"
+  "password": "test1234"
 }
 
 
@@ -34,7 +34,7 @@ Content-Type: application/json
 ### ------------------------------------------------------------
 ### 0) 공통 설정 – 토큰 입력
 ### ------------------------------------------------------------
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MDY0ODM5LCJpYXQiOjE3NjYwNTc2MzksImp0aSI6ImFlY2JiZmZmMzYyODQzNzc5M2JmZDA2MmIwZTRhZjMyIiwidXNlcl9pZCI6IjIifQ.aZY62w7lsHHUjR5xhATBrYLlD_r6z1goAiZN66WQSSs
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MTY5ODU5LCJpYXQiOjE3NjYxNjI2NTksImp0aSI6IjVmMmVkZjhlNDJjYTRhOWJiOGNhMzE0YWZmOWRiNzU5IiwidXNlcl9pZCI6IjIifQ.tYN5fK-NHbOF0P48or1o-hXha9Bo_cxO6xfJtavCxd0
 
 
 
@@ -71,60 +71,126 @@ Content-Type: application/json
 
 
 ### ------------------------------------------------------------
-### 2) 캠페인 생성
+### 2. 캠페인 생성
 ### POST /api/v1/brand/{brand_id}/campaign/create/
 ### ------------------------------------------------------------
 POST http://127.0.0.1:8000/api/v1/brand/2/campaign/create/
-Content-Type: application/json
 Authorization: Bearer {{token}}
+Content-Type: application/json
 
 {
-  "product_name": "포프레시 저알러지 닭고기 어덜트 독 사료",
-  "product_image_url": "https://cdn.pawfecto.kr/products/pawfresh_chicken_adult_dog.png",
-  "product_description": "국내산 닭고기를 주원료로 한 저알러지 어덜트 독 사료입니다. 합성첨가물을 배제하고 소화 흡수율을 높여 성견의 일상 건강 관리를 돕습니다.",
+  "product_name": "내추라펫 저알러지 닭고기 사료",
+  "product_image_url": "https://cdn.pawfecto.kr/products/naturapet_chicken.png",
+  "product_description": "요구조건(requirements)을 포함한 캠페인 등록 테스트입니다. 저알러지 성견용 사료입니다.",
   "target_pet_type": "dog",
   "min_follower_count": 5000,
-  "style_tag_ids": [5],
+  "required_creator_count": 2,
   "requested_at": "2025-02-01T09:00:00Z",
-  "application_deadline_at": "2025-02-15",
-  "posting_start_at": "2025-02-20",
-  "posting_end_at": "2025-02-27",
-  "required_creator_count": 6
+  "application_deadline_at": "2025-02-10",
+  "posting_start_at": "2025-02-15",
+  "posting_end_at": "2025-02-28",
+  "style_tag_ids": [1, 3],
+  "requirements": [
+    {
+      "requirement_type": "object",
+      "description": "사료 패키지가 명확히 보이도록 촬영",
+      "is_required": true
+    },
+    {
+      "requirement_type": "text",
+      "description": "급여 후 반응을 캡션에 작성",
+      "is_required": true
+    }
+  ]
 }
 
 
 
+
 ### ------------------------------------------------------------
-### 3) 캠페인 상세 조회
+### 3) 캠페인 상세 조회 (요구조건 포함)
 ### GET /api/v1/brand/{brand_id}/campaign/{campaign_id}/
 ### ------------------------------------------------------------
-GET http://127.0.0.1:8000/api/v1/brand/2/campaign/13/
+GET http://127.0.0.1:8000/api/v1/brand/2/campaign/20/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 
 
 ### ------------------------------------------------------------
-### 4) 캠페인 수정
+### 4) 캠페인 수정 (요구조건까지 한 번에 수정)
 ### PUT /api/v1/brand/{brand_id}/campaign/{campaign_id}/update/
 ### ------------------------------------------------------------
-PUT http://127.0.0.1:8000/api/v1/brand/2/campaign/12/update/
+PUT http://127.0.0.1:8000/api/v1/brand/2/campaign/20/update/
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "min_follower_count": 8500,
-  "required_creator_count": 10,
-  "application_deadline_at": "2025-02-26"
+  "min_follower_count": 8000,
+  "requirements": [
+    {
+      "requirement_type": "scene",
+      "description": "실내 거실에서 반려견과 함께 촬영",
+      "is_required": true
+    }
+  ]
 }
 
 
 
 ### ------------------------------------------------------------
-### 5) 캠페인 삭제
+### 5. 포스팅 요구조건 목록 조회
+### GET /api/v1/brand/{brand_id}/campaign/{campaign_id}/requirements/
+### ------------------------------------------------------------
+GET http://127.0.0.1:8000/api/v1/brand/2/campaign/20/requirements/
+Authorization: Bearer {{token}}
+
+
+
+### ------------------------------------------------------------
+### 6. 포스팅 요구조건 생성 (추가)
+### POST /api/v1/brand/{brand_id}/campaign/{campaign_id}/requirements/
+### ------------------------------------------------------------
+POST http://127.0.0.1:8000/api/v1/brand/2/campaign/20/requirements/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "requirement_type": "action",
+  "description": "사료를 급여하는 장면 포함",
+  "is_required": false
+}
+
+
+
+### ------------------------------------------------------------
+### 7. 포스팅 요구조건 수정
+### PATCH /api/v1/brand/{brand_id}/campaign/{campaign_id}/requirements/{requirement_id}/update/
+### ------------------------------------------------------------
+PATCH http://127.0.0.1:8000/api/v1/brand/2/campaign/20/requirements/3/update/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "description": "사료를 급여하고 반응이 보이도록 촬영"
+}
+
+
+
+### ------------------------------------------------------------
+### 8. 포스팅 요구조건 삭제
+### DELETE /api/v1/brand/{brand_id}/campaign/{campaign_id}/requirements/{requirement_id}/delete/
+### ------------------------------------------------------------
+DELETE http://127.0.0.1:8000/api/v1/brand/2/campaign/20/requirements/3/delete/
+Authorization: Bearer {{token}}
+
+
+
+### ------------------------------------------------------------
+### 캠페인 삭제
 ### DELETE /api/v1/brand/{brand_id}/campaign/{campaign_id}/delete/
 ### ------------------------------------------------------------
-DELETE http://127.0.0.1:8000/api/v1/brand/2/campaign/14/delete/
+DELETE http://127.0.0.1:8000/api/v1/brand/2/campaign/21/delete/
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -135,11 +201,11 @@ Authorization: Bearer {{token}}
 
 ### [브랜드] Campaign 진행 관련
 ### ------------------------------------------------------------
-### 1) 브랜드 입장에서 특정 캠페인에 대한 크리에이터 신청 현황 조회 (브랜드)
-###    (캠페인 신청 목록 조회)
+### 1) 브랜드 입장에서 특정 캠페인에 대한 크리에이터 목록 조회 (브랜드)
+###    (creator recommendations)
 ### GET /api//v1/brand/{brand_id}/campaign/{campaign_id}/acceptances/
 ### ------------------------------------------------------------
-GET http://127.0.0.1:8000/api/v1/brand/2/campaign/17/acceptances/
+GET http://127.0.0.1:8000/api/v1/brand/2/campaign/20/acceptances/
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -149,7 +215,7 @@ Authorization: Bearer {{token}}
 ### 2) 브랜드가 크리에이터 승인
 ### PATCH /api/v1/brand/{brand_id}/campaign/{campaign_id}/acceptances/{acceptance_id}/approve/
 ### ------------------------------------------------------------
-PATCH http://127.0.0.1:8000/api/v1/brand/2/campaign/13/acceptances/13/approve/
+PATCH http://127.0.0.1:8000/api/v1/brand/2/campaign/20/acceptances/21/approve/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -161,7 +227,7 @@ Content-Type: application/json
 ### 3) 브랜드가 크리에이터 거절
 ### PATCH /api/v1/brand/{brand_id}/campaign/{campaign_id}/acceptances/{acceptance_id}/reject/
 ### ------------------------------------------------------------
-PATCH http://127.0.0.1:8000/api/v1/brand/2/campaign/13/acceptances/15/reject/
+PATCH http://127.0.0.1:8000/api/v1/brand/2/campaign/20/acceptances/22/reject/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -173,6 +239,62 @@ Content-Type: application/json
 ### 6) 캠페인 진행 상황(Deliverables) 조회
 ### GET /api/v1/brand/{brand_id}/campaign/{campaign_id}/progress/
 ### ------------------------------------------------------------
-GET http://127.0.0.1:8000/api/v1/brand/2/campaign/3/progress/
+GET http://127.0.0.1:8000/api/v1/brand/2/campaign/20/progress/
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+
+
+
+### ------------------------------------------------------------
+### 크리에이터
+### ------------------------------------------------------------
+
+### ------------------------------------------------------------
+### 0. 로그인 (크리에이터: puppy_daily, pk = 6)
+### POST /accounts/login/
+### ------------------------------------------------------------
+POST http://127.0.0.1:8000/accounts/login/
+Content-Type: application/json
+
+{
+  "username": "puppy_daily",
+  "password": "test1234"
+}
+
+### ------------------------------------------------------------
+### 공통 설정 – 토큰 입력
+### ------------------------------------------------------------
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MTY5MDAzLCJpYXQiOjE3NjYxNjE4MDMsImp0aSI6IjE4ZTBlNTQxMWRjYzQ3YmFiMjFmZjQzZDI0YTE4OTRlIiwidXNlcl9pZCI6IjYifQ.dNHPTaLYm0DmCFuDwA3ZytFvSlUDbPa5ci6w3mSuDOE
+
+
+
+### ------------------------------------------------------------
+### 10. 캠페인 오퍼 수락 (크리에이터)
+### POST /api/v1/creator/offers/{acceptance_id}/accept/
+### ------------------------------------------------------------
+POST http://127.0.0.1:8000/api/v1/creator/offers/21/accept/
+Authorization: Bearer {{token}}
+
+
+
+### ------------------------------------------------------------
+### 11. Deliverable 제출 ==> postman에서 테스트 확인 완료
+### POST /api/v1/campaign-acceptances/{acceptance_id}/deliverable/
+### ------------------------------------------------------------
+POST http://127.0.0.1:8000/api/v1/campaign-acceptances/21/deliverable/
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data
+
+content=급여 후 반려견의 반응이 매우 좋았습니다. #협찬 #네추라펫
+image=@./test_image.jpg
+
+
+
+### ------------------------------------------------------------
+### 12. Deliverable AI 검증 요청
+### POST /api/v1/deliverables/{deliverable_id}/verify/
+### ------------------------------------------------------------
+POST http://127.0.0.1:8000/api/v1/deliverables/10/verify/
+Authorization: Bearer {{token}}
+

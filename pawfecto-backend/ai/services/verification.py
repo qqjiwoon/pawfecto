@@ -17,22 +17,20 @@ def run_ai_verification(prompt: str, images: list):
 
     return {
         "image_analysis_success": True,
-        "score": 100,
-        "results": [
+        "conditions": [
             {
-                "type": "scene",
-                "passed": True,
-                "reason": "반려동물이 제품을 사용하는 장면이 이미지에서 확인되었습니다."
+                "requirement": "사료를 급여하는 장면 포함",
+                "satisfied": True
             },
             {
-                "type": "object",
-                "passed": True,
-                "reason": "제품이 이미지 내에 명확하게 노출되어 있습니다."
+                "requirement": "제품이 이미지에 노출되어야 함",
+                "satisfied": True
             },
             {
-                "type": "text",
-                "passed": True,
-                "reason": "캡션에 브랜드 요구사항이 충족되었습니다."
+                "requirement": "캡션에 브랜드명이 포함되어야 함",
+                "satisfied": True
             }
-        ]
+        ],
+        "score": 100,
+        "error_reason": None
     }

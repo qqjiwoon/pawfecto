@@ -45,6 +45,32 @@ urlpatterns = [
     ),
 
     # ============================================================
+    # [브랜드] Campaign_requirement 관련
+    # ============================================================
+
+    # 포스팅 요구조건 조회/생성
+    path(
+        "brand/<int:brand_id>/campaign/<int:campaign_id>/requirements/",
+        views.campaign_requirements,
+        name='campaign_requirements'
+    ),
+
+    # 캠페인 포스팅 요구조건 수정
+    path(
+        'brand/<int:brand_id>/campaign/<int:campaign_id>/requirements/<int:requirement_id>/update/',
+        views.update_campaign_requirement,
+        name='update_campaign_requirement'
+    ),
+
+    # 캠페인 포스팅 요구조건 삭제
+    path(
+        'brand/<int:brand_id>/campaign/<int:campaign_id>/requirements/<int:requirement_id>/delete/',
+        views.delete_campaign_requirement,
+        name='delete_campaign_requirement'
+    ),
+
+
+    # ============================================================
     # [브랜드] Campaign 진행 관련
     # ============================================================
 

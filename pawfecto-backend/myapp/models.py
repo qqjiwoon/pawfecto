@@ -185,6 +185,11 @@ class Deliverable(models.Model):
         default="pending"
     )
 
+    ai_result_raw = models.JSONField(
+        null=True,
+        blank=True
+    )
+
     submitted_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

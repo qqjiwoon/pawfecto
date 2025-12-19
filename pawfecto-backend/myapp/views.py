@@ -10,13 +10,14 @@ from django.http import JsonResponse
 from accounts.models import User
 from accounts.serializers import CreatorSerializer
 
-from .models import Campaign, CampaignAcceptance, Deliverable, StyleTag
+from .models import Campaign, CampaignAcceptance, Deliverable, StyleTag, DeliverableRequirement
 from .serializers import (
     CampaignSerializer,
     CampaignListSerializer,
     CampaignAcceptanceSerializer,
     DeliverableSerializer,
-    DeliverableCreateSerializer
+    DeliverableCreateSerializer,
+    DeliverableRequirementSerializer
 )
 
 from django.db.models import Q
@@ -171,12 +172,13 @@ def delete_campaign(request, brand_id, campaign_id):
             status=403
         )
 
-    # 3. 캠페인에 연결된 크리에이터가 하나라도 있으면 삭제 불가
-    has_acceptance = CampaignAcceptance.objects.filter(
-        campaign=campaign
+    # 3. 승인된 크리에이터가 하나라도 있으면 삭제 불가
+    has_approved_acceptance = CampaignAcceptance.objects.filter(
+        campaign=campaign,
+        brand_decision_status="approved"
     ).exists()
 
-    if has_acceptance:
+    if has_approved_acceptance:
         return Response(
             {
                 "error": "크리에이터가 연결된 캠페인은 삭제할 수 없습니다."
@@ -189,6 +191,143 @@ def delete_campaign(request, brand_id, campaign_id):
     return Response({"message": "캠페인이 삭제되었습니다."}, status=204)
 
 
+
+# ============================================================
+# [브랜드] Campaign_requirement 관련
+# ============================================================
+
+# ------------------------------------------------------------
+# [브랜드] 캠페인 포스팅 요구조건 목록 / 생성
+# ------------------------------------------------------------
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def campaign_requirements(request, brand_id, campaign_id):
+
+    campaign = get_object_or_404(
+        Campaign,
+        campaign_id=campaign_id,
+        brand_id=brand_id
+    )
+
+    if campaign.brand != request.user:
+        return Response({"error": "본인 캠페인만 접근할 수 있습니다."}, status=403)
+
+    # GET: 요구조건 목록 조회
+    if request.method == 'GET':
+        serializer = DeliverableRequirementSerializer(
+            campaign.requirements.all(),
+            many=True
+        )
+        return Response(serializer.data, status=200)
+
+    # POST: 요구조건 생성
+    has_approved = CampaignAcceptance.objects.filter(
+        campaign=campaign,
+        brand_decision_status="approved"
+    ).exists()
+
+    if has_approved:
+        return Response(
+            {"error": "크리에이터 승인 이후에는 요구조건을 추가할 수 없습니다."},
+            status=400
+        )
+
+    serializer = DeliverableRequirementSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save(campaign=campaign)
+
+    return Response(serializer.data, status=201)
+
+
+# ------------------------------------------------------------
+# [브랜드] 캠페인 포스팅 요구조건 수정
+# ------------------------------------------------------------
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_campaign_requirement(
+    request,
+    brand_id,
+    campaign_id,
+    requirement_id
+):
+
+    campaign = get_object_or_404(
+        Campaign,
+        campaign_id=campaign_id,
+        brand_id=brand_id
+    )
+
+    if campaign.brand != request.user:
+        return Response({"error": "본인 캠페인만 접근할 수 있습니다."}, status=403)
+
+    requirement = get_object_or_404(
+        DeliverableRequirement,
+        id=requirement_id,
+        campaign=campaign
+    )
+
+    has_approved = CampaignAcceptance.objects.filter(
+        campaign=campaign,
+        brand_decision_status="approved"
+    ).exists()
+
+    if has_approved:
+        return Response(
+            {"error": "크리에이터 승인 이후에는 요구조건을 수정할 수 없습니다."},
+            status=400
+        )
+
+    serializer = DeliverableRequirementSerializer(
+        requirement,
+        data=request.data,
+        partial=True
+    )
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+
+    return Response(serializer.data, status=200)
+
+
+# ------------------------------------------------------------
+# [브랜드] 캠페인 포스팅 요구조건 삭제
+# ------------------------------------------------------------
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_campaign_requirement(
+    request,
+    brand_id,
+    campaign_id,
+    requirement_id
+):
+
+    campaign = get_object_or_404(
+        Campaign,
+        campaign_id=campaign_id,
+        brand_id=brand_id
+    )
+
+    if campaign.brand != request.user:
+        return Response({"error": "본인 캠페인만 접근할 수 있습니다."}, status=403)
+
+    requirement = get_object_or_404(
+        DeliverableRequirement,
+        id=requirement_id,
+        campaign=campaign
+    )
+
+    has_approved = CampaignAcceptance.objects.filter(
+        campaign=campaign,
+        brand_decision_status="approved"
+    ).exists()
+
+    if has_approved:
+        return Response(
+            {"error": "크리에이터 승인 이후에는 요구조건을 삭제할 수 없습니다."},
+            status=400
+        )
+
+    requirement.delete()
+    return Response(status=204)
 
 
 
@@ -218,7 +357,7 @@ def campaign_acceptance_list(request, brand_id, campaign_id):
 
 
 # ------------------------------------------------------------
-# 2) 브랜드가  추천받은 크리에이터 승인
+# 2) 브랜드가 추천받은 크리에이터 승인
 # ------------------------------------------------------------
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
@@ -464,21 +603,56 @@ def creator_detail(request, creator_id):
 @permission_classes([IsAuthenticated])
 def submit_deliverable(request, acceptance_id):
 
+    # CampaignAcceptance 조회
+    acceptance = get_object_or_404(
+        CampaignAcceptance,
+        campaign_acceptance_id=acceptance_id
+    )
+
+    # 크리에이터 본인 여부 확인
+    if request.user.account_type != "creator":
+        return Response(
+            {"error": "크리에이터만 결과물을 제출할 수 있습니다."},
+            status=403
+        )
+
+    if acceptance.creator != request.user:
+        return Response(
+            {"error": "본인 캠페인에 대해서만 결과물을 제출할 수 있습니다."},
+            status=403
+        )
+
+    # 캠페인 수락 상태 확인
+    if acceptance.acceptance_status != "accepted":
+        return Response(
+            {"error": "수락된 캠페인에 대해서만 결과물을 제출할 수 있습니다."},
+            status=400
+        )
+
+    # Deliverable 중복 제출 방지
+    if hasattr(acceptance, "deliverable"):
+        return Response(
+            {"error": "이미 결과물이 제출된 캠페인입니다."},
+            status=400
+        )
+
     serializer = DeliverableCreateSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
     deliverable = Deliverable.objects.create(
-        campaign_acceptance_id=acceptance_id,
-        content=serializer.validated_data['content'],
-        image=serializer.validated_data['image'],
-        deliverable_status='completed',
-        ai_validation_status='pending'
+        campaign_acceptance=acceptance,
+        content=serializer.validated_data["content"],
+        image=serializer.validated_data["image"],
+        deliverable_status="completed",
+        ai_validation_status="pending",
+        posted_at=timezone.now()
     )
 
     return Response(
         DeliverableSerializer(deliverable).data,
         status=201
     )
+
 
 
 # ============================================================
@@ -606,10 +780,7 @@ def cleanup_invalid_acceptances(campaign):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def verify_deliverable(request, deliverable_id):
-    """
-    크리에이터가 제출한 Deliverable에 대해
-    AI 검증을 요청한다.
-    """
+
     deliverable = get_object_or_404(
         Deliverable,
         deliverable_id=deliverable_id
@@ -628,14 +799,14 @@ def verify_deliverable(request, deliverable_id):
             status=403
         )
 
-    # 이미 검증 완료된 경우 방어
-    if deliverable.ai_validation_status != "pending":
+    # 이미 통과한 경우만 재검증 차단
+    if deliverable.ai_validation_status == "passed":
         return Response(
-            {"error": "이미 검증이 처리된 Deliverable입니다."},
+            {"error": "이미 통과된 Deliverable은 재검증할 수 없습니다."},
             status=400
         )
 
-    # 서비스 호출 (AI 실제 호출은 아직 mock 단계)
+    # AI 검증 실행
     from .services.deliverable_service import verify_deliverable as run_verification
     run_verification(deliverable.deliverable_id)
 
@@ -643,3 +814,4 @@ def verify_deliverable(request, deliverable_id):
         {"message": "AI 검증 요청이 접수되었습니다."},
         status=200
     )
+

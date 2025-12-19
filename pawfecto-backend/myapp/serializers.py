@@ -170,6 +170,10 @@ class DeliverableSerializer(serializers.ModelSerializer):
             'posted_at',
             'post_url',
             'deliverable_status',
+            'content',
+            'image',
+            'ai_validation_status',
+            'submitted_at',
         ]
 
 # -----------------------------------------------------------
