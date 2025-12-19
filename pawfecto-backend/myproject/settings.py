@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -157,3 +158,12 @@ SIMPLE_JWT = {
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = 'media/'
+
+
+
+# API keys and settings for AI services
+GMS_API_KEY = os.getenv("GMS_API_KEY")
+GMS_OPENAI_BASE_URL = os.getenv("GMS_OPENAI_BASE_URL")
+
+AI_MODEL_PRIMARY = os.getenv("AI_MODEL_PRIMARY", "gpt-4.1")
+AI_MODEL_CHEAP = os.getenv("AI_MODEL_CHEAP", "gpt-4.1-mini")

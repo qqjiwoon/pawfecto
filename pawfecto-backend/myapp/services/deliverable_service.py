@@ -56,10 +56,18 @@ def verify_deliverable(deliverable_id: int):
             images=[deliverable.image],
         )
 
+        # AI 원본 결과 저장
+        deliverable.ai_result_raw = ai_result
+
         # 4) AI 결과 검증
         validate_ai_result(ai_result)
 
         # 5) 상태 결정
+        # # 임시 테스트용
+        # if ai_result["image_analysis_success"] is True:
+        #     deliverable.ai_validation_status = "passed"
+        # else:
+        #     deliverable.ai_validation_status = "failed"
         if (
             ai_result["image_analysis_success"] is True
             and ai_result["score"] == 100
@@ -73,9 +81,21 @@ def verify_deliverable(deliverable_id: int):
             update_fields=[
                 "ai_validation_status",
                 "deliverable_status",
+                "ai_result_raw",
             ]
         )
 
-    except (AIResultValidationError, Exception):
+    except (AIResultValidationError, Exception) as e:
+        print("❌ AI VERIFICATION ERROR:", e)
+
         deliverable.ai_validation_status = "failed"
-        deliverable.save(update_fields=["ai_validation_status"])
+        deliverable.ai_result_raw = {
+            "error": str(e)
+        }
+
+        deliverable.save(
+            update_fields=[
+                "ai_validation_status",
+                "ai_result_raw",
+            ]
+        )
