@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from myapp.models import StyleTag
-
+from django.core.validators import RegexValidator
 
 # -----------------------------------
 # User 모델 (Brand / Creator 통합)
@@ -15,7 +15,17 @@ class User(AbstractUser):
     account_type = models.CharField(max_length=10, choices=ACCOUNT_TYPES)
     name = models.CharField(max_length=255)
     email = models.EmailField(max_length=100, unique=True)
-    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    phone_number = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^[0-9\-]+$',
+                message='전화번호는 숫자와 하이픈(-)만 입력 가능합니다.'
+            )
+        ]
+    )
 
     pet_type = models.CharField(
         max_length=10,
@@ -45,7 +55,6 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"[{self.account_type.upper()}] {self.name} ({self.username})"
-
 
 # -----------------------------------
 # User ↔ StyleTag 중간 테이블
