@@ -16,6 +16,7 @@ from .serializers import (
     CampaignListSerializer,
     CampaignAcceptanceSerializer,
     DeliverableSerializer,
+    DeliverableCreateSerializer
 )
 
 from django.db.models import Q
@@ -456,7 +457,28 @@ def creator_detail(request, creator_id):
     return JsonResponse(serializer.data, status=200)
 
 
+# ------------------------------------------------------------
+# 11) Deliverable 제출
+# ------------------------------------------------------------
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def submit_deliverable(request, acceptance_id):
 
+    serializer = DeliverableCreateSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    deliverable = Deliverable.objects.create(
+        campaign_acceptance_id=acceptance_id,
+        content=serializer.validated_data['content'],
+        image=serializer.validated_data['image'],
+        deliverable_status='completed',
+        ai_validation_status='pending'
+    )
+
+    return Response(
+        DeliverableSerializer(deliverable).data,
+        status=201
+    )
 
 
 # ============================================================

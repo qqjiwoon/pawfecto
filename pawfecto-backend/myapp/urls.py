@@ -110,8 +110,15 @@ urlpatterns = [
     ),
     # 11) 기본 정보 조회
     path(
-    'creator/<int:creator_id>/',
-    views.creator_detail,
-    name='creator_detail'
+        'creator/<int:creator_id>/',
+        views.creator_detail,
+        name='creator_detail'
     ),
+    # deliverable 제출
+    path(
+        'campaign-acceptances/<int:acceptance_id>/deliverable/',
+        views.submit_deliverable,
+        name='submit_deliverable',
+    ),
+
 ]
