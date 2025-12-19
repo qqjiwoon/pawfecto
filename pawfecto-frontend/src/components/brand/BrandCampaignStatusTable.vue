@@ -119,7 +119,7 @@ onMounted(async () => {
       followers: d.campaign_acceptance?.creator?.follower_count ?? 0,
       styleTags: (d.campaign_acceptance?.creator?.style_tags || []).map(toKoreanTag),
       
-      uploadDate: d.uploaded_at || "미정", 
+      uploadDate: d.posted_at || "미정", 
       postLink: d.post_url || "링크 없음",
       status: d.post_url ? "Complete" : "Incomplete"
     }))

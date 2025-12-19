@@ -88,11 +88,13 @@
 import { ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useCampaignStore } from "@/stores/campaign"
+import { useWarningStore } from '@/stores/warning'
 
 const route = useRoute()
 const router = useRouter()
 const brandId = Number(route.params.brand_id)
 
+const warningStore = useWarningStore() 
 const campaignStore = useCampaignStore()
 
 /* -------------------------------
@@ -156,8 +158,9 @@ function onFileChange(e) {
    캠페인 생성
 -------------------------------- */
 async function createCampaign() {
-  console.log("store:", campaignStore)
-  console.log("createCampaign:", campaignStore.createCampaign)
+  const isConfirmed = await warningStore.confirm("작성하신 내용으로 캠페인을 생성하시겠습니까?")
+  if (!isConfirmed) return
+
   try {
     const styleTagIds = allTags
       .filter(tag => campaign.value.style_tags.includes(tag.code))
@@ -170,13 +173,16 @@ async function createCampaign() {
       style_tag_ids: styleTagIds,
     })
 
-    alert("캠페인이 생성되었습니다.")
+    // [수정] 성공 알림 모달 호출
+    warningStore.open("캠페인이 성공적으로 생성되었습니다.") 
+
     router.push({
       name: "brand-campaign-list",
       params: { brand_id: brandId },
     })
   } catch (err) {
-    alert("캠페인 생성에 실패했습니다.")
+    // [수정] 에러 알림 모달 호출
+    warningStore.open("캠페인 생성에 실패했습니다. 다시 시도해 주세요.") 
   }
 }
 </script>

@@ -76,6 +76,9 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { fetchCampaignDetail } from '@/api/campaign'
 import api from "@/plugins/axios"
+import { useWarningStore } from '@/stores/warning'
+
+const warningStore = useWarningStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -127,32 +130,23 @@ function goUpdate() {
 /* -------------------------------
    캠페인 삭제
 -------------------------------- */
-/* 캠페인 삭제 (백엔드 메시지 그대로 사용) */
 async function goDelete() {
-  const ok = confirm("캠페인을 삭제하시겠습니까?")
-  if (!ok) return
+  // 1. 커스텀 컨펌창 호출 (사용자 선택을 기다림)
+  const isConfirmed = await warningStore.confirm("정말 이 캠페인을 삭제하시겠습니까?")
+  
+  if (!isConfirmed) return // 취소를 누르면 중단
 
   try {
-    const res = await api.delete(
-      `/api/v1/brand/${brandId}/campaign/${campaignId}/delete/`
-    )
-
-    // 204라도 axios는 성공으로 들어옴
-    const message =
-      res.data?.message || "캠페인이 삭제되었습니다."
-
-    alert(message)
-
-    router.push({
-      name: "brand-campaign-list",
-      params: { brand_id: brandId },
-    })
+    const res = await api.delete(`/api/v1/brand/${brandId}/campaign/${campaignId}/delete/`)
+    
+    // 2. 성공 알림창 호출
+    warningStore.open("캠페인이 성공적으로 삭제되었습니다.")
+    
+    router.push({ name: "brand-campaign-list", params: { brand_id: brandId } })
   } catch (err) {
-    alert(
-      err.response?.data?.error ||
-      err.response?.data?.message ||
-      "캠페인 삭제에 실패했습니다."
-    )
+    const errorMsg = err.response?.data?.error || "삭제 중 오류가 발생했습니다."
+    // 3. 에러 알림창 호출
+    warningStore.open(errorMsg)
   }
 }
 

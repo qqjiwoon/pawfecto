@@ -104,10 +104,12 @@ import api from "@/plugins/axios"
 import Pagination from "./Pagination.vue"
 import CreatorProfileModal from "./CreatorProfileModal.vue" // 모달 임포트
 import defaultImg from "@/assets/profile1.jpg"
+import { useWarningStore } from '@/stores/warning'
 
 const route = useRoute()
 const brandId = Number(route.params.brand_id)
 const campaignId = Number(route.params.campaign_id)
+const warningStore = useWarningStore()
 
 // 데이터 상태
 const creators = ref([])
@@ -154,7 +156,7 @@ onMounted(async () => {
     }))
     filteredCreators.value = [...creators.value]
   } catch (err) {
-    console.error(err)
+    warningStore.open("데이터를 불러오는 중 오류가 발생했습니다.")
   }
 })
 
@@ -193,16 +195,25 @@ const handleOutsideClick = (event) => {
 // [핵심] 브랜드 상태 변경
 async function changeBrandStatus(creator, status) {
   if (creator.brandStatus !== 'Pending') return
-  if (!confirm("심사 상태를 변경하면 이후 취소나 수정이 불가능합니다.\n그래도 심사를 확정하시겠습니까?")) return
+
+  // 3. 브라우저 confirm 대신 커스텀 컨펌 모달 사용
+  const isConfirmed = await warningStore.confirm(
+    "심사 상태를 변경하면 이후 취소나 수정이 불가능합니다. 그래도 심사를 확정하시겠습니까?"
+  )
+  
+  if (!isConfirmed) return
 
   const action = status === "Approved" ? "approve" : "reject"
   try {
     await api.patch(`/api/v1/brand/${brandId}/campaign/${campaignId}/acceptances/${creator.id}/${action}/`)
     creator.brandStatus = status
     openStatusId.value = null
-    alert(`${getBrandStatusKor(status)} 처리가 완료되었습니다.`)
+    
+    // 4. 브라우저 alert 대신 커스텀 알림 모달 사용
+    warningStore.open(`${getBrandStatusKor(status)} 처리가 완료되었습니다.`)
   } catch (err) {
-    alert(err.response?.data?.error || "처리 중 오류가 발생했습니다.")
+    const errorMsg = err.response?.data?.error || "처리 중 오류가 발생했습니다."
+    warningStore.open(errorMsg)
   }
 }
 

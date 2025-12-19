@@ -14,7 +14,7 @@ class User(AbstractUser):
 
     account_type = models.CharField(max_length=10, choices=ACCOUNT_TYPES)
     name = models.CharField(max_length=255)
-    email = models.CharField(max_length=100, unique=True)
+    email = models.EmailField(max_length=100, unique=True)
     phone_number = models.CharField(max_length=20, null=True, blank=True)
 
     pet_type = models.CharField(

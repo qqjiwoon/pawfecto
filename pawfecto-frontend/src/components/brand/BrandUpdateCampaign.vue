@@ -97,9 +97,11 @@
 import { ref, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import api from "@/plugins/axios"
+import { useWarningStore } from '@/stores/warning'
 
 const route = useRoute()
 const router = useRouter()
+const warningStore = useWarningStore()
 
 const campaignId = Number(route.params.campaign_id)
 const brandId = Number(route.params.brand_id)
@@ -151,7 +153,7 @@ onMounted(async () => {
     }
 
   } catch (err) {
-    alert("캠페인 정보를 불러오지 못했습니다.")
+    warningStore.open("캠페인 정보를 불러오지 못했습니다.")
   }
 })
 
@@ -206,16 +208,15 @@ async function updateCampaign() {
       }
     )
 
-    alert("캠페인이 수정되었습니다.")
+    warningStore.open("캠페인이 성공적으로 수정되었습니다.")
+    
     router.push({
       name: "brand-campaign-detail",
       params: { brand_id: brandId, campaign_id: campaignId },
     })
   } catch (err) {
-    alert(
-      err.response?.data?.error ||
-      "캠페인 수정에 실패했습니다."
-    )
+    const errorMsg = err.response?.data?.error || "캠페인 수정에 실패했습니다."
+    warningStore.open(errorMsg)
   }
 }
 

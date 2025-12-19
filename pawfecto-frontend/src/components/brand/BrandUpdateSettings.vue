@@ -88,10 +88,12 @@ import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 import api from "@/plugins/axios"
 import { useBrandStore } from "@/stores/brand"
+import { useWarningStore } from "@/stores/warning"
 
 const router = useRouter()
 const brandStore = useBrandStore()
 const isLoaded = ref(false)
+const warningStore = useWarningStore()
 
 // 선택된 파일 자체를 담을 변수
 const imageFile = ref(null)
@@ -136,21 +138,24 @@ function onFileChange(e) {
 
 /* 저장 */
 const updateProfile = async () => {
+  // 1. 비밀번호 일치 확인
   if (form.value.password && form.value.password !== form.value.passwordConfirm) {
-    alert("비밀번호가 일치하지 않습니다.")
+    warningStore.open("비밀번호가 일치하지 않습니다.")
     return
   }
 
-  // 파일을 전송하기 위해 FormData 생성
+  // 2. 저장 의사 확인 (커스텀 모달)
+  const isConfirmed = await warningStore.confirm("변경사항을 저장하시겠습니까?")
+  if (!isConfirmed) return
+
+  // 3. FormData 생성
   const formData = new FormData()
   formData.append("name", form.value.name)
   formData.append("email", form.value.email)
   formData.append("phone_number", form.value.phone_number)
   formData.append("pet_type", form.value.pet_type)
 
-  // 새 이미지가 선택되었다면 FormData에 추가
   if (imageFile.value) {
-    // 백엔드 모델 필드명(profile_image)에 맞춰 전송
     formData.append("profile_image", imageFile.value)
   }
 
@@ -159,16 +164,38 @@ const updateProfile = async () => {
   }
 
   try {
-    // PUT 요청 시 payload 대신 formData 전송
-    await api.put("/accounts/update-profile/", formData)
+    // 4. PUT 요청 (헤더에 토큰 명시)
+    // [중요] 401 에러 방지를 위해 로컬 스토리지의 토큰을 직접 가져와 전달합니다.
+    const token = localStorage.getItem("access_token")
 
-    alert("프로필 정보가 수정되었습니다.")
+    await api.put("/accounts/update-profile/", formData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        // 'Content-Type': 'multipart/form-data'는 브라우저가 자동 설정하게 두어야 합니다.
+      }
+    })
+
+    // 5. 성공 처리
+    warningStore.open("프로필 정보가 수정되었습니다.")
+    
+    // 전역 상태 갱신 (헤더 이미지 등 즉시 반영)
     brandStore.isLoaded = false
     await brandStore.loadBrand()
+    
+    // 대시보드 메인이나 설정 메인으로 이동
     router.push({ name: "brand-settings" })
+
   } catch (err) {
     console.error(err)
-    alert("정보 수정에 실패했습니다.")
+    
+    // 에러 상태에 따른 대응
+    if (err.response?.status === 401) {
+      warningStore.open("로그인 세션이 만료되었습니다. 다시 로그인해 주세요.")
+      router.push("/login")
+    } else {
+      const errorMsg = err.response?.data?.error || "정보 수정에 실패했습니다. 다시 시도해 주세요."
+      warningStore.open(errorMsg)
+    }
   }
 }
 </script>

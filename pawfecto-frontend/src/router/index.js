@@ -175,32 +175,47 @@ const router = createRouter({
   ],
 })
 
+import { useWarningStore } from '@/stores/warning'
+
 router.beforeEach(async (to, from, next) => {
-  // dashboard 경로만 검사
   if (!to.path.startsWith('/dashboard')) {
     return next()
   }
 
+  const warningStore = useWarningStore()
+
   try {
     const res = await api.get('/accounts/me/')
-    const accountType = res.data.account_type
+    const user = res.data
 
-    if (
-      to.path.startsWith('/dashboard/brand') &&
-      accountType !== 'brand'
-    ) {
-      return next('/login')
+    /* BRAND */
+    if (to.path.startsWith('/dashboard/brand')) {
+      if (user.account_type !== 'brand') {
+        warningStore.open('브랜드 계정만 접근할 수 있는 페이지입니다.')
+        return next(`/dashboard/${user.account_type}/${user.id}`)
+      }
+
+      if (Number(to.params.brand_id) !== user.id) {
+        warningStore.open('본인의 대시보드만 접근할 수 있습니다.')
+        return next(`/dashboard/brand/${user.id}`)
+      }
     }
 
-    if (
-      to.path.startsWith('/dashboard/creator') &&
-      accountType !== 'creator'
-    ) {
-      return next('/login')
+    /* CREATOR */
+    if (to.path.startsWith('/dashboard/creator')) {
+      if (user.account_type !== 'creator') {
+        warningStore.open('크리에이터 계정만 접근할 수 있는 페이지입니다.')
+        return next(`/dashboard/${user.account_type}/${user.id}`)
+      }
+
+      if (Number(to.params.creator_id) !== user.id) {
+        warningStore.open('본인의 대시보드만 접근할 수 있습니다.')
+        return next(`/dashboard/creator/${user.id}`)
+      }
     }
 
     next()
-  } catch (err) {
+  } catch {
     next('/login')
   }
 })

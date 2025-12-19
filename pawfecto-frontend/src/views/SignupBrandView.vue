@@ -1,18 +1,15 @@
 <template>
   <section class="pf-signup-hero">
     <div class="pf-signup-hero-overlay"></div>
-
     <h1 class="pf-signup-hero-title pf-logo">Pawfecto</h1>
-
     <div class="pf-signup-breadcrumb">
       <p>Home</p>
       <span> &gt; </span>
       <p>Signup</p>
     </div>
   </section>
-  <div class="signup-container">
-    <!-- <h1>Brand Signup</h1> -->
 
+  <div class="signup-container">
     <h2 class="title">회원 가입</h2>
     <p class="subtitle">
       협찬, 이제는 복잡하지 않게
@@ -33,37 +30,37 @@
     <form @submit.prevent="handleSignup">
       <div class="form-group">
         <label>아이디</label>
-        <input type="text" v-model="form.signupId" required />
+        <input type="text" class="input-field" v-model="form.signupId" placeholder="사용할 아이디를 입력하세요" required />
       </div>
 
       <div class="form-group">
         <label>비밀번호</label>
-        <input type="password" v-model="form.password" required />
+        <input type="password" class="input-field" v-model="form.password" placeholder="8자 이상, 영문/숫자 포함" required />
       </div>
 
       <div class="form-group">
         <label>비밀번호 확인</label>
-        <input type="password" v-model="form.passwordConfirm" required />
+        <input type="password" class="input-field" v-model="form.passwordConfirm" placeholder="비밀번호를 한번 더 입력하세요" required />
       </div>
 
       <div class="form-group">
         <label>브랜드 명</label>
-        <input type="text" v-model="form.brandName" required />
+        <input type="text" class="input-field" v-model="form.brandName" placeholder="브랜드명을 입력하세요" required />
       </div>
 
       <div class="form-group">
         <label>이메일 주소</label>
-        <input type="email" v-model="form.email" required />
+        <input type="email" class="input-field" v-model="form.email" placeholder="example@pawfecto.com" required />
       </div>
 
       <div class="form-group">
         <label>전화번호</label>
-        <input type="text" v-model="form.phoneNumber" required />
+        <input type="text" class="input-field" v-model="form.phoneNumber" placeholder="010-0000-0000" required />
       </div>
 
       <div class="form-group">
         <label>주력 반려 동물</label>
-        <select v-model="form.petType">
+        <select class="input-field" v-model="form.petType">
           <option value="">선택하세요</option>
           <option value="dog">강아지</option>
           <option value="cat">고양이</option>
@@ -72,12 +69,11 @@
 
       <div class="form-group">
         <label>프로필 이미지</label>
-        <input type="file" @change="handleFileUpload" />
+        <input type="file" class="input-field file-input-box" @change="handleFileUpload" accept="image/*" />
       </div>
 
       <button type="submit" class="submit-btn">가입하기</button>
     </form>
-
   </div>
 </template>
 
@@ -88,19 +84,26 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const form = ref({
-    accountType: 'brand',
-    signupId: '',
-    password: '',
-    passwordConfirm: '',
-    brandName: '',
-    email: '',
-    phoneNumber: '',
+  accountType: 'brand',
+  signupId: '',
+  password: '',
+  passwordConfirm: '',
+  brandName: '',
+  email: '',
+  phoneNumber: '',
+  petType: ''
 })
 
-const handleSignup = (() =>{
-    console.log('form.value')
-    console.log('form submitted!!!')
-})
+const handleSignup = () => {
+  console.log('Form submitted:', form.value)
+}
+
+const handleFileUpload = (e) => {
+  const file = e.target.files[0]
+  if (file) {
+    console.log('Selected file:', file)
+  }
+}
 
 watch(
   () => form.value.accountType,
@@ -110,12 +113,10 @@ watch(
     }
   }
 )
-
-
 </script>
 
 <style scoped>
-
+/* Hero Section */
 .pf-signup-hero {
   width: 100%;
   height: 45vh;
@@ -123,12 +124,10 @@ watch(
   background-size: cover;
   background-position: center;
   position: relative;
-
-  /* 중앙 정렬을 위한 Flexbox 추가 */
   display: flex;
   flex-direction: column;
-  justify-content: center; /* 세로 중앙 */
-  align-items: center;     /* 가로 중앙 */
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
@@ -136,40 +135,32 @@ watch(
   position: absolute;
   inset: 0;
   background-color: rgba(255, 255, 255, 0.25);
-  z-index: 1; /* 오버레이가 아래로 가도록 설정 */
+  z-index: 1;
 }
 
 .pf-signup-hero-title {
-  position: relative; 
-  z-index: 2; /* 오버레이보다 위로 올림 */
+  position: relative;
+  z-index: 2;
   font-family: 'Rubik Bubbles', sans-serif;
   font-size: 54px;
   color: #fff;
-  margin: 0; /* 기본 마진 제거 */
+  margin: 0;
 }
 
 .pf-signup-breadcrumb {
   position: relative;
-  z-index: 2; /* 오버레이보다 위로 올림 */
-  margin-top: 10px; /* 타이틀과의 간격 조절 */
+  z-index: 2;
+  margin-top: 10px;
   color: #fff;
   font-size: 14px;
   display: flex;
   gap: 6px;
-  font-family: inherit;
 }
 
-.pf-signup-breadcrumb p,
-.pf-signup-breadcrumb span {
-  margin: 0;
-  padding: 0;
-}
-
-
+/* Container & Typography */
 .signup-container {
   max-width: 480px;
   margin: 60px auto;
-  text-align: center;
   padding: 0 20px;
   font-family: 'Pretendard', sans-serif;
 }
@@ -178,15 +169,18 @@ watch(
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 12px;
+  text-align: center;
 }
 
 .subtitle {
   font-size: 14px;
   color: #666;
   line-height: 1.6;
-  margin-bottom: 35px;
+  margin-bottom: 40px;
+  text-align: center;
 }
 
+/* Account Type Selector */
 .account-type {
   display: flex;
   justify-content: center;
@@ -200,54 +194,72 @@ watch(
   margin-right: 6px;
 }
 
+/* Form Groups & Inputs (From updatesettings) */
 .form-group {
+  margin-bottom: 25px; /* 약간 조정하여 가독성 확보 */
   text-align: left;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-size: 14px;
   font-weight: 500;
+  color: #333;
 }
 
-.form-group input{
+.input-field {
   width: 100%;
-  padding: 12px;
-  border-radius: 8px;
+  height: 46px;
+  padding: 0 12px;
   border: 1px solid #ddd;
+  border-radius: 8px;
   font-size: 14px;
+  box-sizing: border-box;
+  background: #fff;
+  transition: border-color 0.2s;
 }
 
-.form-group select {
-  width: 105%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-}
-
-.form-group input:focus,
-.form-group select:focus {
+.input-field:focus {
   outline: none;
-  border-color: #000;
+  border-color: #3A3A3A;
 }
 
-.submit-btn {
-  width: 105%;
-  padding: 12px;
-  margin-top: 50px;
-  background: #7b7b7b;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
+/* File Input Customization (From updatesettings) */
+.file-input-box {
+  display: flex;
+  align-items: center;
+  line-height: 44px;
   cursor: pointer;
-  transition: 0.2s;
+}
+
+.file-input-box::-webkit-file-upload-button {
+  height: 28px;
+  margin-right: 12px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Submit Button (From updatesettings update-btn style) */
+.submit-btn {
+  display: block;
+  width: 65%; /* updatesettings의 60%보다 가입 페이지 특성상 조금 더 넓게 조정 */
+  padding: 16px;
+  background: #3A3A3A;
+  color: white;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin: 60px auto;
+  transition: background 0.2s;
 }
 
 .submit-btn:hover {
-  background: #3A3A3A;
+  background: #252525;
 }
-
 </style>
