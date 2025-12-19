@@ -1,0 +1,64 @@
+[
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 1,
+    "fields": {
+      "campaign": 9,
+      "requirement_type": "object",
+      "description": "dog wearing harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 2,
+    "fields": {
+      "campaign": 9,
+      "requirement_type": "scene",
+      "description": "outdoor field",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 3,
+    "fields": {
+      "campaign": 9,
+      "requirement_type": "action",
+      "description": "walking",
+      "is_required": true
+    }
+  },
+
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 4,
+    "fields": {
+      "campaign": 7,
+      "requirement_type": "scene",
+      "description": "outdoor walking path",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 5,
+    "fields": {
+      "campaign": 7,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": false
+    }
+  },
+
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 6,
+    "fields": {
+      "campaign": 6,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  }
+]

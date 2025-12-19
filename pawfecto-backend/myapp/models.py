@@ -123,23 +123,46 @@ class CampaignAcceptance(models.Model):
 
 
 # -----------------------------------------------------------
-# 4. Deliverable (포스팅 결과물)
+# 4-1. 브랜드의 포스팅 요구 조건
 # -----------------------------------------------------------
+class DeliverableRequirement(models.Model):
+    campaign = models.ForeignKey(
+        Campaign,
+        on_delete=models.CASCADE,
+        related_name="requirements"
+    )
 
+    REQUIREMENT_TYPE_CHOICES = [
+        ("object", "Object"),
+        ("scene", "Scene"),
+        ("action", "Action"),
+        ("text", "Text"),
+    ]
+
+    requirement_type = models.CharField(
+        max_length=20,
+        choices=REQUIREMENT_TYPE_CHOICES
+    )
+
+    description = models.CharField(max_length=255)
+    is_required = models.BooleanField(default=True)
+
+# -----------------------------------------------------------
+# 4-2. Deliverable (포스팅 결과물)
+# -----------------------------------------------------------
 class Deliverable(models.Model):
 
     deliverable_id = models.AutoField(primary_key=True)
 
-    campaign_acceptance = models.ForeignKey(
+    campaign_acceptance = models.OneToOneField(
         CampaignAcceptance,
         on_delete=models.CASCADE,
-        related_name='deliverables'
+        related_name='deliverable'
     )
 
-    posted_at = models.DateTimeField(null=True, blank=True)  # SQL은 auto_now_add 아님
+    posted_at = models.DateTimeField(null=True, blank=True)
     post_url = models.CharField(max_length=255, null=True, blank=True)
 
-    # 결과물 상태 : ENUM('incomplete', 'completed')
     deliverable_status = models.CharField(
         max_length=10,
         choices=[
@@ -149,6 +172,20 @@ class Deliverable(models.Model):
         default='incomplete'
     )
 
+    content = models.TextField()
+    image = models.ImageField(upload_to="deliverables/")
+
+    ai_validation_status = models.CharField(
+        max_length=20,
+        choices=[
+            ("pending", "Pending"),
+            ("passed", "Passed"),
+            ("failed", "Failed"),
+        ],
+        default="pending"
+    )
+
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return f"Deliverable for {self.campaign_acceptance.campaign.product_name}"
-
