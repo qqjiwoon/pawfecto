@@ -29,7 +29,7 @@
         </div>
 
         <div class="info-row">
-          <span class="label">활동 스타일</span>
+          <span class="label">스타일 태그</span>
           <div class="tag-group">
             <span v-for="tag in creator.styleTags" :key="tag" class="style-tag">
               # {{ tag }}
@@ -38,7 +38,7 @@
         </div>
 
         <div class="info-row" v-if="creator.address">
-          <span class="label">활동 지역</span>
+          <span class="label">주소</span>
           <span class="value">{{ creator.address }}</span>
         </div>
       </div>

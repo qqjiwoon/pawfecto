@@ -5,11 +5,11 @@ POST http://127.0.0.1:8000/accounts/signup/
 Content-Type: application/json
 
 {
-  "username": "pawfecto_brand02",
-  "password": "Pawfecto!2025",
-  "email": "hello@tailplus.co.kr",
-  "name": "테일플러스",
-  "phone_number": "02-7788-1122",
+  "username": "testbrand",
+  "password": "asdf1234",
+  "email": "test@brand.co.kr",
+  "name": "테스트 브랜드 유저",
+  "phone_number": "02-1234-1234",
   "pet_type": "cat",
   "profile_image_url": "https://cdn.pawfecto.kr/brands/tailplus_logo.png",
   "account_type": "brand"

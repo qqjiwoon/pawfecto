@@ -222,17 +222,27 @@ def creator_profile(request, creator_id):
 @permission_classes([IsAuthenticated])
 def update_profile(request):
     user = request.user
+    
+    # 1. QueryDict에서 데이터를 안전하게 가져오기 위해 .copy() 사용
     data = request.data.copy()
     data.pop("account_type", None)
 
-    password = data.pop("password", None)
+    # [핵심 수정] .pop() 대신 .get()을 사용하면 리스트의 첫 번째 문자열만 가져옵니다.
+    # 만약 pop을 써야 한다면 password = request.data.get("password") 로 미리 받아두세요.
+    password = data.get("password") 
 
     serializer = UserSerializer(user, data=data, partial=True)
+    
     if serializer.is_valid():
         user = serializer.save()
 
+        # 2. 비밀번호 처리
         if password:
-            user.set_password(password)
+            # password가 리스트인 경우를 대비해 확실히 문자열로 변환
+            if isinstance(password, list):
+                password = password[0]
+            
+            user.set_password(str(password)) # 확실하게 문자열로 변환하여 설정
             user.save(update_fields=["password"])
 
         return Response(

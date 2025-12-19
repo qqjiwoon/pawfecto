@@ -7,6 +7,7 @@
     <!-- 페이지 내용 -->
     <main class="pf-container">
       <RouterView />
+      <WarningModal />
     </main>
 
     <!-- 공통 푸터 -->
@@ -19,6 +20,7 @@
 import { RouterView } from 'vue-router'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import WarningModal from '@/components/WarningModal.vue'
 </script>
 
 <style scoped>
