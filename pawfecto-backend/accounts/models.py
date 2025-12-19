@@ -56,7 +56,6 @@ class User(AbstractUser):
     def __str__(self):
         return f"[{self.account_type.upper()}] {self.name} ({self.username})"
 
-
 # -----------------------------------
 # User ↔ StyleTag 중간 테이블
 # -----------------------------------
