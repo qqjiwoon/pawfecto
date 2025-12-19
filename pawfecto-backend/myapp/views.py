@@ -593,3 +593,53 @@ def cleanup_invalid_acceptances(campaign):
                 id__in=campaign_tags
             ).exists():
                 acceptance.delete()
+
+
+
+
+# ####################################
+# AI 검증
+# ####################################
+# ------------------------------------------------------------
+# 12) Deliverable AI 검증 요청
+# ------------------------------------------------------------
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def verify_deliverable(request, deliverable_id):
+    """
+    크리에이터가 제출한 Deliverable에 대해
+    AI 검증을 요청한다.
+    """
+    deliverable = get_object_or_404(
+        Deliverable,
+        deliverable_id=deliverable_id
+    )
+
+    # 크리에이터 본인 deliverable만 검증 가능
+    if request.user.account_type != "creator":
+        return Response(
+            {"error": "크리에이터만 검증을 요청할 수 있습니다."},
+            status=403
+        )
+
+    if deliverable.campaign_acceptance.creator != request.user:
+        return Response(
+            {"error": "본인 Deliverable만 검증할 수 있습니다."},
+            status=403
+        )
+
+    # 이미 검증 완료된 경우 방어
+    if deliverable.ai_validation_status != "pending":
+        return Response(
+            {"error": "이미 검증이 처리된 Deliverable입니다."},
+            status=400
+        )
+
+    # 서비스 호출 (AI 실제 호출은 아직 mock 단계)
+    from .services.deliverable_service import verify_deliverable as run_verification
+    run_verification(deliverable.deliverable_id)
+
+    return Response(
+        {"message": "AI 검증 요청이 접수되었습니다."},
+        status=200
+    )

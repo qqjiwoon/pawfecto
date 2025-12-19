@@ -1,0 +1,52 @@
+############################################
+### 0-1. 로그인 (크리에이터: puppy_daily, pk = 6)
+############################################
+POST http://127.0.0.1:8000/accounts/login/
+Content-Type: application/json
+
+{
+  "username": "puppy_daily",
+  "password": "test1234"
+}
+
+
+### 로그인 응답에서 token을 복사해 아래 변수에 넣어라
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MTQxOTQ5LCJpYXQiOjE3NjYxMzQ3NTAsImp0aSI6IjAwMWY5MTNiOTRjNTRjYTZhMTJhNWRiNGFkYTczMzk4IiwidXNlcl9pZCI6IjYifQ.kDxHnz5MwpdenbLIgJX9mBSAkiCiI5pgCM2vWnYAKoA
+
+
+
+############################################
+### 1. Deliverable 제출 (캡션 + 이미지 업로드)
+### campaign_acceptance_id = 3 예시
+############################################
+POST http://127.0.0.1:8000/api/v1/campaign-acceptances/3/deliverable/
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data
+
+--boundary
+Content-Disposition: form-data; name="content"
+
+오늘은 포프레시 저알러지 닭고기 사료로 저녁을 먹어봤어요. 입자가 고르게 씹기 편하고, 급여 후에도 속이 편안해 보이네요. #협찬 #포프레시 #반려견사료
+--boundary
+Content-Disposition: form-data; name="image"; filename="deliverable.jpg"
+Content-Type: image/jpeg
+
+< ./deliverable.jpg
+--boundary--
+
+
+############################################
+### 2. Deliverable AI 검증 요청
+### deliverable_id = 5 예시
+############################################
+POST http://127.0.0.1:8000/api/v1/deliverables/5/verify/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
+############################################
+### 3. 크리에이터 진행 상황 조회 (상태 확인)
+### creator_id = 6
+############################################
+GET http://127.0.0.1:8000/api/v1/creator/6/progress/
+Authorization: Bearer {{token}}
