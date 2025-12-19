@@ -27,12 +27,10 @@
           <!-- 캠페인 정보 -->
           <td>
             <div class="campaign-info">
-              <img :src="item.campaign_image" class="campaign-img" />
-              <!-- 이미지 나중에 아래 것으로 고치기 -->
-              <!-- <img
+              <img
                 :src="item.campaign_acceptance.campaign.product_image_url"
                 class="campaign-img"
-              /> -->
+              />
               <span class="campaign-name">
                 {{ item.campaign_acceptance.campaign.product_name }}
               </span>
@@ -66,13 +64,12 @@
               class="status-badge"
               @click="openEditModal(item)"
             >
-              <span :class="['dot', item.deliverable_status]"></span>
+              <span :class="['dot', getStatus(item)]"></span>
               <span class="status-text">
-                {{ toKoreanStatus(item.deliverable_status) }}
+                {{ getStatusLabel(item) }}
               </span>
             </div>
           </td>
-
         </tr>
       </tbody>
     </table>
@@ -111,11 +108,12 @@
 
   <!-- 상태 수정 모달 -->
   <ProgressEditModal
-    v-if="isModalOpen"
-    :item="editingItem"
-    @save="saveEditedItem"
-    @close="isModalOpen = false"
-  />
+  v-if="isModalOpen"
+  :item="editingItem"
+  @close="isModalOpen = false"
+  @refresh="fetchProgress"
+/>
+
 </template>
 
 
@@ -140,7 +138,6 @@ onMounted(async () => {
   items.value = res.data
 })
 
-const emit = defineEmits(['save', 'close'])
 
 /* 검색 / 페이지 상태 */
 const searchQuery = ref('')
@@ -189,17 +186,28 @@ const openEditModal = (item) => {
   isModalOpen.value = true
 }
 
-const saveEditedItem = (updated) => {
-  emit('save', updated)
-  isModalOpen.value = false
+const fetchProgress = async () => {
+  const res = await api.get(`/api/v1/creator/${props.creatorId}/progress/`)
+  items.value = res.data
 }
 
-/* 상태 한글 */
-const toKoreanStatus = (status) => {
-  if (status === 'completed') return '완료'
-  if (status === 'incomplete') return '미완료'
-  return status
+
+/* 상태 */
+const getStatus = (item) => {
+  if (!item.ai_validation_status) return 'in-progress'
+  if (item.ai_validation_status === 'pending') return 'in-progress'
+  if (item.ai_validation_status === 'passed') return 'completed'
+  if (item.ai_validation_status === 'failed') return 'incomplete'
 }
+
+const getStatusLabel = (item) => {
+  if (!item.ai_validation_status || item.ai_validation_status === 'pending') {
+    return '진행중'
+  }
+  if (item.ai_validation_status === 'passed') return '완료'
+  if (item.ai_validation_status === 'failed') return '미완료'
+}
+
 
 </script>
 
@@ -342,6 +350,8 @@ tbody tr {
 .dot.incomplete {
   background-color: #f44336;
 }
+
+.dot.in-progress { background-color: #ff9800; }
 
 /* 페이지네이션 */
 .pagination {
