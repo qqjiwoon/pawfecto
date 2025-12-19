@@ -48,5 +48,36 @@
       "post_url": null,
       "deliverable_status": "incomplete"
     }
+  }, 
+  {
+    "model": "myapp.deliverable",
+    "pk": 6,
+    "fields": {
+      "campaign_acceptance": 14,
+      "posted_at": "2025-02-24T19:00:00Z",
+      "post_url": "https://www.instagram.com/p/DELIVERABLE006/",
+      "deliverable_status": "completed"
+    }
+  },
+  {
+    "model": "myapp.deliverable",
+    "pk": 7,
+    "fields": {
+      "campaign_acceptance": 17,
+      "posted_at": null,
+      "post_url": null,
+      "deliverable_status": "incomplete"
+    }
+  },
+  {
+    "model": "myapp.deliverable",
+    "pk": 8,
+    "fields": {
+      "campaign_acceptance": 18,
+      "posted_at": "2025-02-23T18:30:00Z",
+      "post_url": "https://www.instagram.com/p/DELIVERABLE008/",
+      "deliverable_status": "completed"
+    }
   }
 ]
+

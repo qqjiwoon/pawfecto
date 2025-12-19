@@ -74,17 +74,59 @@
           <td>{{ offer.campaign.application_deadline_at }}</td>
 
           <!-- 상태 -->
-          <td>
-          <select
-            v-model="offer.acceptance_status"
-            class="status-select"
-            @change="changeStatus(offer)"
-          >
-            <option value="pending">대기중</option>
-            <option value="accepted">수락함</option>
-            <option value="rejected">거절함</option>
-          </select>
-        </td>
+          <td class="status-cell">
+            <div class="status-wrapper">
+
+              <!-- 상태 버튼 (항상 하나) -->
+              <button
+                class="status-btn"
+                :class="[statusClass(offer.acceptance_status), {
+                  'is-locked': offer.acceptance_status === 'accepted'
+                }]"
+                @click="toggleStatusMenu(offer)"
+              >
+                {{ getCreatorStatusKor(offer.acceptance_status) }}
+              </button>
+
+              <!-- 드롭다운 메뉴 -->
+              <ul
+                v-if="openStatusId === offer.campaign_acceptance_id"
+                class="status-menu"
+              >
+                <!-- 1️. 대기중 -->
+                <template v-if="offer.acceptance_status === 'pending'">
+                  <li>
+                    <button
+                      class="status-option Approved"
+                      @click="changeStatus(offer, 'accepted')"
+                    >
+                      수락
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      class="status-option Rejected"
+                      @click="changeStatus(offer, 'rejected')"
+                    >
+                      거절
+                    </button>
+                  </li>
+                </template>
+
+                <!-- 2️. 거절 후 -->
+                <template v-else-if="offer.acceptance_status === 'rejected'">
+                  <li>
+                    <button
+                      class="status-option Approved"
+                      @click="changeStatus(offer, 'accepted')"
+                    >
+                      다시 수락
+                    </button>
+                  </li>
+                </template>
+              </ul>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -136,7 +178,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, onUnmounted, ref, computed } from 'vue'
 import api from '@/plugins/axios'
 
 import CreatorCampaignDetailModal from '@/components/creator/CreatorCampaignDetailModal.vue'
@@ -153,11 +195,21 @@ const offers = ref([])
 const safeOffers = computed(() => offers.value ?? [])
 
 onMounted(async () => {
-  const res = await api.get(
-    `/api/v1/creator/${props.creatorId}/offers/`
-  )
-  offers.value = res.data
+  try {
+    const res = await api.get(
+      `/api/v1/creator/${props.creatorId}/offers/`
+    )
+    offers.value = res.data
+  } catch (err) {
+    console.error(err)
+    openToast('캠페인 오퍼를 불러오지 못했습니다.')
+  }
 })
+
+onUnmounted(() => {
+  window.removeEventListener('click', handleOutsideClick)
+})
+
 
 /* 검색 / 페이지 상태 */
 const searchQuery = ref('')
@@ -183,31 +235,73 @@ const openToast = (message) => {
 }
 
 // 상태 변경 함수
-const changeStatus = async (offer) => {
-  const prevStatus = offer._prevStatus ?? offer.acceptance_status
+const statusClass = (status) => {
+  return {
+    pending: 'Pending',
+    accepted: 'Approved',
+    rejected: 'Rejected',
+  }[status]
+}
+const openStatusId = ref(null)
+
+const toggleStatusMenu = (offer) => {
+  if (offer.acceptance_status === 'accepted') return
+
+  openStatusId.value =
+    openStatusId.value === offer.campaign_acceptance_id
+      ? null
+      : offer.campaign_acceptance_id
+}
+const getCreatorStatusKor = (status) => {
+  return {
+    pending: '대기중',
+    accepted: '수락함',
+    rejected: '거절함',
+  }[status]
+}
+
+const changeStatus = async (offer, nextStatus) => {
+  const prevStatus = offer.acceptance_status
+
+  // 수락 시 최종 확인
+  if (nextStatus === 'accepted' && prevStatus !== 'accepted') {
+    const confirmed = window.confirm(
+      '한 번 수락하면 거절할 수 없습니다.\n수락하시겠습니까?'
+    )
+
+    if (!confirmed) {
+      return
+    }
+  }
 
   try {
-    if (offer.acceptance_status === 'accepted') {
+    if (nextStatus === 'accepted') {
       await api.post(
         `/api/v1/creator/offers/${offer.campaign_acceptance_id}/accept/`
       )
-      openToast('캠페인 상태를 수락함으로 변경하였습니다.')
+      offer.acceptance_status = 'accepted'
+      openToast('캠페인을 수락했습니다.')
     }
 
-    if (offer.acceptance_status === 'rejected') {
+    if (nextStatus === 'rejected') {
       await api.post(
         `/api/v1/creator/offers/${offer.campaign_acceptance_id}/reject/`
       )
-      openToast('캠페인 상태를 거절함으로 변경하였습니다.')
+      offer.acceptance_status = 'rejected'
+      openToast('캠페인을 거절했습니다.')
     }
-
-    offer._prevStatus = offer.acceptance_status
   } catch (err) {
     offer.acceptance_status = prevStatus
-    openToast('상태 변경에 실패했습니다.')
+
+    const message =
+      err.response?.data?.error ??
+      '상태 변경에 실패했습니다.'
+
+    openToast(message)
     console.error(err)
   }
 }
+
 
 /* 검색 필터 */
 const filteredOffers = computed(() => {
@@ -350,23 +444,66 @@ td {
 }
 
 /* 상태 */
-.status-select {
+/* 상태 버튼 공통 */
+.status-btn,
+.status-option {
+  display: inline-flex;              /* ✔ 중앙 정렬 */
+  align-items: center;
+  justify-content: center;
+
+  width: 112px;                      /* ✔ 실제 크기 */
+  height: 38px;
+
+  padding: 0;                        
+  border-radius: 12px;
+
+  font-size: 13px;                   
+  font-weight: 600;
+
   border: none;
-  background-color: #dedede;
-  border-radius: 5px;
-  padding: 6px 14px;
-  font-size: 13px;
+  border-radius: 8px;
   cursor: pointer;
+  text-align: center;
 }
 
-.status-select option[value="accepted"] {
-  background-color: #e8e8e8;
-  color: #333;
+.status-cell {
+  padding: 18px 24px;   /* 좌우 여백 증가 */
+  text-align: center;
 }
 
-.status-select option[value="rejected"] {
-  background-color: #ffe0e0;
-  color: #cc0000;
+
+/* 드롭다운 옵션 전용 */
+.status-option {
+  margin: 4px 0;
+}
+.is-locked {
+  cursor: default !important;
+  opacity: 0.9;
+}
+
+.Pending { background: #fff7da; color: #967a00; }
+.Approved { background: #e5f4e8; color: #3c7c46; }
+.Rejected { background: #ffe7e7; color: #b60000; }
+
+.status-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.status-menu {
+  position: absolute;
+  top: 115%;
+  left: 50%;
+  list-style: none; 
+  transform: translateX(-50%);
+  width: 100%;
+  min-width: 90px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  z-index: 20;
 }
 
 /* 페이지네이션 */

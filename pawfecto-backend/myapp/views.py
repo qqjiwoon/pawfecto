@@ -217,7 +217,7 @@ def campaign_acceptance_list(request, brand_id, campaign_id):
 
 
 # ------------------------------------------------------------
-# 2) 브랜드가 크리에이터 승인
+# 2) 브랜드가  추천받은 크리에이터 승인
 # ------------------------------------------------------------
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
@@ -340,7 +340,11 @@ def creator_campaign_offers(request, creator_id):
     if request.user.id != int(creator_id):
         return Response({"error": "본인 오퍼만 조회할 수 있습니다."}, status=403)
 
-    offers = CampaignAcceptance.objects.filter(creator=request.user)
+    offers = CampaignAcceptance.objects.filter(
+        creator=request.user,
+        brand_decision_status="approved"
+    )
+
     serializer = CampaignAcceptanceSerializer(offers, many=True)
     return Response(serializer.data, status=200)
 
@@ -355,10 +359,34 @@ def accept_offer(request, acceptance_id):
     acceptance = get_object_or_404(
         CampaignAcceptance,
         campaign_acceptance_id=acceptance_id,
-        creator=request.user
+        creator=request.user,
+        brand_decision_status="approved"
     )
 
-    acceptance.acceptance_status = 'accepted'
+    # 1. 이미 수락한 경우
+    if acceptance.acceptance_status == "accepted":
+        return Response(
+            {"error": "이미 수락한 오퍼입니다."},
+            status=400
+        )
+
+    campaign = acceptance.campaign
+
+    # 2. 현재 수락된 크리에이터 수
+    accepted_count = CampaignAcceptance.objects.filter(
+        campaign=campaign,
+        acceptance_status="accepted"
+    ).count()
+
+    # 3. 정원 초과 체크
+    if accepted_count >= campaign.required_creator_count:
+        return Response(
+            {"error": "이미 필요한 크리에이터 수가 모두 충원되었습니다."},
+            status=400
+        )
+
+    # 4. 수락 처리
+    acceptance.acceptance_status = "accepted"
     acceptance.accepted_at = timezone.now()
     acceptance.save()
 
@@ -366,6 +394,8 @@ def accept_offer(request, acceptance_id):
         CampaignAcceptanceSerializer(acceptance).data,
         status=200
     )
+
+
 
 # ------------------------------------------------------------
 # 캠페인 오퍼 거절
@@ -377,16 +407,24 @@ def reject_offer(request, acceptance_id):
     acceptance = get_object_or_404(
         CampaignAcceptance,
         campaign_acceptance_id=acceptance_id,
-        creator=request.user
+        creator=request.user,
+        brand_decision_status="approved"
     )
 
-    acceptance.acceptance_status = 'rejected'
+    if acceptance.acceptance_status == "accepted":
+        return Response(
+            {"error": "이미 수락한 캠페인은 상태를 변경할 수 없습니다."},
+            status=400
+        )
+
+    acceptance.acceptance_status = "rejected"
     acceptance.save()
 
     return Response(
         CampaignAcceptanceSerializer(acceptance).data,
         status=200
     )
+
 
 # ------------------------------------------------------------
 # 10) 크리에이터 진행 상황 조회

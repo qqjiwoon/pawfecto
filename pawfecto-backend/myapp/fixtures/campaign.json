@@ -178,5 +178,169 @@
       "posting_end_at": "2025-03-04",
       "required_creator_count": 5
     }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 11,
+    "fields": {
+      "brand": 1,
+      "product_name": "포프레시 데일리 밸런스 연어 퍼피 사료",
+      "product_image_url": "https://cdn.pawfecto.kr/products/salmon_puppy_food.jpg",
+      "product_description": "성장기 강아지를 위한 고단백 연어 레시피로 소화 흡수율과 면역력 강화를 동시에 고려한 퍼피 전용 사료입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 5000,
+      "style_tags": [1],
+      "requested_at": "2025-02-08T09:00:00Z",
+      "application_deadline_at": "2025-02-16",
+      "posting_start_at": "2025-02-20",
+      "posting_end_at": "2025-03-05",
+      "required_creator_count": 3
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 12,
+    "fields": {
+      "brand": 1,
+      "product_name": "포프레시 저알러지 곡물프리 양고기 사료",
+      "product_image_url": "https://cdn.pawfecto.kr/products/lamb_grainfree.jpg",
+      "product_description": "곡물 알러지가 있는 반려견을 위한 양고기 단일 단백질 레시피로 민감한 장 건강을 고려했습니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 8000,
+      "style_tags": [2],
+      "requested_at": "2025-02-08T10:30:00Z",
+      "application_deadline_at": "2025-02-17",
+      "posting_start_at": "2025-02-22",
+      "posting_end_at": "2025-03-08",
+      "required_creator_count": 4
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 13,
+    "fields": {
+      "brand": 2,
+      "product_name": "포프레시 액티브 케어 관절 영양제",
+      "product_image_url": "https://cdn.pawfecto.kr/products/joint_supplement.jpg",
+      "product_description": "글루코사민과 MSM을 함유하여 활동량이 많은 반려견의 관절 건강을 지원하는 기능성 영양제입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 10000,
+      "style_tags": [9],
+      "requested_at": "2025-02-09T11:00:00Z",
+      "application_deadline_at": "2025-02-18",
+      "posting_start_at": "2025-02-23",
+      "posting_end_at": "2025-03-10",
+      "required_creator_count": 2
+    }
+  },
+
+  {
+    "model": "myapp.campaign",
+    "pk": 14,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 오가닉 치킨 & 브라운라이스",
+      "product_image_url": "https://cdn.pawfecto.kr/products/chicken_brownrice.jpg",
+      "product_description": "유기농 닭고기와 현미를 사용해 장시간 포만감을 제공하는 데일리 주식 사료입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 6000,
+      "style_tags": [4],
+      "requested_at": "2025-02-08T13:00:00Z",
+      "application_deadline_at": "2025-02-16",
+      "posting_start_at": "2025-02-21",
+      "posting_end_at": "2025-03-06",
+      "required_creator_count": 1
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 15,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 저자극 스킨 & 코트 트릿",
+      "product_image_url": "https://cdn.pawfecto.kr/products/skin_coat_treat.jpg",
+      "product_description": "피부와 모질 개선에 도움을 주는 오메가3 기반 기능성 트릿으로 민감성 반려견에게 적합합니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 7000,
+      "style_tags": [3],
+      "requested_at": "2025-02-09T09:30:00Z",
+      "application_deadline_at": "2025-02-17",
+      "posting_start_at": "2025-02-22",
+      "posting_end_at": "2025-03-07",
+      "required_creator_count": 2
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 16,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 내추럴 덴탈 케어 스틱",
+      "product_image_url": "https://cdn.pawfecto.kr/products/dental_stick.jpg",
+      "product_description": "자연 유래 성분으로 치석 제거와 구강 냄새 개선을 돕는 데일리 덴탈 케어 간식입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 4000,
+      "style_tags": [3],
+      "requested_at": "2025-02-09T14:00:00Z",
+      "application_deadline_at": "2025-02-18",
+      "posting_start_at": "2025-02-23",
+      "posting_end_at": "2025-03-09",
+      "required_creator_count": 6
+    }
+  },
+
+  {
+    "model": "myapp.campaign",
+    "pk": 17,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 캣 웰니스 유리너리 케어 파우치",
+      "product_image_url": "https://cdn.pawfecto.kr/products/cat_urinary.jpg",
+      "product_description": "요로 건강을 위한 미네랄 밸런스를 맞춘 파우치형 습식 사료입니다.",
+      "target_pet_type": "cat",
+      "min_follower_count": 6000,
+      "style_tags": [2],
+      "requested_at": "2025-02-08T15:00:00Z",
+      "application_deadline_at": "2025-02-15",
+      "posting_start_at": "2025-02-20",
+      "posting_end_at": "2025-03-04",
+      "required_creator_count": 4
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 18,
+    "fields": {
+      "brand": 2,
+      "product_name": "미우밀 캣 프리미엄 닭가슴살 토핑",
+      "product_image_url": "https://cdn.pawfecto.kr/products/cat_chicken_topping.jpg",
+      "product_description": "100% 닭가슴살로 만든 고양이용 토핑 간식으로 주식 위에 곁들여 급여할 수 있습니다.",
+      "target_pet_type": "cat",
+      "min_follower_count": 8000,
+      "style_tags": [7],
+      "requested_at": "2025-02-09T10:00:00Z",
+      "application_deadline_at": "2025-02-16",
+      "posting_start_at": "2025-02-21",
+      "posting_end_at": "2025-03-05",
+      "required_creator_count": 3
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 19,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 캣 스트레스 완화 허브 스프레이",
+      "product_image_url": "https://cdn.pawfecto.kr/products/cat_herb_spray.jpg",
+      "product_description": "고양이의 긴장을 완화하는 천연 허브 성분 스프레이로 이동장 및 생활 공간에 사용할 수 있습니다.",
+      "target_pet_type": "cat",
+      "min_follower_count": 5000,
+      "style_tags": [6],
+      "requested_at": "2025-02-09T16:00:00Z",
+      "application_deadline_at": "2025-02-17",
+      "posting_start_at": "2025-02-22",
+      "posting_end_at": "2025-03-06",
+      "required_creator_count": 2
+    }
   }
 ]
