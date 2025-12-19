@@ -8,7 +8,7 @@ from ai.prompts import (
     OUTPUT_FORMAT_INSTRUCTION,
 )
 from ai.validators import validate_ai_result, AIResultValidationError
-from ai.client import run_ai_verification
+from ai.services.verification import run_ai_verification
 
 
 def verify_deliverable(deliverable_id: int):

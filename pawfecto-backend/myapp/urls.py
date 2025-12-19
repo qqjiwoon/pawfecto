@@ -120,5 +120,11 @@ urlpatterns = [
         views.submit_deliverable,
         name='submit_deliverable',
     ),
+    # Deliverable AI 검증 요청
+    path(
+        'deliverables/<int:deliverable_id>/verify/',
+        views.verify_deliverable,
+        name='verify_deliverable',
+    ),
 
 ]
