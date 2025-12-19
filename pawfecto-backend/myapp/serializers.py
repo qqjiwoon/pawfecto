@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Campaign, CampaignAcceptance, Deliverable, StyleTag
+from .models import Campaign, CampaignAcceptance, Deliverable, StyleTag, DeliverableRequirement
 from accounts.serializers import BrandSerializer, UserSerializer
 
 
@@ -12,6 +12,18 @@ class StyleTagSerializer(serializers.ModelSerializer):
         fields = ['id', 'code', 'name']
 
 
+# -----------------------------------------------------------
+# 5. DeliverableRequirementSerializer 포스팅 요구 조건
+# -----------------------------------------------------------
+class DeliverableRequirementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliverableRequirement
+        fields = [
+            'id',
+            'requirement_type',
+            'description',
+            'is_required',
+        ]
 
 # -----------------------------------------------------------
 # 1. CampaignSerializer (상세 페이지용)
@@ -32,6 +44,11 @@ class CampaignSerializer(serializers.ModelSerializer):
         write_only=True
     )
 
+    requirements = DeliverableRequirementSerializer(
+        many=True,
+        required=False
+    )
+
     class Meta:
         model = Campaign
         fields = [
@@ -49,16 +66,27 @@ class CampaignSerializer(serializers.ModelSerializer):
             'posting_start_at',
             'posting_end_at',
             'required_creator_count',
+            'requirements',
         ]
 
     def create(self, validated_data):
         style_tags = validated_data.pop('style_tag_ids', [])
+        requirements_data = validated_data.pop('requirements', [])
+
         campaign = Campaign.objects.create(**validated_data)
         campaign.style_tags.set(style_tags)
+
+        for req in requirements_data:
+            DeliverableRequirement.objects.create(
+                campaign=campaign,
+                **req
+            )
+
         return campaign
 
     def update(self, instance, validated_data):
         style_tags = validated_data.pop('style_tag_ids', None)
+        requirements_data = validated_data.pop('requirements', None)
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
@@ -66,6 +94,14 @@ class CampaignSerializer(serializers.ModelSerializer):
 
         if style_tags is not None:
             instance.style_tags.set(style_tags)
+
+        if requirements_data is not None:
+            instance.requirements.all().delete()
+            for req in requirements_data:
+                DeliverableRequirement.objects.create(
+                    campaign=instance,
+                    **req
+                )
 
         return instance
 
@@ -120,7 +156,7 @@ class CampaignAcceptanceSerializer(serializers.ModelSerializer):
 
 
 # -----------------------------------------------------------
-# 4. DeliverableSerializer (납품 결과물)
+# 4. DeliverableSerializer (납품 결과물) 조회용 
 # -----------------------------------------------------------
 
 class DeliverableSerializer(serializers.ModelSerializer):
@@ -134,4 +170,15 @@ class DeliverableSerializer(serializers.ModelSerializer):
             'posted_at',
             'post_url',
             'deliverable_status',
+        ]
+
+# -----------------------------------------------------------
+# 4-1. 이미지 업로드 content 입력
+# -----------------------------------------------------------
+class DeliverableCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Deliverable
+        fields = [
+            'content',
+            'image',
         ]
