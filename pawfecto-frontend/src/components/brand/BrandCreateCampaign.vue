@@ -158,7 +158,9 @@ function onFileChange(e) {
    캠페인 생성
 -------------------------------- */
 async function createCampaign() {
-  const isConfirmed = await warningStore.confirm("작성하신 내용으로 캠페인을 생성하시겠습니까?")
+  const isConfirmed = await warningStore.confirm(
+    "작성하신 내용으로 캠페인을 생성하시겠습니까?"
+  )
   if (!isConfirmed) return
 
   try {
@@ -166,25 +168,42 @@ async function createCampaign() {
       .filter(tag => campaign.value.style_tags.includes(tag.code))
       .map(tag => tag.id)
 
-    await campaignStore.createCampaign(brandId, {
-      ...campaign.value,
-      requested_at: new Date().toISOString(),
-      application_deadline_at: campaign.value.posting_start_at,
-      style_tag_ids: styleTagIds,
+    // 핵심: FormData 사용
+    const formData = new FormData()
+
+    formData.append("product_name", campaign.value.product_name)
+    formData.append("product_description", campaign.value.product_description)
+    formData.append("target_pet_type", campaign.value.target_pet_type)
+    formData.append("min_follower_count", campaign.value.min_follower_count)
+    formData.append("required_creator_count", campaign.value.required_creator_count)
+    formData.append("posting_start_at", campaign.value.posting_start_at)
+    formData.append("posting_end_at", campaign.value.posting_end_at)
+    formData.append("requested_at", new Date().toISOString())
+    formData.append("application_deadline_at", campaign.value.posting_start_at)
+
+    // 스타일 태그 (배열은 이렇게)
+    styleTagIds.forEach(id => {
+      formData.append("style_tag_ids", id)
     })
 
-    // [수정] 성공 알림 모달 호출
-    warningStore.open("캠페인이 성공적으로 생성되었습니다.") 
+    // 이미지 (있을 때만)
+    if (imageFile.value) {
+      formData.append("product_image", imageFile.value)
+    }
+
+    await campaignStore.createCampaign(brandId, formData)
+
+    warningStore.open("캠페인이 성공적으로 생성되었습니다.")
 
     router.push({
       name: "brand-campaign-list",
       params: { brand_id: brandId },
     })
   } catch (err) {
-    // [수정] 에러 알림 모달 호출
-    warningStore.open("캠페인 생성에 실패했습니다. 다시 시도해 주세요.") 
+    warningStore.open("캠페인 생성에 실패했습니다. 다시 시도해 주세요.")
   }
 }
+
 </script>
 
 <style scoped>

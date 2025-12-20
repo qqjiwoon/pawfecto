@@ -1,7 +1,8 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
 from django.views.decorators.cache import never_cache
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
@@ -42,7 +43,8 @@ def brand_campaign_list(request, brand_id):
     if request.user.id != int(brand_id):
         return Response({"error": "본인 캠페인만 조회 가능합니다."}, status=403)
 
-    campaigns = Campaign.objects.filter(brand=request.user)
+    campaigns = Campaign.objects.filter(brand=request.user).order_by('-requested_at')
+
     serializer = CampaignListSerializer(campaigns, many=True)
     return Response(serializer.data, status=200)
 
@@ -53,6 +55,7 @@ def brand_campaign_list(request, brand_id):
 # ------------------------------------------------------------
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def create_campaign(request, brand_id):
 
     if request.user.account_type != "brand":
@@ -70,6 +73,7 @@ def create_campaign(request, brand_id):
     auto_match_creators(campaign)
 
     return Response(serializer.data, status=201)
+
 
 
 
@@ -100,6 +104,7 @@ def campaign_detail(request, brand_id, campaign_id):
 # ------------------------------------------------------------
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def update_campaign(request, brand_id, campaign_id):
 
     campaign = get_object_or_404(
@@ -128,7 +133,7 @@ def update_campaign(request, brand_id, campaign_id):
             "required_creator_count",
         }
 
-        if forbidden_fields & request.data.keys():
+        if forbidden_fields & set(request.data.keys()):
             return Response(
                 {
                     "error": "크리에이터가 승인된 이후에는 가이드라인을 수정할 수 없습니다."
@@ -136,7 +141,11 @@ def update_campaign(request, brand_id, campaign_id):
                 status=400
             )
 
-    serializer = CampaignSerializer(campaign, data=request.data, partial=True)
+    serializer = CampaignSerializer(
+        campaign,
+        data=request.data,
+        partial=True
+    )
     serializer.is_valid(raise_exception=True)
     serializer.save()
 
@@ -147,6 +156,7 @@ def update_campaign(request, brand_id, campaign_id):
     auto_match_creators(campaign)
 
     return Response(serializer.data, status=200)
+
 
 
 
@@ -492,6 +502,7 @@ def creator_campaign_offers(request, creator_id):
 # ------------------------------------------------------------
 # 캠페인 오퍼 수락
 # ------------------------------------------------------------
+# 캠페인 오퍼 수락 + Deliverable 자동 생성
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def accept_offer(request, acceptance_id):
@@ -529,6 +540,16 @@ def accept_offer(request, acceptance_id):
     acceptance.acceptance_status = "accepted"
     acceptance.accepted_at = timezone.now()
     acceptance.save()
+
+    # 5. Deliverable 자동 생성 (중복 방지)
+    Deliverable.objects.get_or_create(
+        campaign_acceptance=acceptance,
+        defaults={
+            "content": "",
+            "deliverable_status": "incomplete",
+            "ai_validation_status": "pending"
+        }
+    )
 
     return Response(
         CampaignAcceptanceSerializer(acceptance).data,
@@ -601,6 +622,7 @@ def creator_detail(request, creator_id):
 # ------------------------------------------------------------
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def submit_deliverable(request, acceptance_id):
 
     # CampaignAcceptance 조회

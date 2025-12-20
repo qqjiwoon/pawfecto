@@ -189,27 +189,37 @@ async function updateCampaign() {
       .filter(tag => campaign.value.style_tags.includes(tag.code))
       .map(tag => tag.id)
 
+    // 🔥 핵심: FormData 사용
+    const formData = new FormData()
+
+    formData.append("product_name", campaign.value.product_name)
+    formData.append("product_description", campaign.value.product_description)
+
+    formData.append("target_pet_type", campaign.value.target_pet_type)
+    formData.append("min_follower_count", campaign.value.min_follower_count)
+    formData.append("required_creator_count", campaign.value.required_creator_count)
+
+    formData.append("application_deadline_at", campaign.value.application_deadline_at)
+    formData.append("posting_start_at", campaign.value.posting_start_at)
+    formData.append("posting_end_at", campaign.value.posting_end_at)
+
+    // 스타일 태그 (M2M)
+    styleTagIds.forEach(id => {
+      formData.append("style_tag_ids", id)
+    })
+
+    // 🔥 이미지: 파일이 선택된 경우에만
+    if (imageFile.value) {
+      formData.append("product_image_url", imageFile.value)
+    }
+
     await api.put(
       `/api/v1/brand/${brandId}/campaign/${campaignId}/update/`,
-      {
-        product_name: campaign.value.product_name,
-        product_description: campaign.value.product_description,
-        product_image_url: campaign.value.product_image_url,
-
-        target_pet_type: campaign.value.target_pet_type,
-        min_follower_count: campaign.value.min_follower_count,
-        required_creator_count: campaign.value.required_creator_count,
-
-        application_deadline_at: campaign.value.application_deadline_at,
-        posting_start_at: campaign.value.posting_start_at,
-        posting_end_at: campaign.value.posting_end_at,
-
-        style_tag_ids: styleTagIds,
-      }
+      formData
     )
 
     warningStore.open("캠페인이 성공적으로 수정되었습니다.")
-    
+
     router.push({
       name: "brand-campaign-detail",
       params: { brand_id: brandId, campaign_id: campaignId },

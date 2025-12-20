@@ -9,7 +9,7 @@
           <div class="profile-image-wrap">
             <img
               class="profile-img"
-              :src="brand.profile_image_url || defaultProfileImage"
+              :src="fullProfileImageUrl"
               alt="profile image"
               @click="goDashboard"
             />
@@ -29,9 +29,11 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
-import defaultProfileImage from '@/assets/defalut-profile-image.jpg'
+import { computed } from "vue"
+import { useRouter } from "vue-router"
+import defaultProfileImage from "@/assets/defalut-profile-image.jpg"
 
+// props
 const props = defineProps({
   brand: {
     type: Object,
@@ -39,13 +41,33 @@ const props = defineProps({
   }
 })
 
-// 프로필 이미지 클릭 시 대시보드 메인페이지로 이동
+// router
 const router = useRouter()
 const goDashboard = () => {
   router.push(`/dashboard/brand/${props.brand.id}`)
 }
 
+// backend base url (env 기준)
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000"
+
+// profile image url
+const fullProfileImageUrl = computed(() => {
+  const url = props.brand.profile_image_url
+
+  if (!url) {
+    return defaultProfileImage
+  }
+
+  // absolute url
+  if (url.startsWith("http")) {
+    return url
+  }
+
+  // relative media url
+  return `${API_BASE_URL}${url}`
+})
 </script>
+
 
 <style scoped>
 .brand-header {

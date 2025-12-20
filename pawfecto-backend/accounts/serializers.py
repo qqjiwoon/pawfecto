@@ -30,11 +30,14 @@ class BrandSerializer(serializers.ModelSerializer):
             'name',
             'phone_number',
             'pet_type',
+            'profile_image',
             'profile_image_url',
             'account_type',
         ]
         extra_kwargs = {
             'password': {'write_only': True},  # 비밀번호는 쓰기 전용
+            'profile_image': {'write_only': True}, 
+            'profile_image_url': {'read_only': True},
         }
 
     # 1. 아이디(username) 중복 검사
@@ -119,6 +122,10 @@ class CreatorSerializer(serializers.ModelSerializer):
             'account_type',
             'pet_type',
             'profile_image_url',
+            'instagram_id', 
+            'follower_count',
+            'following_count',
+            'total_post_count',
         ]
         extra_kwargs = {
             'password': {'write_only': True},
@@ -202,7 +209,7 @@ class UserSerializer(serializers.ModelSerializer):
         required=False
     )
 
-    profile_image = serializers.ImageField(required=False, allow_null=True)
+    profile_image_url = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = User
@@ -221,8 +228,8 @@ class UserSerializer(serializers.ModelSerializer):
         # 스타일 태그 code 배열 처리
         style_tag_codes = validated_data.pop("style_tag_codes", None)
 
-        # 이미지 및 태그
-        profile_image = validated_data.pop("profile_image", None)
+        # # 이미지 URL 처리
+        # profile_image = validated_data.pop("profile_image", None)
 
         # 일반 필드 업데이트
         for attr, value in validated_data.items():
@@ -232,16 +239,16 @@ class UserSerializer(serializers.ModelSerializer):
         if password:
             instance.set_password(password)
 
-        # 4. 이미지 파일 처리 및 URL 동기화 (500 에러 주요 구간)
-        if profile_image:
-            instance.profile_image = profile_image
-            instance.save() # 파일을 먼저 저장해야 URL이 생성됨
-            try:
-                # 저장된 파일의 경로를 텍스트 필드에도 복사
-                instance.profile_image_url = instance.profile_image.url
-            except ValueError:
-                # 파일 경로 생성 실패 시 예외 처리
-                pass
+        # # 4. 이미지 파일 처리 및 URL 동기화 (500 에러 주요 구간)
+        # if profile_image:
+        #     instance.profile_image = profile_image
+        #     instance.save() # 파일을 먼저 저장해야 URL이 생성됨
+        #     try:
+        #         # 저장된 파일의 경로를 텍스트 필드에도 복사
+        #         instance.profile_image_url = instance.profile_image.url
+        #     except ValueError:
+        #         # 파일 경로 생성 실패 시 예외 처리
+        #         pass
 
         instance.save()
 

@@ -1,0 +1,52 @@
+### Case 1: [성공] 현실적인 프리미엄 펫푸드 브랜드 가입
+POST http://127.0.0.1:8000/accounts/signup/
+Content-Type: application/json
+
+{
+  "username": "tailplus_official",
+  "password": "brandpassword123!",
+  "email": "contact@tailplus.co.kr",
+  "name": "테일플러스 코리아",
+  "phone_number": "02-555-1234",
+  "pet_type": "dog",
+  "profile_image_url": "https://storage.googleapis.com/pawfecto-bucket/brands/tailplus_logo.png",
+  "account_type": "brand"
+}
+
+### Case 2: [성공] 고양이 전문 용품 브랜드 가입
+POST http://127.0.0.1:8000/accounts/signup/
+Content-Type: application/json
+
+{
+  "username": "meow_studio",
+  "password": "meowpass7890",
+  "email": "hello@meowstudio.io",
+  "name": "뮤스튜디오",
+  "phone_number": "010-9876-5432",
+  "pet_type": "cat",
+  "profile_image_url": "https://storage.googleapis.com/pawfecto-bucket/brands/meow_logo.jpg",
+  "account_type": "brand"
+}
+
+### Case 3: [실패] 이미 존재하는 아이디(username)로 가입 시도
+POST http://127.0.0.1:8000/accounts/signup/
+Content-Type: application/json
+
+{
+  "username": "tailplus_official",
+  "password": "differentpassword",
+  "email": "another@tailplus.co.kr",
+  "name": "중복테스트",
+  "account_type": "brand"
+}
+
+### Case 4: [실패] 필수 항목(email) 누락
+POST http://127.0.0.1:8000/accounts/signup/
+Content-Type: application/json
+
+{
+  "username": "no_email_user",
+  "password": "password123",
+  "name": "이메일없는브랜드",
+  "account_type": "brand"
+}

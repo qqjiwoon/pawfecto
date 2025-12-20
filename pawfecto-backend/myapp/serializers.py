@@ -29,8 +29,6 @@ class DeliverableRequirementSerializer(serializers.ModelSerializer):
 # 1. CampaignSerializer (상세 페이지용)
 # -----------------------------------------------------------
 
-# Campaign Serializer (생성/조회 겸용)
-
 class CampaignSerializer(serializers.ModelSerializer):
     brand = BrandSerializer(read_only=True)
 
@@ -43,6 +41,8 @@ class CampaignSerializer(serializers.ModelSerializer):
         many=True,
         write_only=True
     )
+
+    product_image_url = serializers.ImageField(required=False)
 
     requirements = DeliverableRequirementSerializer(
         many=True,
@@ -185,4 +185,5 @@ class DeliverableCreateSerializer(serializers.ModelSerializer):
         fields = [
             'content',
             'image',
+            'post_url',
         ]

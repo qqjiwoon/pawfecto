@@ -80,6 +80,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 const router = useRouter()
 
@@ -91,17 +92,69 @@ const form = ref({
   brandName: '',
   email: '',
   phoneNumber: '',
-  petType: ''
+  petType: '',
+  profileImageFile: null // 1. 파일 객체를 저장할 공간 추가
 })
-
-const handleSignup = () => {
-  console.log('Form submitted:', form.value)
-}
 
 const handleFileUpload = (e) => {
   const file = e.target.files[0]
   if (file) {
+    form.value.profileImageFile = file // 2. 선택된 파일을 state에 저장
     console.log('Selected file:', file)
+  }
+}
+
+const handleSignup = async () => {
+  // 비밀번호 확인
+  if (form.value.password !== form.value.passwordConfirm) {
+    alert("비밀번호가 일치하지 않습니다.")
+    return
+  }
+
+  // 3. FormData 객체 생성 (파일 업로드를 위해 필수!)
+  const formData = new FormData()
+  
+  // 백엔드 Serializer 필드명에 맞춰서 append
+  formData.append('username', form.value.signupId)
+  formData.append('password', form.value.password)
+  formData.append('email', form.value.email)
+  formData.append('name', form.value.brandName)
+  formData.append('phone_number', form.value.phoneNumber)
+  formData.append('account_type', 'brand')
+  
+  if (form.value.petType) {
+    formData.append('pet_type', form.value.petType)
+  }
+
+  // ★ 핵심: 이미지 파일이 있을 때만 추가 (키 이름은 백엔드 필드명인 'profile_image')
+  if (form.value.profileImageFile) {
+    formData.append('profile_image', form.value.profileImageFile)
+  }
+
+  try {
+    await axios.post(
+      "http://127.0.0.1:8000/accounts/signup/",
+      formData, // 4. JSON 대신 formData 전송
+      {
+        headers: {
+          "Content-Type": "multipart/form-data", // 5. 헤더 변경
+        },
+      }
+    )
+
+    alert("회원가입이 완료되었습니다.")
+    router.push("/login")
+
+  } catch (err) {
+    console.error(err)
+    if (err.response?.data) {
+      // 에러 메시지가 객체인 경우 첫 번째 메시지 출력
+      const firstErrorKey = Object.keys(err.response.data)[0]
+      const firstErrorValue = err.response.data[firstErrorKey]
+      alert(`${firstErrorKey}: ${firstErrorValue}`)
+    } else {
+      alert("회원가입 중 오류가 발생했습니다.")
+    }
   }
 }
 

@@ -4,12 +4,12 @@
 
     <div class="search-box">
       <input
-        v-model="search"
+        v-model="keyword"
         type="text"
         placeholder="Search Creator..."
-        @keyup.enter="filterSearch"
+        @input="filterCreators"
       />
-      <button class="search-btn" @click="filterSearch">🔍</button>
+      <span class="search-icon">🔍</span>
     </div>
 
     <table class="status-table">
@@ -24,7 +24,7 @@
 
       <tbody>
         <tr 
-          v-for="creator in filteredCreators" 
+          v-for="creator in paginatedCreators" 
           :key="creator.id"
         >
           <td 
@@ -42,9 +42,15 @@
           <td>{{ creator.uploadDate }}</td>
 
           <td class="link-cell">
-            <a :href="creator.postLink" target="_blank" class="post-link">
+            <a 
+              v-if="creator.postLink !== '링크 없음'" 
+              :href="creator.postLink" 
+              target="_blank" 
+              class="post-link"
+            >
               {{ creator.postLink }}
             </a>
+            <span v-else class="no-link">{{ creator.postLink }}</span>
           </td>
 
           <td>
@@ -63,46 +69,56 @@
       </tbody>
     </table>
 
+    <Pagination
+      v-if="totalPages > 0"
+      :currentPage="currentPage"
+      :totalPages="totalPages"
+      @change-page="goToPage"
+    />
+
     <CreatorProfileModal
       v-if="isProfileModalOpen && selectedCreator"
       :creator="selectedCreator"
       @close="closeProfile"
     />
-    
   </div>
 </template>
 
 
 <script setup>
-import { ref, computed, onMounted } from "vue"
+import { ref, computed, onMounted, watch } from "vue"
 import { useRoute } from "vue-router"
 import api from "@/plugins/axios"
-import CreatorProfileModal from "./CreatorProfileModal.vue" // 1. 모달 임포트
+import Pagination from '@/components/Pagination.vue'
+import CreatorProfileModal from "./CreatorProfileModal.vue"
 import defaultImg from "@/assets/profile1.jpg"
 
 const route = useRoute()
 const brandId = Number(route.params.brand_id)
 const campaignId = Number(route.params.campaign_id)
 
-const search = ref("")
+/* 상태 관리 */
 const creators = ref([])
+const keyword = ref("")
+const currentPage = ref(1)
+const itemsPerPage = 10
 
-// 2. 모달 관련 상태 추가
 const isProfileModalOpen = ref(false)
 const selectedCreator = ref(null)
 
+/* 유틸리티 및 매핑 함수 */
 const getStatusKor = (status) => {
   const mapping = { Complete: "완료", Incomplete: "미완료" }
   return mapping[status] || status
 }
 
-// 태그 변환 함수 (기존 recommendations에서 가져옴)
 function toKoreanTag(t) {
   const raw = typeof t === "string" ? t : (t?.name_ko || t?.label || t?.name || "")
   const m = raw.match(/\(([^)]+)\)/)
   return m ? m[1] : raw
 }
 
+/* 데이터 로드 */
 onMounted(async () => {
   try {
     const res = await api.get(`/api/v1/brand/${brandId}/campaign/${campaignId}/progress/`)
@@ -113,8 +129,8 @@ onMounted(async () => {
       handle: d.campaign_acceptance?.creator?.sns_handle || d.campaign_acceptance?.creator?.username || "unknown",
       profileImg: d.campaign_acceptance?.creator?.profile_image_url || defaultImg,
       
-      // [중요] 모달에 보여줄 상세 정보들 추가 매핑
-      address: d.campaign_acceptance?.creator?.address || "", // 주소 추가!
+      // 모달용 데이터
+      address: d.campaign_acceptance?.creator?.address || "",
       petType: d.campaign_acceptance?.creator?.pet_type,
       followers: d.campaign_acceptance?.creator?.follower_count ?? 0,
       styleTags: (d.campaign_acceptance?.creator?.style_tags || []).map(toKoreanTag),
@@ -124,11 +140,43 @@ onMounted(async () => {
       status: d.post_url ? "Complete" : "Incomplete"
     }))
   } catch (err) {
-    console.error("로드 실패:", err)
+    console.error("데이터 로드 실패:", err)
   }
 })
 
-// 3. 모달 제어 함수
+/* 검색 및 페이지네이션 로직 */
+const filterCreators = () => {
+  // @input 시 호출되는 함수 (필요 시 추가 로직 작성)
+  currentPage.value = 1
+}
+
+const filteredCreators = computed(() => {
+  const k = keyword.value.trim().toLowerCase()
+  if (!k) return creators.value
+  return creators.value.filter(c =>
+    c.name.toLowerCase().includes(k) || c.handle.toLowerCase().includes(k)
+  )
+})
+
+const totalPages = computed(() => {
+  return Math.ceil(filteredCreators.value.length / itemsPerPage)
+})
+
+const paginatedCreators = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  return filteredCreators.value.slice(start, start + itemsPerPage)
+})
+
+const goToPage = (page) => {
+  currentPage.value = page
+}
+
+// 검색어 변경 시 페이지 초기화
+watch(keyword, () => {
+  currentPage.value = 1
+})
+
+/* 모달 제어 */
 const openProfile = (creator) => {
   selectedCreator.value = creator
   isProfileModalOpen.value = true
@@ -137,33 +185,26 @@ const closeProfile = () => {
   isProfileModalOpen.value = false
   selectedCreator.value = null
 }
-
-const filteredCreators = computed(() => {
-  const k = search.value.trim().toLowerCase()
-  if (!k) return creators.value
-  return creators.value.filter(c =>
-    c.name.toLowerCase().includes(k) || c.handle.toLowerCase().includes(k)
-  )
-})
 </script>
 
 
 <style scoped>
+/* 1. 레이아웃 (Recommendation과 동일하게 맞춤) */
 .status-wrapper {
   width: 95%;
   max-width: 1200px;
-  margin: 40px auto;
+  margin: 40px auto; /* 상하 여백 40px로 통일 */
 }
 
 .title {
   text-align: center;
-  font-size: 32px;
+  font-size: 40px;
   font-weight: 700;
-  margin: 100px 0 40px 0;
+  margin: 140px 0 80px 0;
   color: #222;
 }
 
-/* 검색창 */
+/* 2. 검색창 (Recommendation 스타일: border-radius 8px, 우측 정렬) */
 .search-box {
   display: flex;
   align-items: center;
@@ -171,8 +212,8 @@ const filteredCreators = computed(() => {
   background: #fff;
   border: 1px solid #ddd;
   padding: 6px 12px;
-  border-radius: 8px;
-  margin: 0 0 20px auto;
+  border-radius: 8px; /* 20px -> 8px로 변경 */
+  margin: 0 0 20px auto; /* margin auto를 사용하여 우측 정렬 */
 }
 
 .search-box input {
@@ -183,27 +224,24 @@ const filteredCreators = computed(() => {
   font-size: 14px;
 }
 
-.search-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
+.search-icon {
   color: #888;
+  font-size: 14px;
 }
 
-/* 테이블 디자인 - Recommendations 스타일 통일 */
+/* 3. 테이블 스타일 (Recommendation과 헤더/셀 스타일 통일) */
 .status-table {
   width: 100%;
   border-collapse: collapse;
 }
 
 .status-table th {
-  padding: 16px 8px;
+  padding: 16px 8px; /* 패딩 확대 */
   font-size: 16px;
   font-weight: 600;
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid #eee; /* 헤더 라인 두껍게 (2px) */
   text-align: center;
-  color: #333;
+  color: #333; /* 글자색 진하게 (#777 -> #333) */
 }
 
 .status-table td {
@@ -212,10 +250,10 @@ const filteredCreators = computed(() => {
   border-bottom: 1px solid #eee;
   text-align: center;
   vertical-align: middle;
-  color: #444;
+  color: #444; /* 기본 글자색 지정 */
 }
 
-/* 크리에이터 셀 */
+/* 4. 내부 요소 스타일 */
 .creator-cell {
   display: flex;
   align-items: center;
@@ -231,47 +269,60 @@ const filteredCreators = computed(() => {
   flex-shrink: 0;
 }
 
-.info .name { font-weight: 600; color: #333; margin: 0; }
-.info .handle { font-size: 13px; color: #888; margin: 0; }
+.info .name { 
+  font-weight: 600; 
+  color: #333; 
+  margin: 0; 
+  font-size: 15px; 
+}
+
+/* 마우스 올렸을 때 이름 색상 변경 */
+.creator-cell:hover .name {
+  color: #6495ff;
+}
+
+.info .handle { 
+  font-size: 13px; 
+  color: #888; 
+  margin: 0; 
+}
+
+/* 마우스 올렸을 때 이름 색상 변경 */
+.creator-cell:hover .handle {
+  color: #B8A58D;
+}
 
 .post-link {
   color: #6495ff;
   text-decoration: none;
+  word-break: break-all;
 }
+.no-link { color: #bbb; }
 
-/* 상태 태그 - 요청하신 스타일 적용 */
+/* 상태 태그 (기존 로직 유지하되 디자인 톤 앤 매너 맞춤) */
 .status-tag {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  width: 100%;
-  max-width: 80px;
+  width: 80px;
   padding: 6px 0;
-  background: #fff;           /* 흰색 배경 */
-  border: 1px solid #ddd;     /* 회색 실선 테두리 */
+  background: #fff;
+  border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 500;
   color: #444;
 }
 
-.status-dot {
-  font-size: 10px;
-}
-
-/* 상태별 점(Dot) 색상 */
-.complete .status-dot {
-  color: #1ea35a; /* 초록색 점 */
-}
-
-.incomplete .status-dot {
-  color: #d93232; /* 빨간색 점 */
-}
+.status-dot { font-size: 10px; }
+.complete .status-dot { color: #1ea35a; }
+.incomplete .status-dot { color: #d93232; }
 
 .no-result {
   text-align: center;
-  padding: 40px !important;
-  color: #888;
+  padding: 60px !important;
+  color: #999;
+  font-size: 16px;
 }
 </style>

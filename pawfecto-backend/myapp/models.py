@@ -28,7 +28,7 @@ class Campaign(models.Model):
     )
 
     product_name = models.CharField(max_length=100)
-    product_image_url = models.CharField(max_length=255)
+    product_image_url = models.ImageField(upload_to='campaigns/', null=True, blank=True)
     product_description = models.TextField()
 
     # 타겟 반려동물 : ENUM('dog', 'cat') NULL
@@ -173,7 +173,7 @@ class Deliverable(models.Model):
     )
 
     content = models.TextField()
-    image = models.ImageField(upload_to="deliverables/")
+    image = models.ImageField(upload_to='deliverables/', null=True, blank=True)
 
     ai_validation_status = models.CharField(
         max_length=20,
