@@ -4,19 +4,15 @@
 
     <div class="search-box">
       <input
-        type="text"
         v-model="keyword"
+        type="text"
         placeholder="Search Creator..."
         @input="filterCreators"
       />
       <span class="search-icon">🔍</span>
     </div>
 
-    <p v-if="filteredCreators.length === 0" class="no-result">
-      찾으시는 크리에이터가 없습니다.
-    </p>
-
-    <table v-else class="creator-table">
+    <table class="creator-table">
       <thead>
         <tr>
           <th style="width: 20%">크리에이터</th>
@@ -37,12 +33,6 @@
               <p class="handle">@{{ creator.handle }}</p>
             </div>
           </td>
-
-          <CreatorProfileModal
-            v-if="isProfileModalOpen && selectedCreator"
-            :creator="selectedCreator"
-            @close="closeProfile"
-          />
 
           <td>{{ creator.petType }}</td>
           <td>{{ creator.followers.toLocaleString() }}</td>
@@ -86,13 +76,26 @@
             </span>
           </td>
         </tr>
+
+        <tr v-if="paginatedCreators.length === 0">
+          <td colspan="6" class="no-result" style="text-align: center; padding: 40px 0;">
+            찾으시는 크리에이터가 없습니다.
+          </td>
+        </tr>
       </tbody>
     </table>
 
-    <Pagination
-      :currentPage="currentPage"
-      :totalPages="totalPages"
-      @change-page="goToPage"
+    <CreatorProfileModal
+      v-if="isProfileModalOpen && selectedCreator"
+      :creator="selectedCreator"
+      @close="closeProfile"
+    />
+
+    <Pagination 
+      v-if="totalPages > 0"
+      :currentPage="currentPage" 
+      :totalPages="totalPages" 
+      @change-page="goToPage" 
     />
   </div>
 </template>
@@ -101,7 +104,7 @@
 import { ref, computed, onMounted, onUnmounted } from "vue"
 import { useRoute } from "vue-router"
 import api from "@/plugins/axios"
-import Pagination from "./Pagination.vue"
+import Pagination from '@/components/Pagination.vue'
 import CreatorProfileModal from "./CreatorProfileModal.vue" // 모달 임포트
 import defaultImg from "@/assets/profile1.jpg"
 import { useWarningStore } from '@/stores/warning'
@@ -236,10 +239,10 @@ const closeProfile = () => {
 }
 
 .title {
-  font-size: 32px;
-  font-weight: 700;
-  margin: 100px 0 40px 0;
   text-align: center;
+  font-size: 40px;
+  font-weight: 700;
+  margin: 140px 0 80px 0;
   color: #222;
 }
 
@@ -259,6 +262,11 @@ const closeProfile = () => {
   border: none;
   background: transparent;
   outline: none;
+  font-size: 14px;
+}
+
+.search-icon {
+  color: #888;
   font-size: 14px;
 }
 
@@ -282,6 +290,7 @@ const closeProfile = () => {
   border-bottom: 1px solid #eee;
   text-align: center;
   vertical-align: middle;
+  color: #444; /* 기본 글자색 지정 */
 }
 
 .creator-cell {
@@ -290,6 +299,25 @@ const closeProfile = () => {
   gap: 12px;
   text-align: left;
 }
+
+/* 이름 스타일 */
+.info .name { 
+  font-weight: 600; 
+  color: #333; 
+  font-size: 15px; 
+  margin: 0;
+}
+
+/* 마우스 올렸을 때 이름 색상 변경 */
+.creator-cell:hover .name {
+  color: #6495ff;
+}
+
+/* 마우스 올렸을 때 색상 변경 */
+.creator-cell:hover .handle {
+  color: #B8A58D;
+}
+
 
 .profile-img {
   width: 42px;
@@ -339,12 +367,19 @@ const closeProfile = () => {
   text-align: center;
   cursor: pointer;
   font-weight: 500;
+  transition: all 0.2s ease; /* 색상이 부드럽게 변하는 효과 추가 */
 }
 
-/* 완료된 상태일 때 마우스 포인터 변경 */
+/* 완료된 상태일 때 (잠김) */
 .is-locked {
-  cursor: default !important;
+  cursor: default;
   opacity: 0.9;
+}
+
+/* 완료되지 않은 상태일 때만 마우스 올리면 반응 */
+.status-btn:not(.is-locked):hover {
+  filter: brightness(0.98); /* 기존 배경색보다 살짝 어둡게 만들어 클릭 가능함을 표현 */
+  transform: translateY(-1px); /* (선택사항) 살짝 위로 떠오르는 느낌 */
 }
 
 /* 크리에이터 매칭 텍스트 스타일 */
@@ -399,5 +434,12 @@ const closeProfile = () => {
 
 .status-option {
   margin: 3px 0;
+}
+
+.no-result {
+  text-align: center;
+  padding: 60px !important;
+  color: #999;
+  font-size: 16px;
 }
 </style>

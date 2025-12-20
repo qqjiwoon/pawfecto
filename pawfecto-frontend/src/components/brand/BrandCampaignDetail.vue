@@ -3,7 +3,7 @@
 
     <div class="campaign-info">
       
-      <img :src="campaign.product_image_url" class="product-img" />
+      <img :src="campaignImageUrl" class="product-img" />
       
       <div class="content-box">
         <h1>{{ campaign.product_name }}</h1>
@@ -89,6 +89,22 @@ const campaignId = Number(route.params.campaign_id)
 
 // 캠페인 상태
 const campaign = ref(null)
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000"
+
+const campaignImageUrl = computed(() => {
+  const url = campaign.value?.product_image_url
+  if (!url) return ""
+
+  // 이미 절대경로면 그대로
+  if (url.startsWith("http")) {
+    return url
+  }
+
+  // /media/... 인 경우 backend 주소 붙이기
+  return `${API_BASE_URL}${url}`
+})
+
 
 /* -------------------------------
    상세 데이터 로드

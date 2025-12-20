@@ -4,7 +4,6 @@
 
     <div class="campaign-list">
 
-      <!-- 캠페인 생성 버튼 (항상 노출) -->
       <router-link
         :to="{
           name: 'brand-create-campaign',
@@ -19,19 +18,17 @@
       </router-link>
 
       <BrandCampaignCard
-        v-for="campaign in campaigns"
+        v-for="campaign in sortedCampaigns"
         :key="campaign.campaign_id || campaign.id"
         :campaign="campaign"
         :brandId="brandId"
       />
     </div>
 
-    <!-- 캠페인 없음 (최상단) -->
     <p v-if="campaigns.length === 0" class="empty-message">
       현재 진행 중인 캠페인이 없습니다. 첫 캠페인을 등록해보세요!
     </p>
 
-    <!-- 캠페인 목록 -->
     <div v-if="campaigns.length > 0" class="pagination-wrap">
       <Pagination
         :currentPage="currentPage"
@@ -42,13 +39,13 @@
   </div>
 </template>
 
-
 <script setup>
+import { computed } from 'vue'
 import BrandCampaignCard from './BrandCampaignCard.vue'
-import Pagination from './Pagination.vue'
+import Pagination from '@/components/Pagination.vue'
 
 // Props 정의
-defineProps({
+const props = defineProps({
   campaigns: {
     type: Array,
     required: true,
@@ -70,17 +67,32 @@ defineProps({
 
 // Emits 정의
 defineEmits(['change-page'])
+
+// [수정됨] requested_at 기준 최신순 정렬
+const sortedCampaigns = computed(() => {
+  if (!props.campaigns) return []
+
+  // 원본 배열 복사 후 정렬
+  return [...props.campaigns].sort((a, b) => {
+    // 날짜 문자열을 Date 객체로 변환하여 밀리초 단위로 비교
+    // 값이 없으면 0으로 처리하여 맨 뒤로 보냄
+    const dateA = a.requested_at ? new Date(a.requested_at).getTime() : 0;
+    const dateB = b.requested_at ? new Date(b.requested_at).getTime() : 0;
+    
+    // 내림차순 (최신 날짜가 더 큰 숫자이므로 B - A)
+    return dateB - dateA;
+  })
+})
 </script>
 
 <style scoped>
 .title {
   font-size: 32px;
-  font-weight: Bold;
+  font-weight: bold;
   margin: 90px 0;
   text-align: center;
 }
 
-/* 안내 문구 스타일 */
 .empty-message {
   text-align: center;
   color: #7E6B5A;
@@ -94,7 +106,8 @@ defineEmits(['change-page'])
 
 .campaign-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 250px);
+  /* 반응형 그리드: 최소 250px 너비 유지, 자동 줄바꿈 */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   justify-content: center;
   gap: 30px;
   margin-bottom: 5%;
@@ -104,16 +117,21 @@ defineEmits(['change-page'])
 
 /* 등록 카드 스타일 */
 .add-card {
-  width: 250px;
-  height: 380px; /* BrandCampaignCard의 실제 높이에 맞춰 조절하세요 */
+  width: 100%;
+  max-width: 250px; /* 카드 최대 너비 제한 */
+  height: 380px; /* BrandCampaignCard 높이와 일치 */
+  
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px dashed #e0d6cc; /* 연한 브라운 점선 테두리 */
+  border: 1.5px dashed #e0d6cc;
   border-radius: 16px;
-  background-color: #fdfaf8; /* 아주 연한 베이지 배경 */
+  background-color: #fdfaf8;
   text-decoration: none;
   transition: all 0.3s ease;
+  
+  /* 그리드 내 중앙 정렬 */
+  justify-self: center; 
 }
 
 .add-content {
@@ -136,16 +154,15 @@ defineEmits(['change-page'])
   color: #7E6B5A;
 }
 
-/* 마우스 올렸을 때 효과 */
 .add-card:hover {
   background-color: #f5f1ec;
   border-color: #C4B199;
-  transform: translateY(-5px); /* 살짝 위로 이동 */
+  transform: translateY(-5px);
 }
 
 .add-card:hover .plus-icon,
 .add-card:hover .add-text {
-  color: #65481F; /* 마우스 올리면 글자색 진하게 */
+  color: #65481F;
 }
 
 .pagination-wrap {
@@ -153,40 +170,4 @@ defineEmits(['change-page'])
   display: flex;
   justify-content: center;
 }
-
-/* 버튼을 감싸는 영역 - 중앙 정렬 유지 */
-.create-button-wrap {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 24px;
-}
-
-/* Option A: Solid 스타일 버튼 */
-.create-button {
-  display: inline-block; /* a 태그를 버튼 모양으로 만들기 위해 */
-  background-color: #65481F; /* 브랜드 메인 브라운 컬러 */
-  color: white; /* 글자색은 흰색으로 */
-  padding: 12px 32px; /* 내부 여백을 주어 버튼 형태 만들기 */
-  border-radius: 50px; /* 둥근 알약 모양 */
-  text-decoration: none; /* 밑줄 제거 */
-  font-weight: 700; /* 글자를 조금 더 두껍게 */
-  font-size: 16px;
-  transition: all 0.3s ease; /* 부드러운 호버 효과 */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 살짝 그림자 주어 입체감 더하기 */
-}
-
-/* 마우스 올렸을 때 효과 */
-.create-button:hover {
-  background-color: #4e3817; /* 조금 더 진한 색으로 변경 */
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* 그림자 더 깊게 */
-  transform: translateY(-2px); /* 살짝 위로 떠오르는 느낌 */
-}
-
-.empty-message {
-  text-align: center;
-  color: #7E6B5A;
-  font-size: 15px;
-  margin: 80px 0;
-}
-
 </style>

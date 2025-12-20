@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'myapp',
     "corsheaders",
     'rest_framework',
+    'storages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -156,11 +157,72 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": False,
 }
 
+'''
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = 'media/'
 
 
+# GCS 설정
+GS_BUCKET_NAME = 'pawfecto-storage-admin' 
+GS_PROJECT_ID = 'pawfecto' 
+GS_FILE_OVERWRITE = True
 
+# 1. 경로 설정: Path 객체를 사용하여 절대 경로 확보 후 슬래시(/) 변환
+GOOGLE_APPLICATION_CREDENTIALS_PATH = (BASE_DIR / 'keys' / 'service-account-key.json').as_posix()
+
+# 2. 환경 변수 등록: os.environ에 직접 박아야 라이브러리가 즉시 인식함
+import os
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GOOGLE_APPLICATION_CREDENTIALS_PATH
+
+# 3. 라이브러리용 변수 설정
+GOOGLE_APPLICATION_CREDENTIALS = GOOGLE_APPLICATION_CREDENTIALS_PATH
+
+# 4. 저장 엔진 설정
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+
+# 5. [추가] 수동으로 세션을 유지하지 않도록 설정 (권한 에러 방지)
+GS_DEFAULT_ACL = None  # 버킷의 기본 권한 설정을 따름
+'''
+
+# ==============================================================================
+# MEDIA & GCS STORAGE SETTINGS
+# ==============================================================================
+
+# 1. 로컬 미디어 설정 제거 (로컬 저장을 방지하기 위해 반드시 주석 처리하거나 삭제하세요)
+# MEDIA_ROOT = BASE_DIR / 'media'
+# MEDIA_URL = '/media/'
+
+# 2. GCS 기본 정보 설정
+GS_BUCKET_NAME = 'pawfecto'  # 스크린샷에서 확인된 실제 버킷 이름으로 수정
+GS_PROJECT_ID = 'pawfecto' 
+GS_FILE_OVERWRITE = True
+GS_DEFAULT_ACL = None  # 버킷의 '공개 액세스 방지' 설정을 따르거나 allUsers 권한을 따름
+
+# 3. GCS 인증 설정 (윈도우 경로 호환성 확보)
+import os
+from pathlib import Path
+
+# 키 파일의 절대 경로를 슬래시(/) 방향으로 생성
+GOOGLE_APPLICATION_CREDENTIALS_PATH = (BASE_DIR / 'keys' / 'service-account-key.json').as_posix()
+
+# 시스템 환경 변수에 즉시 등록 (라이브러리 인식 필수 단계)
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GOOGLE_APPLICATION_CREDENTIALS_PATH
+GOOGLE_APPLICATION_CREDENTIALS = GOOGLE_APPLICATION_CREDENTIALS_PATH
+
+# 4. 파일 저장 엔진 설정 (이 줄이 로컬 대신 GCS를 사용하게 만드는 핵심입니다)
+# DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+
+
+# ==============================================================================
 # API keys and settings for AI services
 GMS_API_KEY = os.getenv("GMS_API_KEY")
 GMS_OPENAI_BASE_URL = os.getenv("GMS_OPENAI_BASE_URL")

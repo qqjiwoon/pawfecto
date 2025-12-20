@@ -1,6 +1,10 @@
 <template>
   <div class="card" @click="goDetail">
-    <img :src="campaign.product_image_url" class="card-img" alt="campaign">
+    <img
+      :src="campaignImageUrl"
+      class="card-img"
+      alt="campaign"
+    />
 
     <div class="card-body">
       <h3 class="card-title">{{ campaign.product_name }}</h3>
@@ -10,27 +14,47 @@
   </div>
 </template>
 
+
+
 <script setup>
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed } from "vue"
+import { useRouter } from "vue-router"
 
 const props = defineProps({
-  campaign: Object,
-  brandId: Number
+  campaign: {
+    type: Object,
+    required: true
+  },
+  brandId: {
+    type: Number,
+    required: true
+  }
 })
 
 const router = useRouter()
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000"
+
+const campaignImageUrl = computed(() => {
+  const url = props.campaign.product_image_url
+
+  if (!url) return ""
+
+  // 이미 절대경로면 그대로 사용
+  if (url.startsWith("http")) {
+    return url
+  }
+
+  // /media/... 인 경우 backend 주소 붙이기
+  return `${API_BASE_URL}${url}`
+})
+
 const shortDescription = computed(() => {
-  if (!props.campaign.product_description) return ""
-  const text = props.campaign.product_description
+  const text = props.campaign.product_description || ""
   return text.length > 50 ? text.slice(0, 50) + "..." : text
 })
 
 function goDetail() {
-  console.log("brandId:", props.brandId)
-  console.log("campaign_id:", props.campaign.campaign_id)
-
   router.push({
     name: "campaign-recommendations",
     params: {
@@ -40,6 +64,7 @@ function goDetail() {
   })
 }
 </script>
+
 
 
 <style scoped>

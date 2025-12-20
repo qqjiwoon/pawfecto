@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
+from myproject.utils import upload_to_gcs
 
 from .serializers import (
     UserSerializer,
@@ -121,7 +122,7 @@ def find_id(request):
     )
 
 # ============================================
-# 2-2) 패스워드  찾기
+# 2-2) 패스워드 찾기
 # ============================================
 @api_view(['POST'])
 def password_reset(request):
@@ -179,15 +180,24 @@ def me(request):
         return Response(serializer.data, status=200)
 
     elif request.method == 'PUT':
-        serializer = UserSerializer(
-            user,
-            data=request.data,
-            partial=True  # 일부 필드만 수정 가능
-        )
+        # partial=True로 일부 필드만 받아도 되게 설정
+        serializer = UserSerializer(user, data=request.data, partial=True)
 
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=200)
+            # 1. 시리얼라이저를 통해 먼저 기본 정보를 저장 (이때 모델의 save()가 호출됨)
+            # 픽클 에러를 방지하기 위해 instance를 직접 넘겨받음
+            updated_user = serializer.save()
+
+            # 2. 만약 요청에 비밀번호가 포함되어 있다면 별도로 암호화 처리
+            password = request.data.get('password')
+            if password:
+                updated_user.set_password(password)
+                updated_user.save()
+
+            # 3. 최신 정보를 다시 시리얼라이즈하여 응답
+            # 저장 후 새로고침된 데이터를 반환하여 픽클 에러가 난 객체와의 연결을 끊음
+            final_serializer = UserSerializer(updated_user)
+            return Response(final_serializer.data, status=200)
 
         return Response(serializer.errors, status=400)
 
@@ -222,28 +232,29 @@ def creator_profile(request, creator_id):
 @permission_classes([IsAuthenticated])
 def update_profile(request):
     user = request.user
-    
-    # 1. QueryDict에서 데이터를 안전하게 가져오기 위해 .copy() 사용
+
     data = request.data.copy()
     data.pop("account_type", None)
+    data.pop("profile_image", None)
 
-    # [핵심 수정] .pop() 대신 .get()을 사용하면 리스트의 첫 번째 문자열만 가져옵니다.
-    # 만약 pop을 써야 한다면 password = request.data.get("password") 로 미리 받아두세요.
-    password = data.get("password") 
+    password = data.get("password")
+    image = request.FILES.get("profile_image")
 
     serializer = UserSerializer(user, data=data, partial=True)
-    
+
     if serializer.is_valid():
         user = serializer.save()
 
-        # 2. 비밀번호 처리
+        # 비밀번호 처리
         if password:
-            # password가 리스트인 경우를 대비해 확실히 문자열로 변환
             if isinstance(password, list):
                 password = password[0]
-            
-            user.set_password(str(password)) # 확실하게 문자열로 변환하여 설정
+            user.set_password(str(password))
             user.save(update_fields=["password"])
+
+        # 프로필 이미지 처리 (storages가 GCS로 자동 업로드)
+        if image:
+            user.profile_image.save(image.name, image, save=True)
 
         return Response(
             {"message": "profile updated", "user": serializer.data},
@@ -251,6 +262,7 @@ def update_profile(request):
         )
 
     return Response(serializer.errors, status=400)
+
 
 
 # ============================================
