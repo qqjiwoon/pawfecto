@@ -15,7 +15,7 @@
     "fields": {
       "campaign": 9,
       "requirement_type": "scene",
-      "description": "outdoor field",
+      "description": "outdoor or indoor",
       "is_required": true
     }
   },
@@ -25,7 +25,7 @@
     "fields": {
       "campaign": 9,
       "requirement_type": "action",
-      "description": "walking",
+      "description": "walking or standing",
       "is_required": true
     }
   },

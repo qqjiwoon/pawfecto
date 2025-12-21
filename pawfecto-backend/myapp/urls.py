@@ -142,7 +142,7 @@ urlpatterns = [
     ),
     # deliverable 제출
     path(
-        'campaign-acceptances/<int:acceptance_id>/deliverable/',
+        'deliverables/<int:deliverable_id>/submit/',
         views.submit_deliverable,
         name='submit_deliverable',
     ),

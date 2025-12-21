@@ -14,6 +14,10 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
+from dotenv import load_dotenv
+load_dotenv()
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -229,3 +233,10 @@ GMS_OPENAI_BASE_URL = os.getenv("GMS_OPENAI_BASE_URL")
 
 AI_MODEL_PRIMARY = os.getenv("AI_MODEL_PRIMARY", "gpt-4.1")
 AI_MODEL_CHEAP = os.getenv("AI_MODEL_CHEAP", "gpt-4.1-mini")
+
+
+# # Django가 이 출처(origin)를 신뢰하지 않아서 POST 요청을 차단 방지
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://localhost:5173",
+#     "http://127.0.0.1:5173",
+# ]

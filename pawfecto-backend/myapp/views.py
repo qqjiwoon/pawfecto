@@ -9,7 +9,9 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from ai.validators import validate_ai_result, AIResultValidationError
 from .services.deliverable_service import run_deliverable_ai_verification
-
+from .ai_client import call_llm
+from django.conf import settings
+import json
 
 from accounts.models import User
 from accounts.serializers import CreatorSerializer
@@ -625,69 +627,46 @@ def creator_detail(request, creator_id):
 # ------------------------------------------------------------
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@parser_classes([MultiPartParser, FormParser])
-def submit_deliverable(request, acceptance_id):
-
-    acceptance = get_object_or_404(
-        CampaignAcceptance,
-        campaign_acceptance_id=acceptance_id
+def submit_deliverable(request, deliverable_id):
+    deliverable = get_object_or_404(
+        Deliverable,
+        deliverable_id=deliverable_id
     )
 
-    # 크리에이터 본인 여부 확인
-    if request.user.account_type != "creator":
+    # 권한 체크
+    if request.user != deliverable.campaign_acceptance.creator:
         return Response(
-            {"error": "크리에이터만 결과물을 제출할 수 있습니다."},
+            {"error": "본인 Deliverable만 제출할 수 있습니다."},
             status=403
         )
 
-    if acceptance.creator != request.user:
-        return Response(
-            {"error": "본인 캠페인에 대해서만 결과물을 제출할 수 있습니다."},
-            status=403
-        )
-
-    # 캠페인 수락 상태 확인
-    if acceptance.acceptance_status != "accepted":
-        return Response(
-            {"error": "수락된 캠페인에 대해서만 결과물을 제출할 수 있습니다."},
-            status=400
-        )
-
-    # Deliverable 존재 확인 (accept_offer에서 이미 생성됨)
-    if not hasattr(acceptance, "deliverable"):
-        return Response(
-            {"error": "Deliverable이 존재하지 않습니다."},
-            status=400
-        )
-
-    deliverable = acceptance.deliverable
-
-    # 🔐 AI 검증 통과 여부 확인 (핵심)
+    # AI 검증 통과 여부 체크
     if deliverable.ai_validation_status != "passed":
         return Response(
-            {"error": "AI 검증을 통과한 후에만 제출할 수 있습니다."},
+            {"error": "AI 검증을 통과한 Deliverable만 제출할 수 있습니다."},
             status=400
         )
 
-    # 이미 제출된 경우 방지
-    if deliverable.deliverable_status == "completed":
+    # 이미 제출된 경우
+    if deliverable.submitted_at:
         return Response(
-            {"error": "이미 제출 완료된 결과물입니다."},
+            {"error": "이미 제출된 Deliverable입니다."},
             status=400
         )
 
-    serializer = DeliverableCreateSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-
-    # Deliverable 업데이트 (생성 ❌)
-    deliverable.content = serializer.validated_data["content"]
-    deliverable.image = serializer.validated_data["image"]
+    #  제출 처리
     deliverable.deliverable_status = "completed"
-    deliverable.posted_at = timezone.now()
-    deliverable.save()
+    deliverable.submitted_at = timezone.now()
+    deliverable.save(
+        update_fields=["deliverable_status", "submitted_at"]
+    )
 
     return Response(
-        DeliverableSerializer(deliverable).data,
+        {
+            "message": "Deliverable 제출이 완료되었습니다.",
+            "submitted_at": deliverable.submitted_at,
+            "deliverable_status": deliverable.deliverable_status,
+        },
         status=200
     )
 
@@ -817,13 +796,11 @@ def cleanup_invalid_acceptances(campaign):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def verify_deliverable(request, deliverable_id):
-
     deliverable = get_object_or_404(
         Deliverable,
         deliverable_id=deliverable_id
     )
 
-    # 권한 체크
     if request.user.account_type != "creator":
         return Response(
             {"error": "크리에이터만 검증을 요청할 수 있습니다."},
@@ -836,21 +813,12 @@ def verify_deliverable(request, deliverable_id):
             status=403
         )
 
-    if deliverable.ai_validation_status == "passed":
-        return Response(
-            {"error": "이미 통과된 Deliverable은 재검증할 수 없습니다."},
-            status=400
-        )
-
-    from .services.deliverable_service import run_deliverable_ai_verification
-
     try:
-        # ✅ service가 모든 검증 + DB 저장을 담당
-        run_deliverable_ai_verification(deliverable.deliverable_id)
+        ai_result = run_deliverable_ai_verification(deliverable.deliverable_id)
 
-        # ✅ 최신 DB 상태 반영
         deliverable.refresh_from_db()
 
+        # 무조건 200으로 내려줌
         return Response(
             {
                 "ai_validation_status": deliverable.ai_validation_status,
@@ -860,9 +828,7 @@ def verify_deliverable(request, deliverable_id):
         )
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-
+        # 진짜 서버 에러만 400
         return Response(
             {"error": str(e)},
             status=400
