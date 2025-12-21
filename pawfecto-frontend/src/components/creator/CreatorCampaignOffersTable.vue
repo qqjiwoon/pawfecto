@@ -44,7 +44,7 @@
             {{ offer.campaign.product_name }}
           </td>
 
-          <td>{{ offer.creator.follower_count.toLocaleString() }}</td>
+          <td>{{ offer.campaign.min_follower_count.toLocaleString() }}</td>
 
           <td>
             <div class="tag-container">

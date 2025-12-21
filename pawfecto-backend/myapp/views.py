@@ -7,6 +7,9 @@ from rest_framework import status
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from ai.validators import validate_ai_result, AIResultValidationError
+from .services.deliverable_service import run_deliverable_ai_verification
+
 
 from accounts.models import User
 from accounts.serializers import CreatorSerializer
@@ -625,7 +628,6 @@ def creator_detail(request, creator_id):
 @parser_classes([MultiPartParser, FormParser])
 def submit_deliverable(request, acceptance_id):
 
-    # CampaignAcceptance 조회
     acceptance = get_object_or_404(
         CampaignAcceptance,
         campaign_acceptance_id=acceptance_id
@@ -651,30 +653,43 @@ def submit_deliverable(request, acceptance_id):
             status=400
         )
 
-    # Deliverable 중복 제출 방지
-    if hasattr(acceptance, "deliverable"):
+    # Deliverable 존재 확인 (accept_offer에서 이미 생성됨)
+    if not hasattr(acceptance, "deliverable"):
         return Response(
-            {"error": "이미 결과물이 제출된 캠페인입니다."},
+            {"error": "Deliverable이 존재하지 않습니다."},
+            status=400
+        )
+
+    deliverable = acceptance.deliverable
+
+    # 🔐 AI 검증 통과 여부 확인 (핵심)
+    if deliverable.ai_validation_status != "passed":
+        return Response(
+            {"error": "AI 검증을 통과한 후에만 제출할 수 있습니다."},
+            status=400
+        )
+
+    # 이미 제출된 경우 방지
+    if deliverable.deliverable_status == "completed":
+        return Response(
+            {"error": "이미 제출 완료된 결과물입니다."},
             status=400
         )
 
     serializer = DeliverableCreateSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
-    deliverable = Deliverable.objects.create(
-        campaign_acceptance=acceptance,
-        content=serializer.validated_data["content"],
-        image=serializer.validated_data["image"],
-        deliverable_status="completed",
-        ai_validation_status="pending",
-        posted_at=timezone.now()
-    )
+    # Deliverable 업데이트 (생성 ❌)
+    deliverable.content = serializer.validated_data["content"]
+    deliverable.image = serializer.validated_data["image"]
+    deliverable.deliverable_status = "completed"
+    deliverable.posted_at = timezone.now()
+    deliverable.save()
 
     return Response(
         DeliverableSerializer(deliverable).data,
-        status=201
+        status=200
     )
-
 
 
 # ============================================================
@@ -808,7 +823,7 @@ def verify_deliverable(request, deliverable_id):
         deliverable_id=deliverable_id
     )
 
-    # 크리에이터 본인 deliverable만 검증 가능
+    # 권한 체크
     if request.user.account_type != "creator":
         return Response(
             {"error": "크리에이터만 검증을 요청할 수 있습니다."},
@@ -821,19 +836,34 @@ def verify_deliverable(request, deliverable_id):
             status=403
         )
 
-    # 이미 통과한 경우만 재검증 차단
     if deliverable.ai_validation_status == "passed":
         return Response(
             {"error": "이미 통과된 Deliverable은 재검증할 수 없습니다."},
             status=400
         )
 
-    # AI 검증 실행
-    from .services.deliverable_service import verify_deliverable as run_verification
-    run_verification(deliverable.deliverable_id)
+    from .services.deliverable_service import run_deliverable_ai_verification
 
-    return Response(
-        {"message": "AI 검증 요청이 접수되었습니다."},
-        status=200
-    )
+    try:
+        # ✅ service가 모든 검증 + DB 저장을 담당
+        run_deliverable_ai_verification(deliverable.deliverable_id)
 
+        # ✅ 최신 DB 상태 반영
+        deliverable.refresh_from_db()
+
+        return Response(
+            {
+                "ai_validation_status": deliverable.ai_validation_status,
+                "ai_result": deliverable.ai_result_raw,
+            },
+            status=200
+        )
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+
+        return Response(
+            {"error": str(e)},
+            status=400
+        )

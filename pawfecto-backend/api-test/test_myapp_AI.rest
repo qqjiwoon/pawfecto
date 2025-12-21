@@ -11,7 +11,7 @@ Content-Type: application/json
 
 
 ### 로그인 응답에서 token을 복사해 아래 변수에 넣어라
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MTc2OTk0LCJpYXQiOjE3NjYxNjk3OTQsImp0aSI6IjlmMGU0NDZhM2NiNDRmNDRiOWFkZTQ0N2E4ZTc4M2JjIiwidXNlcl9pZCI6IjYifQ.Jb7aSsIjGochGyb_7915VhNt1Xkr7A8lF3HSVDq4PNI
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MzIzNjg5LCJpYXQiOjE3NjYzMTY0ODksImp0aSI6ImQ4NTE4Njk1YmI1OTQwOWQ4MDdhY2E5ZjZiMThkNWNkIiwidXNlcl9pZCI6IjYifQ.qyvPePJFqDibrf-u96y_C_wfmu7jcKXiFSsKrarPfC4
 
 
 
@@ -38,6 +38,10 @@ POST http://127.0.0.1:8000/api/v1/deliverables/10/verify/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
+###
+POST http://127.0.0.1:8000/api/v1/deliverables/5/verify/
+Authorization: Bearer {{token}}
+Content-Type: application/json
 
 
 ############################################

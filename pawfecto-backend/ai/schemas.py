@@ -11,38 +11,33 @@ DELIVERABLE_AI_RESULT_SCHEMA = {
     "type": "object",
     "properties": {
         "image_analysis_success": {
-            "type": "boolean",
-            "description": "이미지 분석 성공 여부"
+            "type": "boolean"
         },
         "conditions": {
             "type": "array",
             "items": {
                 "type": "object",
                 "properties": {
-                    "requirement": {
+                    "requirement_type": {
                         "type": "string",
-                        "description": "브랜드 요구사항에서 도출된 검증 조건"
+                        "enum": ["object", "scene", "action", "text"]
+                    },
+                    "requirement": {
+                        "type": "string"
                     },
                     "satisfied": {
-                        "type": "boolean",
-                        "description": "조건 충족 여부"
+                        "type": "boolean"
                     }
                 },
                 "required": ["requirement", "satisfied"]
             }
         },
         "score": {
-            "type": "number",
-            "description": "조건 충족 기반 점수 (100점 만점)"
+            "type": "number"
         },
         "error_reason": {
-            "type": ["string", "null"],
-            "description": "이미지 분석 실패 시 사유"
+            "type": ["string", "null"]
         }
     },
-    "required": [
-        "image_analysis_success",
-        "conditions",
-        "score"
-    ]
+    "required": ["image_analysis_success", "conditions", "score"]
 }

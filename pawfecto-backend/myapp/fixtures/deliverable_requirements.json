@@ -60,5 +60,45 @@
       "description": "mention product benefits",
       "is_required": true
     }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 7,
+    "fields": {
+      "campaign": 1,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 8,
+    "fields": {
+      "campaign": 1,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 9,
+    "fields": {
+      "campaign": 1,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 10,
+    "fields": {
+      "campaign": 1,
+      "requirement_type": "text",
+      "description": "mention joint health benefits",
+      "is_required": true
+    }
   }
 ]
