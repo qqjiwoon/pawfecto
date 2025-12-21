@@ -63,8 +63,8 @@
       "posted_at": null,
       "post_url": null,
       "deliverable_status": "incomplete",
-      "content": "캠페인 준비 중으로 게시 예정입니다.",
-      "image": "deliverables/sample5.jpg",
+      "content": "오늘은 시티워크 에어 메시 하네스를 착용하고\n도심 공원에서 산책을 다녀왔어요 🐕\n\n가볍고 통기성이 좋아서\n오래 걸어도 불편해 보이지 않았고,\n움직일 때도 몸에 잘 밀착돼서 안정감이 느껴졌어요.\n\n산책하면서도 자연스럽게 걷는 모습이 잘 나와서\n데일리 하네스로 딱인 제품이라고 느꼈습니다.",
+      "image": "deliverables/ai_test.jpg",
       "ai_validation_status": "pending",
       "submitted_at": "2025-02-14T09:00:00Z"
     }
@@ -78,7 +78,7 @@
       "post_url": "https://www.instagram.com/p/DELIVERABLE006/",
       "deliverable_status": "completed",
       "content": "기능성 간식을 급여하는 장면을 담아 제품 특징을 설명했습니다.",
-      "image": "deliverables/sample6.jpg",
+      "image": "pawfecto-frontend/src/assets/profile2.jpg",
       "ai_validation_status": "pending",
       "submitted_at": "2025-02-24T19:05:00Z"
     }

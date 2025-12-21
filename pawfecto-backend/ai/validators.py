@@ -10,7 +10,29 @@ class AIResultValidationError(Exception):
 
 
 # 허용되는 requirement_type 값
-ALLOWED_REQUIREMENT_TYPES = {"object", "scene", "action", "text"}
+# ALLOWED_REQUIREMENT_TYPES = {"object", "scene", "action", "text"}
+
+ALLOWED_SATISFIED_VALUES = {"yes", "uncertain", "no"}
+
+def validate_ai_result(result: dict):
+    if "conditions" not in result:
+        raise AIResultValidationError("conditions missing")
+
+    for idx, cond in enumerate(result["conditions"]):
+        if "requirement_type" not in cond:
+            raise AIResultValidationError(f"condition[{idx}] missing requirement_type")
+
+        if "requirement" not in cond:
+            raise AIResultValidationError(f"condition[{idx}] missing requirement")
+
+        if "satisfied" not in cond:
+            raise AIResultValidationError(f"condition[{idx}] missing satisfied")
+
+        if cond["satisfied"] not in ALLOWED_SATISFIED_VALUES:
+            raise AIResultValidationError(
+                f"condition[{idx}] invalid satisfied value: {cond['satisfied']}"
+            )
+
 
 
 def validate_schema(ai_result: dict):
@@ -75,11 +97,15 @@ def validate_business_rules(ai_result: dict):
             )
 
 
-def validate_ai_result(ai_result: dict):
-    """
-    외부에서 사용하는 단일 검증 함수
-    """
-    validate_schema(ai_result)
-    validate_business_rules(ai_result)
+def validate_ai_result(result: dict):
+    if "conditions" not in result or not isinstance(result["conditions"], list):
+        raise ValueError("conditions missing or invalid")
 
-    return True
+    for i, cond in enumerate(result["conditions"]):
+        for field in ["requirement_type", "requirement", "satisfied"]:
+            if field not in cond:
+                raise ValueError(f"condition[{i}] missing required fields")
+
+        # reason은 optional로 완화
+        if "reason" not in cond:
+            cond["reason"] = "AI 판단 사유가 제공되지 않았습니다."
