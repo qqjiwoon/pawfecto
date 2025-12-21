@@ -1,3 +1,4 @@
+<!-- ProgresesEditModal.vue -->
 <template>
   <div class="modal-overlay" @click.self="closeModal">
     <div class="modal-container">
@@ -29,20 +30,55 @@
         <input type="file" @change="onFileChange" />
       </div>
 
+      <!-- AI 검증 -->
+      <div v-if="aiResult" class="ai-result-box">
+      <h4>AI 검증 결과</h4>
+      <ul>
+        <li
+          v-for="cond in aiResult.conditions"
+          :key="cond.requirement"
+          :class="cond.satisfied ? 'pass' : 'fail'"
+        >
+          {{ cond.requirement_type.toUpperCase() }} :
+          {{ cond.requirement }}
+        </li>
+      </ul>
+
+      <p v-if="aiStatus === 'failed'" class="fail-msg">
+        필수 조건을 충족하지 못했습니다.
+      </p>
+
+      <p v-if="aiStatus === 'passed'" class="pass-msg">
+        모든 필수 조건을 충족했습니다 🎉
+      </p>
+    </div>
+
+
       <!-- AI 검증 버튼 -->
       <div class="btn-row">
-        <button class="save-btn" @click="submitForValidation">
-          AI 검증받기
-        </button>
-      </div>
+      <button
+        class="save-btn"
+        :disabled="aiStatus === 'running'"
+        @click="runAIVerification"
+      >
+        AI 검증받기
+      </button>
 
+      <button
+        class="submit-btn"
+        :disabled="aiStatus !== 'passed'"
+        @click="submitDeliverable"
+      >
+        제출하기
+      </button>
+    </div>
 
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import api from '@/plugins/axios'
 
 const props = defineProps({
@@ -52,7 +88,15 @@ const props = defineProps({
   }
 })
 
+
+
 const emit = defineEmits(['close', 'refresh'])
+
+// AI 검증 상태
+const aiStatus = ref('pending') 
+// pending | running | passed | failed
+
+const aiResult = ref(null)
 
 // 게시글 내용
 const content = ref('')
@@ -65,35 +109,39 @@ const onFileChange = (event) => {
   imageFile.value = event.target.files[0]
 }
 
-// AI 검증 요청
-const submitForValidation = async () => {
-  if (!content.value || !imageFile.value) {
-    alert('게시글 내용과 이미지를 모두 입력해주세요.')
-    return
-  }
+watch(
+  () => props.item,
+  (newItem) => {
+    // 최초 로딩 시에만 반영
+    if (aiResult.value === null) {
+      aiStatus.value = newItem.ai_validation_status || 'pending'
+      aiResult.value = newItem.ai_result_raw || null
+    }
+  },
+  { immediate: true }
+)
 
-  const formData = new FormData()
-  formData.append('content', content.value)
-  formData.append('image', imageFile.value)
+const runAIVerification = async () => {
+  if (!content.value || !imageFile.value) return
+
+  aiStatus.value = 'running'
 
   try {
-    await api.post(
-      `/campaign-acceptances/${props.item.campaign_acceptance_id}/deliverable/`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
+    const res = await api.post(
+      `/api/v1/deliverables/${props.item.deliverable_id}/verify/`
     )
 
-    emit('refresh')
-    emit('close')
-  } catch (error) {
-    console.error(error)
-    alert('AI 검증 요청 중 오류가 발생했습니다.')
+    // 모달이 살아있을 때만 상태 갱신
+    if (!props.item) return
+
+    aiResult.value = res.data.ai_result
+    aiStatus.value = res.data.ai_validation_status
+  } catch (e) {
+    aiStatus.value = 'failed'
   }
 }
+
+
 
 // 모달 닫기
 const closeModal = () => {
@@ -257,5 +305,63 @@ const closeModal = () => {
   line-height: 1.4;
 }
 
+/* AI 검증 */
+.ai-result-box {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #fafafa;
+  font-size: 14px;
+}
+
+.ai-result-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.ai-result-box li.pass {
+  color: #1ea35a;
+}
+
+.ai-result-box li.fail {
+  color: #d93232;
+}
+
+.pass-msg {
+  margin-top: 12px;
+  color: #1ea35a;
+  font-weight: 600;
+}
+
+.fail-msg {
+  margin-top: 12px;
+  color: #d93232;
+  font-weight: 600;
+}
+
+/* 제출 버튼 */
+.submit-btn {
+  width: 180px;
+  padding: 14px 0;
+  margin-left: 12px;
+  background: #1ea35a;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.submit-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.submit-btn:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
 
 </style>

@@ -9,6 +9,10 @@ class AIResultValidationError(Exception):
     pass
 
 
+# 허용되는 requirement_type 값
+ALLOWED_REQUIREMENT_TYPES = {"object", "scene", "action", "text"}
+
+
 def validate_schema(ai_result: dict):
     """
     1차 검증: JSON Schema 구조 검증
@@ -17,7 +21,6 @@ def validate_schema(ai_result: dict):
         validate(instance=ai_result, schema=DELIVERABLE_AI_RESULT_SCHEMA)
     except ValidationError as e:
         raise AIResultValidationError(f"Schema validation failed: {e.message}")
-
 
 def validate_business_rules(ai_result: dict):
     """
@@ -48,16 +51,24 @@ def validate_business_rules(ai_result: dict):
         raise AIResultValidationError("conditions must be a non-empty list")
 
     for idx, condition in enumerate(conditions):
-        if "requirement" not in condition or "satisfied" not in condition:
+        # 🔹 필수 필드 존재 여부
+        if (
+            "requirement_type" not in condition
+            or "requirement" not in condition
+            or "satisfied" not in condition
+        ):
             raise AIResultValidationError(
                 f"condition[{idx}] missing required fields"
             )
 
+
+        # 🔹 requirement 타입 검증
         if not isinstance(condition["requirement"], str):
             raise AIResultValidationError(
                 f"condition[{idx}].requirement must be string"
             )
 
+        # 🔹 satisfied 타입 검증
         if not isinstance(condition["satisfied"], bool):
             raise AIResultValidationError(
                 f"condition[{idx}].satisfied must be boolean"

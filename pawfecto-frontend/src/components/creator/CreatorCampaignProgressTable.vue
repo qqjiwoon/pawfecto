@@ -1,3 +1,4 @@
+<!-- CreatorcampaignProgressTable.vue -->
 <template>
   <div class="progress-wrapper">
 
@@ -86,6 +87,7 @@
 
   <ProgressEditModal
     v-if="isModalOpen"
+    :key="editingItem?.deliverable_id"
     :item="editingItem"
     @close="isModalOpen = false"
     @refresh="fetchProgress"
@@ -180,6 +182,7 @@ const getStatusLabel = (item) => {
   if (item.ai_validation_status === 'passed') return '완료'
   if (item.ai_validation_status === 'failed') return '미완료'
 }
+
 </script>
 
 <style scoped>

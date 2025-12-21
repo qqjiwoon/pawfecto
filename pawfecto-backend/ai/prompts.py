@@ -18,7 +18,9 @@ SYSTEM_PROMPT = """
 
 USER_PROMPT_TEMPLATE = """
 아래는 브랜드가 정의한 포스팅 요구조건 목록이다.
-각 조건은 이미 분류(type)와 설명(description)을 포함하고 있다.
+각 조건은 다음 정보를 가진다:
+- requirement_type (object | scene | action | text)
+- description (조건 설명)
 
 요구조건 목록:
 {requirements}
@@ -34,6 +36,11 @@ OUTPUT_FORMAT_INSTRUCTION = """
 결과는 반드시 아래 JSON 형식으로만 출력하라.
 JSON 외의 어떤 텍스트도 출력하지 마라.
 
+중요:
+- conditions 배열의 각 항목은 반드시 아래 key를 정확히 포함해야 한다.
+- key 이름은 절대 변경하지 마라.
+- requirement 값은 요구조건의 description을 그대로 사용하라.
+
 출력 규칙:
 1. 이미지 분석이 불가능한 경우:
    - image_analysis_success: false
@@ -43,10 +50,13 @@ JSON 외의 어떤 텍스트도 출력하지 마라.
 
 2. 이미지 분석이 가능한 경우:
    - image_analysis_success: true
-   - conditions: 요구조건 목록과 1:1로 대응되는 결과 배열
-     - requirement: 요구조건 설명(description)
-     - satisfied: true 또는 false
-   - 모든 조건이 true인 경우에만 score는 100
+   - conditions: 배열
+     각 원소는 반드시 아래 형태여야 한다:
+     {
+       "requirement": string,
+       "satisfied": boolean
+     }
+   - 모든 satisfied가 true인 경우 score는 100
    - 하나라도 false인 경우 score는 100보다 작은 값
    - error_reason: null
 

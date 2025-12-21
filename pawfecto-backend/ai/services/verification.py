@@ -1,36 +1,45 @@
 # ai/services/verification.py
 # AI 검증 실행 서비스 (mock 단계)
 
+from myapp.models import DeliverableRequirement
+
+
 def run_ai_verification(prompt: str, images: list):
     """
-    AI 검증 실행
-    - prompt: myapp에서 조합한 전체 프롬프트
-    - images: 이미지 경로 리스트 (string)
-    
-    반환값은 schemas / validators에서 정의한 형식을 따른다.
+    MOCK AI 검증
+    - 실제 AI 연동 전 단계
+    - 캠페인에 정의된 요구조건을 그대로 PASS 처리
     """
 
-    # NOTE:
-    # 현재는 GMS 연동 전 mock 단계이므로
-    # 항상 성공 케이스를 반환한다.
-    # 이후 이 함수 내부를 실제 GMS API 호출로 교체한다.
+    # ⚠️ prompt 안에는 deliverable_id 정보가 없으므로
+    # 실제 mock에서는 "프롬프트에 포함된 요구조건 문자열"을 신뢰하지 않는다
+    # → 서비스 계층에서 requirement description을 기준으로 결과를 맞춘다
 
+    # MOCK 결과 예시 (실제 requirement와 반드시 일치해야 함)
     return {
-        "image_analysis_success": True,
-        "conditions": [
-            {
-                "requirement": "사료를 급여하는 장면 포함",
-                "satisfied": True
-            },
-            {
-                "requirement": "제품이 이미지에 노출되어야 함",
-                "satisfied": True
-            },
-            {
-                "requirement": "캡션에 브랜드명이 포함되어야 함",
-                "satisfied": True
-            }
-        ],
-        "score": 100,
-        "error_reason": None
-    }
+    "image_analysis_success": True,
+    "conditions": [
+        {
+            "requirement_type": "object",
+            "requirement": "dog wearing harness",
+            "satisfied": True
+        },
+        {
+            "requirement_type": "scene",
+            "requirement": "outdoor field",
+            "satisfied": True
+        },
+        {
+            "requirement_type": "action",
+            "requirement": "walking",
+            "satisfied": True
+        },
+        {
+            "requirement_type": "text",
+            "requirement": "mention product benefits",
+            "satisfied": True
+        }
+    ],
+    "score": 100,
+    "error_reason": None
+}

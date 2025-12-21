@@ -10,20 +10,17 @@ from ai.prompts import (
 from ai.validators import validate_ai_result, AIResultValidationError
 from ai.services.verification import run_ai_verification
 
-
-def verify_deliverable(deliverable_id: int):
+def run_deliverable_ai_verification(deliverable_id: int):
     deliverable = Deliverable.objects.select_related(
         "campaign_acceptance__campaign"
     ).get(deliverable_id=deliverable_id)
 
-    # 검증 시작
     deliverable.ai_validation_status = "pending"
     deliverable.save(update_fields=["ai_validation_status"])
 
     try:
         campaign = deliverable.campaign_acceptance.campaign
 
-        # 1) 요구조건 목록을 구조화된 문자열로 변환
         requirements_payload = [
             {
                 "type": req.requirement_type,
@@ -36,7 +33,6 @@ def verify_deliverable(deliverable_id: int):
         if not requirements_payload:
             raise ValueError("요구조건이 존재하지 않습니다.")
 
-        # 2) 프롬프트 구성
         user_prompt = USER_PROMPT_TEMPLATE.format(
             requirements=requirements_payload,
             caption=deliverable.content or "",
@@ -50,52 +46,41 @@ def verify_deliverable(deliverable_id: int):
             + OUTPUT_FORMAT_INSTRUCTION
         )
 
-        # 3) AI 호출
-        ai_result = run_ai_verification(
+        ai_result_raw = run_ai_verification(
             prompt=full_prompt,
             images=[deliverable.image],
         )
 
-        # AI 원본 결과 저장
-        deliverable.ai_result_raw = ai_result
+        if not isinstance(ai_result_raw, dict):
+            raise ValueError(f"AI 결과 타입 오류: {type(ai_result_raw)}")
 
-        # 4) AI 결과 검증
-        validate_ai_result(ai_result)
+        validate_ai_result(ai_result_raw)
 
-        # 5) 상태 결정
-        # # 임시 테스트용
-        # if ai_result["image_analysis_success"] is True:
-        #     deliverable.ai_validation_status = "passed"
-        # else:
-        #     deliverable.ai_validation_status = "failed"
-        if (
-            ai_result["image_analysis_success"] is True
-            and ai_result["score"] == 100
-        ):
-            deliverable.ai_validation_status = "passed"
-            deliverable.deliverable_status = "completed"
-        else:
-            deliverable.ai_validation_status = "failed"
+        # ✅ PASS / FAIL 판단
+        required_reqs = campaign.requirements.filter(is_required=True)
 
-        deliverable.save(
-            update_fields=[
-                "ai_validation_status",
-                "deliverable_status",
-                "ai_result_raw",
-            ]
-        )
-
-    except (AIResultValidationError, Exception) as e:
-        print("❌ AI VERIFICATION ERROR:", e)
-
-        deliverable.ai_validation_status = "failed"
-        deliverable.ai_result_raw = {
-            "error": str(e)
+        ai_condition_map = {
+            c["requirement"]: c["satisfied"]
+            for c in ai_result_raw["conditions"]
         }
 
-        deliverable.save(
-            update_fields=[
-                "ai_validation_status",
-                "ai_result_raw",
-            ]
+        is_passed = all(
+            ai_condition_map.get(req.description) is True
+            for req in required_reqs
         )
+
+        deliverable.ai_result_raw = ai_result_raw
+        deliverable.ai_validation_status = "passed" if is_passed else "failed"
+        deliverable.save(
+            update_fields=["ai_result_raw", "ai_validation_status"]
+        )
+
+        return ai_result_raw
+
+    except Exception as e:
+        deliverable.ai_validation_status = "failed"
+        deliverable.ai_result_raw = {"error": str(e)}
+        deliverable.save(
+            update_fields=["ai_validation_status", "ai_result_raw"]
+        )
+        raise
