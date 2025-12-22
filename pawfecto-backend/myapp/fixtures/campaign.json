@@ -4,12 +4,15 @@
     "pk": 1,
     "fields": {
       "brand": 1,
-      "product_name": "힐스 초이스 홀리스틱 - 닭고기 & 렌틸콩 어덜트 독 사료",
-      "product_image_url": "https://cdn.pawfecto.kr/products/fresh_chicken_dog.jpg",
-      "product_description": "엄선된 휴먼 그레이드 닭고기와 소화에 좋은 렌틸콩을 주원료로 합니다. 관절 건강을 위한 글루코사민과 콘드로이틴을 강화하여 활동량이 많은 반려견의 데일리 관절 케어에 도움을 줍니다.",
+      "product_name": "포프레시 제품 1",
+      "product_image_url": "https://images.dog.ceo/breeds/pitbull/dog-5437227_640.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 5000,
-      "style_tags": [1],
+      "min_follower_count": 14883,
+      "style_tags": [
+        5,
+        8
+      ],
       "requested_at": "2025-02-01T09:00:00Z",
       "application_deadline_at": "2025-02-10",
       "posting_start_at": "2025-02-15",
@@ -22,106 +25,125 @@
     "pk": 2,
     "fields": {
       "brand": 1,
-      "product_name": "펫오브네이처 싱글 프로틴 오리 져키 트릿",
-      "product_image_url": "https://cdn.pawfecto.kr/products/duck_snack.jpg",
-      "product_description": "98% 오리 단일 단백질로 알러지 반응을 최소화한 간식입니다. 무곡물(Grain-Free) 레시피로 민감한 반려견에게도 안심하고 급여할 수 있으며, 훈련 및 보상용으로 최적화된 소프트 져키 타입입니다.",
+      "product_name": "포프레시 제품 2",
+      "product_image_url": "https://images.dog.ceo/breeds/pitbull/dog-5437227_640.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 3000,
-      "style_tags": [3],
-      "requested_at": "2025-02-03T10:00:00Z",
-      "application_deadline_at": "2025-02-12",
-      "posting_start_at": "2025-02-18",
-      "posting_end_at": "2025-03-02",
-      "required_creator_count": 6
+      "min_follower_count": 60283,
+      "style_tags": [
+        7,
+        6
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
     }
   },
   {
     "model": "myapp.campaign",
     "pk": 3,
     "fields": {
-      "brand": 2,
-      "product_name": "내추럴 밸런스 오가닉 연어 & 해조류 레시피",
-      "product_image_url": "https://cdn.pawfecto.kr/products/salmon_omega.jpg",
-      "product_description": "유기농 인증 연어와 해조류에서 추출한 고농축 오메가3(EPA/DHA) 성분을 담았습니다. 건조하고 푸석한 피부를 개선하고 윤기나는 모질 관리에 특화된 프리미엄 기능성 사료입니다.",
+      "brand": 1,
+      "product_name": "포프레시 제품 3",
+      "product_image_url": "https://images.dog.ceo/breeds/dachshund/dachshund-in-jacket.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 8000,
-      "style_tags": [4],
-      "requested_at": "2025-02-02T11:00:00Z",
-      "application_deadline_at": "2025-02-11",
-      "posting_start_at": "2025-02-16",
-      "posting_end_at": "2025-03-01",
-      "required_creator_count": 4
+      "min_follower_count": 50000,
+      "style_tags": [
+        2,
+        4
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
     }
   },
   {
     "model": "myapp.campaign",
     "pk": 4,
     "fields": {
-      "brand": 2,
-      "product_name": "라이트컷 헬시 에그 타르트 (저칼로리)",
-      "product_image_url": "https://cdn.pawfecto.kr/products/lowcal_snack.jpg",
-      "product_description": "닭고기 대신 저지방 계란을 사용하여 칼로리 부담을 줄인 다이어트용 간식입니다. 1개당 10kcal 미만으로 체중 조절이 필요한 반려견에게 포만감을 주며, 인공 향료/색소/방부제가 들어있지 않습니다.",
+      "brand": 1,
+      "product_name": "포프레시 제품 4",
+      "product_image_url": "https://images.dog.ceo/breeds/rajapalayam-indian/Rajapalayam-dog.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 4000,
-      "style_tags": [2],
-      "requested_at": "2025-02-04T09:30:00Z",
-      "application_deadline_at": "2025-02-13",
-      "posting_start_at": "2025-02-19",
-      "posting_end_at": "2025-03-05",
-      "required_creator_count": 6
+      "min_follower_count": 88781,
+      "style_tags": [
+        4,
+        6,
+        7
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
     }
   },
   {
     "model": "myapp.campaign",
     "pk": 5,
     "fields": {
-      "brand": 3,
-      "product_name": "마이캣 라이프 실내 케어 주식 캔 (참치 & 치킨 무스)",
-      "product_image_url": "https://cdn.pawfecto.kr/products/indoor_cat_can.jpg",
-      "product_description": "활동량이 적은 실내 고양이의 요로 건강을 위해 미네랄 함량을 조절했습니다. 부드러운 무스 타입으로 음수량 증가에 도움을 주며, 편식하는 고양이의 뛰어난 기호성을 자랑합니다.",
-      "target_pet_type": "cat",
-      "min_follower_count": 6000,
-      "style_tags": [2],
-      "requested_at": "2025-02-01T14:00:00Z",
-      "application_deadline_at": "2025-02-09",
-      "posting_start_at": "2025-02-14",
-      "posting_end_at": "2025-02-27",
-      "required_creator_count": 5
+      "brand": 1,
+      "product_name": "포프레시 제품 5",
+      "product_image_url": "https://images.dog.ceo/breeds/rough-collie/Collie-Rough.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 54621,
+      "style_tags": [
+        8,
+        4
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
     }
   },
   {
     "model": "myapp.campaign",
     "pk": 6,
     "fields": {
-      "brand": 3,
-      "product_name": "캣타임 츄르 - 생참치 & 콜라겐 (프리미엄)",
-      "product_image_url": "https://cdn.pawfecto.kr/products/cat_churu_tuna.jpg",
-      "product_description": "참치 살코기 함량 60%로 영양과 기호성을 모두 잡은 액상 간식입니다. 저분자 콜라겐을 첨가하여 피부와 털 건강을 함께 관리할 수 있으며, 고양이의 폭발적인 반응을 유도하여 릴스 등 반응형 영상 콘텐츠에 활용하기에 좋습니다.",
-      "target_pet_type": "cat",
-      "min_follower_count": 7000,
-      "style_tags": [3],
-      "requested_at": "2025-02-03T15:00:00Z",
-      "application_deadline_at": "2025-02-12",
-      "posting_start_at": "2025-02-17",
-      "posting_end_at": "2025-03-03",
-      "required_creator_count": 7
+      "brand": 1,
+      "product_name": "포프레시 제품 6",
+      "product_image_url": "https://images.dog.ceo/breeds/bulldog-boston/n02096585_12362.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 86639,
+      "style_tags": [
+        1,
+        7
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
     }
   },
   {
     "model": "myapp.campaign",
     "pk": 7,
     "fields": {
-      "brand": 4,
-      "product_name": "닥터 펫케어 퓨어 허브 발밤",
-      "product_image_url": "https://cdn.pawfecto.kr/products/paw_balm.jpg",
-      "product_description": "쉐어버터와 천연 허브 오일을 주성분으로 하여 산책 후 건조해진 발바닥 각질과 보습 관리에 효과적입니다. 미끌거림 없이 빠르게 흡수되는 제형으로 반려견이 핥아도 안전합니다.",
+      "brand": 1,
+      "product_name": "포프레시 제품 7",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-cairn/n02096177_2553.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 5000,
-      "style_tags": [9],
-      "requested_at": "2025-02-05T10:00:00Z",
-      "application_deadline_at": "2025-02-14",
-      "posting_start_at": "2025-02-20",
-      "posting_end_at": "2025-03-06",
+      "min_follower_count": 15513,
+      "style_tags": [
+        4,
+        7
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
       "required_creator_count": 5
     }
   },
@@ -129,17 +151,20 @@
     "model": "myapp.campaign",
     "pk": 8,
     "fields": {
-      "brand": 4,
-      "product_name": "저자극 pH 밸런싱 순한 강아지 샴푸 (무향)",
-      "product_image_url": "https://cdn.pawfecto.kr/products/dog_shampoo.jpg",
-      "product_description": "반려견 피부의 pH 밸런스에 맞춰 개발된 순한 저자극 포뮬러 샴푸입니다. 코코넛 유래 세정 성분을 사용하여 거품은 풍성하고 헹굼은 빠르며, 민감성 피부의 데일리 목욕 케어에 적합합니다.",
+      "brand": 1,
+      "product_name": "포프레시 제품 8",
+      "product_image_url": "https://images.dog.ceo/breeds/rough-collie/Collie-Rough.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 6000,
-      "style_tags": [2],
-      "requested_at": "2025-02-06T11:00:00Z",
-      "application_deadline_at": "2025-02-15",
-      "posting_start_at": "2025-02-21",
-      "posting_end_at": "2025-03-07",
+      "min_follower_count": 74193,
+      "style_tags": [
+        7,
+        6
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
       "required_creator_count": 6
     }
   },
@@ -147,35 +172,41 @@
     "model": "myapp.campaign",
     "pk": 9,
     "fields": {
-      "brand": 5,
-      "product_name": "시티워크 - 에어 메시 하네스 (베이직 라인)",
-      "product_image_url": "https://cdn.pawfecto.kr/products/dog_harness.jpg",
-      "product_description": "가슴 전체를 감싸는 인체공학적 디자인으로 당김을 최소화한 하네스입니다. 가볍고 통기성이 좋은 에어 메시 소재로 제작되어 도심 산책 및 봄/여름 야외 활동에 적합합니다.",
+      "brand": 1,
+      "product_name": "포프레시 제품 9",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-scottish/n02097298_13452.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 9000,
-      "style_tags": [9],
-      "requested_at": "2025-02-02T13:00:00Z",
-      "application_deadline_at": "2025-02-11",
-      "posting_start_at": "2025-02-16",
-      "posting_end_at": "2025-03-01",
-      "required_creator_count": 4
+      "min_follower_count": 61484,
+      "style_tags": [
+        3,
+        5
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
     }
   },
   {
     "model": "myapp.campaign",
     "pk": 10,
     "fields": {
-      "brand": 5,
-      "product_name": "모던펫 세라믹 푸드볼 (높이조절 가능)",
-      "product_image_url": "https://cdn.pawfecto.kr/products/pet_bowl_set.jpg",
-      "product_description": "반려동물의 식도와 관절에 부담이 적도록 각도와 높이 조절이 가능한 디자인 식기 세트입니다. 위생적인 세라믹 소재로 제작되었으며, 모던한 디자인으로 인테리어를 해치지 않습니다.",
+      "brand": 1,
+      "product_name": "포프레시 제품 10",
+      "product_image_url": "https://images.dog.ceo/breeds/african-wild/n02116738_4732.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 7000,
-      "style_tags": [7],
-      "requested_at": "2025-02-04T16:00:00Z",
-      "application_deadline_at": "2025-02-13",
-      "posting_start_at": "2025-02-18",
-      "posting_end_at": "2025-03-04",
+      "min_follower_count": 55109,
+      "style_tags": [
+        5,
+        5
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
       "required_creator_count": 5
     }
   },
@@ -184,17 +215,20 @@
     "pk": 11,
     "fields": {
       "brand": 1,
-      "product_name": "포프레시 데일리 밸런스 연어 퍼피 사료",
-      "product_image_url": "https://cdn.pawfecto.kr/products/salmon_puppy_food.jpg",
-      "product_description": "성장기 강아지를 위한 고단백 연어 레시피로 소화 흡수율과 면역력 강화를 동시에 고려한 퍼피 전용 사료입니다.",
+      "product_name": "포프레시 제품 11",
+      "product_image_url": "https://images.dog.ceo/breeds/spaniel-japanese/n02085782_1077.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 5000,
-      "style_tags": [1],
-      "requested_at": "2025-02-08T09:00:00Z",
-      "application_deadline_at": "2025-02-16",
-      "posting_start_at": "2025-02-20",
-      "posting_end_at": "2025-03-05",
-      "required_creator_count": 3
+      "min_follower_count": 88046,
+      "style_tags": [
+        1,
+        2
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
     }
   },
   {
@@ -202,72 +236,83 @@
     "pk": 12,
     "fields": {
       "brand": 1,
-      "product_name": "포프레시 저알러지 곡물프리 양고기 사료",
-      "product_image_url": "https://cdn.pawfecto.kr/products/lamb_grainfree.jpg",
-      "product_description": "곡물 알러지가 있는 반려견을 위한 양고기 단일 단백질 레시피로 민감한 장 건강을 고려했습니다.",
+      "product_name": "포프레시 제품 12",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-scottish/n02097298_13452.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 8000,
-      "style_tags": [2],
-      "requested_at": "2025-02-08T10:30:00Z",
-      "application_deadline_at": "2025-02-17",
-      "posting_start_at": "2025-02-22",
-      "posting_end_at": "2025-03-08",
-      "required_creator_count": 4
+      "min_follower_count": 79138,
+      "style_tags": [
+        1,
+        3
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
     }
   },
   {
     "model": "myapp.campaign",
     "pk": 13,
     "fields": {
-      "brand": 2,
-      "product_name": "포프레시 액티브 케어 관절 영양제",
-      "product_image_url": "https://cdn.pawfecto.kr/products/joint_supplement.jpg",
-      "product_description": "글루코사민과 MSM을 함유하여 활동량이 많은 반려견의 관절 건강을 지원하는 기능성 영양제입니다.",
+      "brand": 1,
+      "product_name": "포프레시 제품 13",
+      "product_image_url": "https://images.dog.ceo/breeds/otterhound/n02091635_831.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 10000,
-      "style_tags": [9],
-      "requested_at": "2025-02-09T11:00:00Z",
-      "application_deadline_at": "2025-02-18",
-      "posting_start_at": "2025-02-23",
-      "posting_end_at": "2025-03-10",
-      "required_creator_count": 2
+      "min_follower_count": 20620,
+      "style_tags": [
+        4,
+        2
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
     }
   },
-
   {
     "model": "myapp.campaign",
     "pk": 14,
     "fields": {
-      "brand": 2,
-      "product_name": "네추라펫 오가닉 치킨 & 브라운라이스",
-      "product_image_url": "https://cdn.pawfecto.kr/products/chicken_brownrice.jpg",
-      "product_description": "유기농 닭고기와 현미를 사용해 장시간 포만감을 제공하는 데일리 주식 사료입니다.",
+      "brand": 1,
+      "product_name": "포프레시 제품 14",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-welsh/lucy.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 6000,
-      "style_tags": [4],
-      "requested_at": "2025-02-08T13:00:00Z",
-      "application_deadline_at": "2025-02-16",
-      "posting_start_at": "2025-02-21",
-      "posting_end_at": "2025-03-06",
-      "required_creator_count": 1
+      "min_follower_count": 66441,
+      "style_tags": [
+        5,
+        1
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
     }
   },
   {
     "model": "myapp.campaign",
     "pk": 15,
     "fields": {
-      "brand": 2,
-      "product_name": "네추라펫 저자극 스킨 & 코트 트릿",
-      "product_image_url": "https://cdn.pawfecto.kr/products/skin_coat_treat.jpg",
-      "product_description": "피부와 모질 개선에 도움을 주는 오메가3 기반 기능성 트릿으로 민감성 반려견에게 적합합니다.",
+      "brand": 1,
+      "product_name": "포프레시 제품 15",
+      "product_image_url": "https://images.dog.ceo/breeds/tervuren/maverick.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 7000,
-      "style_tags": [3],
-      "requested_at": "2025-02-09T09:30:00Z",
-      "application_deadline_at": "2025-02-17",
-      "posting_start_at": "2025-02-22",
-      "posting_end_at": "2025-03-07",
-      "required_creator_count": 2
+      "min_follower_count": 37170,
+      "style_tags": [
+        10,
+        3
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
     }
   },
   {
@@ -275,36 +320,41 @@
     "pk": 16,
     "fields": {
       "brand": 2,
-      "product_name": "네추라펫 내추럴 덴탈 케어 스틱",
-      "product_image_url": "https://cdn.pawfecto.kr/products/dental_stick.jpg",
-      "product_description": "자연 유래 성분으로 치석 제거와 구강 냄새 개선을 돕는 데일리 덴탈 케어 간식입니다.",
+      "product_name": "네추라펫 제품 16",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-cairn/n02096177_606.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
       "target_pet_type": "dog",
-      "min_follower_count": 4000,
-      "style_tags": [3],
-      "requested_at": "2025-02-09T14:00:00Z",
-      "application_deadline_at": "2025-02-18",
-      "posting_start_at": "2025-02-23",
-      "posting_end_at": "2025-03-09",
-      "required_creator_count": 6
+      "min_follower_count": 83097,
+      "style_tags": [
+        5,
+        1
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
     }
   },
-
   {
     "model": "myapp.campaign",
     "pk": 17,
     "fields": {
-      "brand": 3,
-      "product_name": "미우밀 캣 웰니스 유리너리 케어 파우치",
-      "product_image_url": "https://cdn.pawfecto.kr/products/cat_urinary.jpg",
-      "product_description": "요로 건강을 위한 미네랄 밸런스를 맞춘 파우치형 습식 사료입니다.",
-      "target_pet_type": "cat",
-      "min_follower_count": 6000,
-      "style_tags": [2],
-      "requested_at": "2025-02-08T15:00:00Z",
-      "application_deadline_at": "2025-02-15",
-      "posting_start_at": "2025-02-20",
-      "posting_end_at": "2025-03-04",
-      "required_creator_count": 4
+      "brand": 2,
+      "product_name": "네추라펫 제품 17",
+      "product_image_url": "https://images.dog.ceo/breeds/pitbull/dog-5437227_640.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 34563,
+      "style_tags": [
+        1,
+        10
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
     }
   },
   {
@@ -312,35 +362,1406 @@
     "pk": 18,
     "fields": {
       "brand": 2,
-      "product_name": "미우밀 캣 프리미엄 닭가슴살 토핑",
-      "product_image_url": "https://cdn.pawfecto.kr/products/cat_chicken_topping.jpg",
-      "product_description": "100% 닭가슴살로 만든 고양이용 토핑 간식으로 주식 위에 곁들여 급여할 수 있습니다.",
-      "target_pet_type": "cat",
-      "min_follower_count": 8000,
-      "style_tags": [7],
-      "requested_at": "2025-02-09T10:00:00Z",
-      "application_deadline_at": "2025-02-16",
-      "posting_start_at": "2025-02-21",
-      "posting_end_at": "2025-03-05",
-      "required_creator_count": 3
+      "product_name": "네추라펫 제품 18",
+      "product_image_url": "https://images.dog.ceo/breeds/whippet/n02091134_16201.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 77781,
+      "style_tags": [
+        7,
+        5
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
     }
   },
   {
     "model": "myapp.campaign",
     "pk": 19,
     "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 19",
+      "product_image_url": "https://images.dog.ceo/breeds/mountain-bernese/n02107683_1629.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 87201,
+      "style_tags": [
+        8,
+        2
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 20,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 20",
+      "product_image_url": "https://images.dog.ceo/breeds/rajapalayam-indian/Rajapalayam-dog.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 36853,
+      "style_tags": [
+        1,
+        8
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 21,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 21",
+      "product_image_url": "https://images.dog.ceo/breeds/mountain-bernese/n02107683_1629.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 36451,
+      "style_tags": [
+        2,
+        6
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 22,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 22",
+      "product_image_url": "https://images.dog.ceo/breeds/schipperke/n02104365_8706.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 76996,
+      "style_tags": [
+        4,
+        9
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 23,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 23",
+      "product_image_url": "https://images.dog.ceo/breeds/doberman/n02107142_3073.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 45024,
+      "style_tags": [
+        6,
+        1
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 24,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 24",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-norwich/n02094258_52.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 62313,
+      "style_tags": [
+        6,
+        5
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 25,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 25",
+      "product_image_url": "https://images.dog.ceo/breeds/dane-great/n02109047_23058.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 14625,
+      "style_tags": [
+        10,
+        4
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 26,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 26",
+      "product_image_url": "https://images.dog.ceo/breeds/poodle-miniature/n02113712_919.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 32802,
+      "style_tags": [
+        6,
+        10
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 27,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 27",
+      "product_image_url": "https://images.dog.ceo/breeds/australian-shepherd/forest.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 33965,
+      "style_tags": [
+        10,
+        6
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 28,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 28",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-westhighland/n02098286_4568.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 90246,
+      "style_tags": [
+        10,
+        6
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 29,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 29",
+      "product_image_url": "https://images.dog.ceo/breeds/dachshund/dachshund-in-jacket.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 76288,
+      "style_tags": [
+        7,
+        5
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 30,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 30",
+      "product_image_url": "https://images.dog.ceo/breeds/dane-great/n02109047_23058.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 86026,
+      "style_tags": [
+        7,
+        10
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 31,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 31",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-boston/bostonTerrier_000002.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 20241,
+      "style_tags": [
+        2,
+        5
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 32,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 32",
+      "product_image_url": "https://images.dog.ceo/breeds/spaniel-japanese/n02085782_1077.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 77886,
+      "style_tags": [
+        7,
+        4
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 33,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 33",
+      "product_image_url": "https://images.dog.ceo/breeds/pitbull/dog-5437227_640.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 23723,
+      "style_tags": [
+        3,
+        10
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 34,
+    "fields": {
+      "brand": 2,
+      "product_name": "네추라펫 제품 34",
+      "product_image_url": "https://images.dog.ceo/breeds/leonberg/n02111129_1390.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 29754,
+      "style_tags": [
+        10,
+        10
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 35,
+    "fields": {
       "brand": 3,
-      "product_name": "미우밀 캣 스트레스 완화 허브 스프레이",
-      "product_image_url": "https://cdn.pawfecto.kr/products/cat_herb_spray.jpg",
-      "product_description": "고양이의 긴장을 완화하는 천연 허브 성분 스프레이로 이동장 및 생활 공간에 사용할 수 있습니다.",
-      "target_pet_type": "cat",
-      "min_follower_count": 5000,
-      "style_tags": [6],
-      "requested_at": "2025-02-09T16:00:00Z",
-      "application_deadline_at": "2025-02-17",
-      "posting_start_at": "2025-02-22",
-      "posting_end_at": "2025-03-06",
-      "required_creator_count": 2
+      "product_name": "미우밀 제품 35",
+      "product_image_url": "https://images.dog.ceo/breeds/spaniel-sussex/n02102480_7629.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 23088,
+      "style_tags": [
+        3,
+        5
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 36,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 36",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-wheaten/n02098105_1062.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 29034,
+      "style_tags": [
+        7,
+        9
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 37,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 37",
+      "product_image_url": "https://images.dog.ceo/breeds/otterhound/n02091635_831.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 84085,
+      "style_tags": [
+        2,
+        5
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 38,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 38",
+      "product_image_url": "https://images.dog.ceo/breeds/whippet/n02091134_16201.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 37550,
+      "style_tags": [
+        8,
+        1
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 39,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 39",
+      "product_image_url": "https://images.dog.ceo/breeds/setter-english/n02100735_1305.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 43639,
+      "style_tags": [
+        8,
+        6
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 40,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 40",
+      "product_image_url": "https://images.dog.ceo/breeds/leonberg/n02111129_4850.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 82491,
+      "style_tags": [
+        1,
+        3
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 41,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 41",
+      "product_image_url": "https://images.dog.ceo/breeds/mountain-bernese/n02107683_1629.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 10131,
+      "style_tags": [
+        3,
+        8
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 42,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 42",
+      "product_image_url": "https://images.dog.ceo/breeds/rough-collie/Collie-Rough.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 35678,
+      "style_tags": [
+        8,
+        1
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 43,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 43",
+      "product_image_url": "https://images.dog.ceo/breeds/dane-great/n02109047_23058.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 79565,
+      "style_tags": [
+        1,
+        2
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 44,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 44",
+      "product_image_url": "https://images.dog.ceo/breeds/schnauzer-miniature/n02097047_1705.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 45341,
+      "style_tags": [
+        10,
+        10
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 45,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 45",
+      "product_image_url": "https://images.dog.ceo/breeds/mexicanhairless/n02113978_1551.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 82208,
+      "style_tags": [
+        10,
+        1
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 46,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 46",
+      "product_image_url": "https://images.dog.ceo/breeds/saluki/n02091831_3962.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 71187,
+      "style_tags": [
+        9,
+        4
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 47,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 47",
+      "product_image_url": "https://images.dog.ceo/breeds/greyhound-italian/n02091032_11119.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 45353,
+      "style_tags": [
+        6,
+        6
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 48,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 48",
+      "product_image_url": "https://images.dog.ceo/breeds/australian-shepherd/forest.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 83550,
+      "style_tags": [
+        5,
+        1
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 49,
+    "fields": {
+      "brand": 3,
+      "product_name": "미우밀 제품 49",
+      "product_image_url": "https://images.dog.ceo/breeds/mountain-swiss/n02107574_1180.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 53617,
+      "style_tags": [
+        5,
+        8
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 50,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 50",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-westhighland/n02098286_4568.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 53578,
+      "style_tags": [
+        9,
+        5
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 51,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 51",
+      "product_image_url": "https://images.dog.ceo/breeds/briard/n02105251_6984.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 65726,
+      "style_tags": [
+        7,
+        9
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 52,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 52",
+      "product_image_url": "https://images.dog.ceo/breeds/bakharwal-indian/Bakharwal.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 85257,
+      "style_tags": [
+        9,
+        1
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 53,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 53",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-wheaten/n02098105_1062.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 71285,
+      "style_tags": [
+        2,
+        4
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 54,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 54",
+      "product_image_url": "https://images.dog.ceo/breeds/spaniel-sussex/n02102480_7629.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 36955,
+      "style_tags": [
+        6,
+        1
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 55,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 55",
+      "product_image_url": "https://images.dog.ceo/breeds/mountain-bernese/n02107683_1629.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 39380,
+      "style_tags": [
+        6,
+        1
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 56,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 56",
+      "product_image_url": "https://images.dog.ceo/breeds/leonberg/n02111129_1390.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 53294,
+      "style_tags": [
+        9,
+        10
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 57,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 57",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-cairn/n02096177_2553.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 12290,
+      "style_tags": [
+        3,
+        8
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 58,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 58",
+      "product_image_url": "https://images.dog.ceo/breeds/leonberg/n02111129_1390.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 56346,
+      "style_tags": [
+        3,
+        7
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 59,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 59",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-wheaten/n02098105_1066.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 68830,
+      "style_tags": [
+        9,
+        2
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 60,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 60",
+      "product_image_url": "https://images.dog.ceo/breeds/dachshund/dachshund-in-jacket.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 16229,
+      "style_tags": [
+        3,
+        7
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 61,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 61",
+      "product_image_url": "https://images.dog.ceo/breeds/pitbull/dog-5437227_640.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 18470,
+      "style_tags": [
+        10,
+        6
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 62,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 62",
+      "product_image_url": "https://images.dog.ceo/breeds/kelpie/n02105412_5288.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 12735,
+      "style_tags": [
+        1,
+        3
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 63,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 63",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-welsh/lucy.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 56333,
+      "style_tags": [
+        6,
+        6
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 64,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 64",
+      "product_image_url": "https://images.dog.ceo/breeds/wolfhound-irish/n02090721_2860.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 64305,
+      "style_tags": [
+        3,
+        2
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 65,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 65",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-kerryblue/n02093859_1645.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 70699,
+      "style_tags": [
+        4,
+        1
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 66,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 66",
+      "product_image_url": "https://images.dog.ceo/breeds/puggle/IMG_041234.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 55703,
+      "style_tags": [
+        2,
+        6
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 67,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 67",
+      "product_image_url": "https://images.dog.ceo/breeds/bulldog-boston/n02096585_12362.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 19485,
+      "style_tags": [
+        10,
+        6
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 68,
+    "fields": {
+      "brand": 4,
+      "product_name": "테일케어 제품 68",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-cairn/n02096177_606.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 67942,
+      "style_tags": [
+        3,
+        10
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 69,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 69",
+      "product_image_url": "https://images.dog.ceo/breeds/whippet/n02091134_16201.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 39241,
+      "style_tags": [
+        7,
+        5
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 70,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 70",
+      "product_image_url": "https://images.dog.ceo/breeds/briard/n02105251_6984.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 22877,
+      "style_tags": [
+        6,
+        4
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 71,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 71",
+      "product_image_url": "https://images.dog.ceo/breeds/mountain-bernese/n02107683_1629.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 55628,
+      "style_tags": [
+        6,
+        7
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 72,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 72",
+      "product_image_url": "https://images.dog.ceo/breeds/poodle-miniature/n02113712_919.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 53993,
+      "style_tags": [
+        3,
+        4
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 73,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 73",
+      "product_image_url": "https://images.dog.ceo/breeds/dachshund/dachshund-in-jacket.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 64032,
+      "style_tags": [
+        3,
+        6
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 74,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 74",
+      "product_image_url": "https://images.dog.ceo/breeds/mexicanhairless/n02113978_1551.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 96999,
+      "style_tags": [
+        6,
+        2
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 75,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 75",
+      "product_image_url": "https://images.dog.ceo/breeds/saluki/n02091831_3962.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 72355,
+      "style_tags": [
+        7,
+        3
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 76,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 76",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-boston/bostonTerrier_000002.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 59728,
+      "style_tags": [
+        8,
+        4
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 77,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 77",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-norwich/n02094258_1404.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 79925,
+      "style_tags": [
+        7,
+        1
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 78,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 78",
+      "product_image_url": "https://images.dog.ceo/breeds/clumber/n02101556_6842.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 80080,
+      "style_tags": [
+        7,
+        2
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 79,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 79",
+      "product_image_url": "https://images.dog.ceo/breeds/leonberg/n02111129_1390.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 33640,
+      "style_tags": [
+        5,
+        2
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 80,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 80",
+      "product_image_url": "https://images.dog.ceo/breeds/whippet/n02091134_16201.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 72703,
+      "style_tags": [
+        5,
+        6
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 7
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 81,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 81",
+      "product_image_url": "https://images.dog.ceo/breeds/hound-plott/hhh-23456.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 90272,
+      "style_tags": [
+        5,
+        2
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 82,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 82",
+      "product_image_url": "https://images.dog.ceo/breeds/bulldog-boston/n02096585_12362.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 63530,
+      "style_tags": [
+        4,
+        3
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 6
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 83,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 83",
+      "product_image_url": "https://images.dog.ceo/breeds/pointer-germanlonghair/hans4.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 90207,
+      "style_tags": [
+        6,
+        10
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
+    }
+  },
+  {
+    "model": "myapp.campaign",
+    "pk": 84,
+    "fields": {
+      "brand": 5,
+      "product_name": "어반펫 제품 84",
+      "product_image_url": "https://images.dog.ceo/breeds/terrier-wheaten/n02098105_1066.jpg",
+      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "target_pet_type": "dog",
+      "min_follower_count": 71484,
+      "style_tags": [
+        4,
+        8
+      ],
+      "requested_at": "2025-02-01T09:00:00Z",
+      "application_deadline_at": "2025-02-10",
+      "posting_start_at": "2025-02-15",
+      "posting_end_at": "2025-02-28",
+      "required_creator_count": 5
     }
   }
 ]
