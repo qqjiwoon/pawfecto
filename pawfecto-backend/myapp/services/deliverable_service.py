@@ -38,8 +38,7 @@ def run_deliverable_ai_verification(deliverable_id: int):
         deliverable.save(update_fields=["ai_validation_status", "ai_result_raw"])
         return deliverable.ai_result_raw
 
-    deliverable.ai_validation_status = "pending"
-    deliverable.save(update_fields=["ai_validation_status"])
+
 
     try:
         campaign = deliverable.campaign_acceptance.campaign
@@ -91,9 +90,9 @@ def run_deliverable_ai_verification(deliverable_id: int):
 
         avg_score = sum(scores) / len(scores)
 
-        if avg_score >= 0.5:
+        if avg_score >= 0.65:
             status = "passed"
-        elif avg_score >= 0.3:
+        elif avg_score >= 0.4:
             status = "review"
         else:
             status = "failed"

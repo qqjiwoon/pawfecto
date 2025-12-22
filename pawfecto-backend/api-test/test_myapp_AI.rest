@@ -11,7 +11,7 @@ Content-Type: application/json
 
 
 ### 로그인 응답에서 token을 복사해 아래 변수에 넣어라
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MzkwNzM0LCJpYXQiOjE3NjYzODM1MzQsImp0aSI6ImNmZmQxY2Q0NjIzZjQ0MjM4MTIwYmU4MjUzMWE0ZThjIiwidXNlcl9pZCI6IjIzIn0.mnhALOgVDmr6RTT8wJ8twr3MYjWYjnbr_e-gT2OblsI
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2NDI1MzU2LCJpYXQiOjE3NjY0MTgxNTYsImp0aSI6IjYwNTE1OWU2MTExYjQxMWZhYTlkOTY3M2NhNDJkMmIyIiwidXNlcl9pZCI6IjIzIn0.n3ASLVActhZdzmDAf0NxM-ixGq3yyaehuI-48S6kPOo
 ############################################
 ### 1. Deliverable 제출 (캡션 + 이미지 업로드)
 ### campaign_acceptance_id = 21 예시
@@ -42,6 +42,10 @@ Content-Type: application/json
 
 {}
 
+
+###
+POST http://127.0.0.1:8000//api/v1/deliverables/1/
+Content-Type: multipart/form-data
 
 ############################################
 ### 3. 크리에이터 진행 상황 조회 (상태 확인)
