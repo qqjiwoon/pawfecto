@@ -58,6 +58,18 @@ class Campaign(models.Model):
 
     def __str__(self):
         return self.product_name
+    
+    def save(self, *args, **kwargs):
+        # 1. 먼저 부모 save를 실행하여 파일 업로드 완료
+        super().save(*args, **kwargs)
+
+        # 2. 프로덕트 이미지가 있다면 GCS URL을 반영
+        if self.product_image_url:
+            try:
+                # GCS에 업로드된 이미지의 URL을 가져옴
+                self.product_image_url = self.product_image_url.url
+            except Exception as e:
+                print(f"GCS URL 동기화 실패: {e}")
 
 
 
