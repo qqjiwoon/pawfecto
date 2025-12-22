@@ -3,9 +3,9 @@
     "model": "myapp.deliverablerequirement",
     "pk": 1,
     "fields": {
-      "campaign": 9,
+      "campaign": 1,
       "requirement_type": "object",
-      "description": "dog wearing harness",
+      "description": "dog drinking water",
       "is_required": true
     }
   },
@@ -13,7 +13,7 @@
     "model": "myapp.deliverablerequirement",
     "pk": 2,
     "fields": {
-      "campaign": 9,
+      "campaign": 1,
       "requirement_type": "scene",
       "description": "outdoor or indoor",
       "is_required": true
@@ -23,20 +23,19 @@
     "model": "myapp.deliverablerequirement",
     "pk": 3,
     "fields": {
-      "campaign": 9,
+      "campaign": 1,
       "requirement_type": "action",
-      "description": "walking or standing",
+      "description": "active dog movement",
       "is_required": true
     }
   },
-
   {
     "model": "myapp.deliverablerequirement",
     "pk": 4,
     "fields": {
-      "campaign": 7,
-      "requirement_type": "scene",
-      "description": "outdoor walking path",
+      "campaign": 2,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
       "is_required": true
     }
   },
@@ -44,16 +43,125 @@
     "model": "myapp.deliverablerequirement",
     "pk": 5,
     "fields": {
-      "campaign": 7,
-      "requirement_type": "object",
-      "description": "dog paw balm visible",
-      "is_required": false
+      "campaign": 2,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
     }
   },
-
   {
     "model": "myapp.deliverablerequirement",
     "pk": 6,
+    "fields": {
+      "campaign": 2,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 7,
+    "fields": {
+      "campaign": 3,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 8,
+    "fields": {
+      "campaign": 3,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 9,
+    "fields": {
+      "campaign": 3,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 10,
+    "fields": {
+      "campaign": 4,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 11,
+    "fields": {
+      "campaign": 4,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 12,
+    "fields": {
+      "campaign": 4,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 13,
+    "fields": {
+      "campaign": 5,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 14,
+    "fields": {
+      "campaign": 5,
+      "requirement_type": "action",
+      "description": "walking or standing",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 15,
+    "fields": {
+      "campaign": 5,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 16,
+    "fields": {
+      "campaign": 6,
+      "requirement_type": "action",
+      "description": "walking or standing",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 17,
     "fields": {
       "campaign": 6,
       "requirement_type": "text",
@@ -63,19 +171,29 @@
   },
   {
     "model": "myapp.deliverablerequirement",
-    "pk": 7,
+    "pk": 18,
     "fields": {
-      "campaign": 1,
+      "campaign": 6,
       "requirement_type": "object",
-      "description": "dog eating dry food",
+      "description": "dog paw balm visible",
       "is_required": true
     }
   },
   {
     "model": "myapp.deliverablerequirement",
-    "pk": 8,
+    "pk": 19,
     "fields": {
-      "campaign": 1,
+      "campaign": 7,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 20,
+    "fields": {
+      "campaign": 7,
       "requirement_type": "scene",
       "description": "home feeding area",
       "is_required": true
@@ -83,21 +201,2321 @@
   },
   {
     "model": "myapp.deliverablerequirement",
-    "pk": 9,
+    "pk": 21,
     "fields": {
-      "campaign": 1,
+      "campaign": 7,
+      "requirement_type": "object",
+      "description": "dog with harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 22,
+    "fields": {
+      "campaign": 8,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 23,
+    "fields": {
+      "campaign": 8,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 24,
+    "fields": {
+      "campaign": 8,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 25,
+    "fields": {
+      "campaign": 9,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 26,
+    "fields": {
+      "campaign": 9,
       "requirement_type": "action",
       "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 27,
+    "fields": {
+      "campaign": 9,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 28,
+    "fields": {
+      "campaign": 10,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 29,
+    "fields": {
+      "campaign": 10,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 30,
+    "fields": {
+      "campaign": 10,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 31,
+    "fields": {
+      "campaign": 11,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 32,
+    "fields": {
+      "campaign": 11,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 33,
+    "fields": {
+      "campaign": 11,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 34,
+    "fields": {
+      "campaign": 12,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 35,
+    "fields": {
+      "campaign": 12,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
       "is_required": false
     }
   },
   {
     "model": "myapp.deliverablerequirement",
-    "pk": 10,
+    "pk": 36,
     "fields": {
-      "campaign": 1,
+      "campaign": 12,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 37,
+    "fields": {
+      "campaign": 13,
       "requirement_type": "text",
-      "description": "mention joint health benefits",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 38,
+    "fields": {
+      "campaign": 13,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 39,
+    "fields": {
+      "campaign": 13,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 40,
+    "fields": {
+      "campaign": 14,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 41,
+    "fields": {
+      "campaign": 14,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 42,
+    "fields": {
+      "campaign": 14,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 43,
+    "fields": {
+      "campaign": 15,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 44,
+    "fields": {
+      "campaign": 15,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 45,
+    "fields": {
+      "campaign": 15,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 46,
+    "fields": {
+      "campaign": 16,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 47,
+    "fields": {
+      "campaign": 16,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 48,
+    "fields": {
+      "campaign": 16,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 49,
+    "fields": {
+      "campaign": 17,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 50,
+    "fields": {
+      "campaign": 17,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 51,
+    "fields": {
+      "campaign": 17,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 52,
+    "fields": {
+      "campaign": 18,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 53,
+    "fields": {
+      "campaign": 18,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 54,
+    "fields": {
+      "campaign": 18,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 55,
+    "fields": {
+      "campaign": 19,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 56,
+    "fields": {
+      "campaign": 19,
+      "requirement_type": "object",
+      "description": "dog with harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 57,
+    "fields": {
+      "campaign": 19,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 58,
+    "fields": {
+      "campaign": 20,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 59,
+    "fields": {
+      "campaign": 20,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 60,
+    "fields": {
+      "campaign": 20,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 61,
+    "fields": {
+      "campaign": 21,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 62,
+    "fields": {
+      "campaign": 21,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 63,
+    "fields": {
+      "campaign": 21,
+      "requirement_type": "action",
+      "description": "walking or standing",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 64,
+    "fields": {
+      "campaign": 22,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 65,
+    "fields": {
+      "campaign": 22,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 66,
+    "fields": {
+      "campaign": 22,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 67,
+    "fields": {
+      "campaign": 23,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 68,
+    "fields": {
+      "campaign": 23,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 69,
+    "fields": {
+      "campaign": 23,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 70,
+    "fields": {
+      "campaign": 24,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 71,
+    "fields": {
+      "campaign": 24,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 72,
+    "fields": {
+      "campaign": 24,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 73,
+    "fields": {
+      "campaign": 25,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 74,
+    "fields": {
+      "campaign": 25,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 75,
+    "fields": {
+      "campaign": 25,
+      "requirement_type": "object",
+      "description": "dog with harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 76,
+    "fields": {
+      "campaign": 26,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 77,
+    "fields": {
+      "campaign": 26,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 78,
+    "fields": {
+      "campaign": 26,
+      "requirement_type": "action",
+      "description": "walking or standing",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 79,
+    "fields": {
+      "campaign": 27,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 80,
+    "fields": {
+      "campaign": 27,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 81,
+    "fields": {
+      "campaign": 27,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 82,
+    "fields": {
+      "campaign": 28,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 83,
+    "fields": {
+      "campaign": 28,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 84,
+    "fields": {
+      "campaign": 28,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 85,
+    "fields": {
+      "campaign": 29,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 86,
+    "fields": {
+      "campaign": 29,
+      "requirement_type": "action",
+      "description": "walking or standing",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 87,
+    "fields": {
+      "campaign": 29,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 88,
+    "fields": {
+      "campaign": 30,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 89,
+    "fields": {
+      "campaign": 30,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 90,
+    "fields": {
+      "campaign": 30,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 91,
+    "fields": {
+      "campaign": 31,
+      "requirement_type": "action",
+      "description": "walking or standing",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 92,
+    "fields": {
+      "campaign": 31,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 93,
+    "fields": {
+      "campaign": 31,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 94,
+    "fields": {
+      "campaign": 32,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 95,
+    "fields": {
+      "campaign": 32,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 96,
+    "fields": {
+      "campaign": 32,
+      "requirement_type": "object",
+      "description": "dog with harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 97,
+    "fields": {
+      "campaign": 33,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 98,
+    "fields": {
+      "campaign": 33,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 99,
+    "fields": {
+      "campaign": 33,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 100,
+    "fields": {
+      "campaign": 34,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 101,
+    "fields": {
+      "campaign": 34,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 102,
+    "fields": {
+      "campaign": 34,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 103,
+    "fields": {
+      "campaign": 35,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 104,
+    "fields": {
+      "campaign": 35,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 105,
+    "fields": {
+      "campaign": 35,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 106,
+    "fields": {
+      "campaign": 36,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 107,
+    "fields": {
+      "campaign": 36,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 108,
+    "fields": {
+      "campaign": 36,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 109,
+    "fields": {
+      "campaign": 37,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 110,
+    "fields": {
+      "campaign": 37,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 111,
+    "fields": {
+      "campaign": 37,
+      "requirement_type": "object",
+      "description": "dog with harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 112,
+    "fields": {
+      "campaign": 38,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 113,
+    "fields": {
+      "campaign": 38,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 114,
+    "fields": {
+      "campaign": 38,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 115,
+    "fields": {
+      "campaign": 39,
+      "requirement_type": "object",
+      "description": "dog with harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 116,
+    "fields": {
+      "campaign": 39,
+      "requirement_type": "action",
+      "description": "walking or standing",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 117,
+    "fields": {
+      "campaign": 39,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 118,
+    "fields": {
+      "campaign": 40,
+      "requirement_type": "action",
+      "description": "walking or standing",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 119,
+    "fields": {
+      "campaign": 40,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 120,
+    "fields": {
+      "campaign": 40,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 121,
+    "fields": {
+      "campaign": 41,
+      "requirement_type": "object",
+      "description": "dog with harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 122,
+    "fields": {
+      "campaign": 41,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 123,
+    "fields": {
+      "campaign": 41,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 124,
+    "fields": {
+      "campaign": 42,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 125,
+    "fields": {
+      "campaign": 42,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 126,
+    "fields": {
+      "campaign": 42,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 127,
+    "fields": {
+      "campaign": 43,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 128,
+    "fields": {
+      "campaign": 43,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 129,
+    "fields": {
+      "campaign": 43,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 130,
+    "fields": {
+      "campaign": 44,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 131,
+    "fields": {
+      "campaign": 44,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 132,
+    "fields": {
+      "campaign": 44,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 133,
+    "fields": {
+      "campaign": 45,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 134,
+    "fields": {
+      "campaign": 45,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 135,
+    "fields": {
+      "campaign": 45,
+      "requirement_type": "object",
+      "description": "dog with harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 136,
+    "fields": {
+      "campaign": 46,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 137,
+    "fields": {
+      "campaign": 46,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 138,
+    "fields": {
+      "campaign": 46,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 139,
+    "fields": {
+      "campaign": 47,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 140,
+    "fields": {
+      "campaign": 47,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 141,
+    "fields": {
+      "campaign": 47,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 142,
+    "fields": {
+      "campaign": 48,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 143,
+    "fields": {
+      "campaign": 48,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 144,
+    "fields": {
+      "campaign": 48,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 145,
+    "fields": {
+      "campaign": 49,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 146,
+    "fields": {
+      "campaign": 49,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 147,
+    "fields": {
+      "campaign": 49,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 148,
+    "fields": {
+      "campaign": 50,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 149,
+    "fields": {
+      "campaign": 50,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 150,
+    "fields": {
+      "campaign": 50,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 151,
+    "fields": {
+      "campaign": 51,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 152,
+    "fields": {
+      "campaign": 51,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 153,
+    "fields": {
+      "campaign": 51,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 154,
+    "fields": {
+      "campaign": 52,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 155,
+    "fields": {
+      "campaign": 52,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 156,
+    "fields": {
+      "campaign": 52,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 157,
+    "fields": {
+      "campaign": 53,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 158,
+    "fields": {
+      "campaign": 53,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 159,
+    "fields": {
+      "campaign": 53,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 160,
+    "fields": {
+      "campaign": 54,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 161,
+    "fields": {
+      "campaign": 54,
+      "requirement_type": "object",
+      "description": "dog with harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 162,
+    "fields": {
+      "campaign": 54,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 163,
+    "fields": {
+      "campaign": 55,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 164,
+    "fields": {
+      "campaign": 55,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 165,
+    "fields": {
+      "campaign": 55,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 166,
+    "fields": {
+      "campaign": 56,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 167,
+    "fields": {
+      "campaign": 56,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 168,
+    "fields": {
+      "campaign": 56,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 169,
+    "fields": {
+      "campaign": 57,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 170,
+    "fields": {
+      "campaign": 57,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 171,
+    "fields": {
+      "campaign": 57,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 172,
+    "fields": {
+      "campaign": 58,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 173,
+    "fields": {
+      "campaign": 58,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 174,
+    "fields": {
+      "campaign": 58,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 175,
+    "fields": {
+      "campaign": 59,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 176,
+    "fields": {
+      "campaign": 59,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 177,
+    "fields": {
+      "campaign": 59,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 178,
+    "fields": {
+      "campaign": 60,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 179,
+    "fields": {
+      "campaign": 60,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 180,
+    "fields": {
+      "campaign": 60,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 181,
+    "fields": {
+      "campaign": 61,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 182,
+    "fields": {
+      "campaign": 61,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 183,
+    "fields": {
+      "campaign": 61,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 184,
+    "fields": {
+      "campaign": 62,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 185,
+    "fields": {
+      "campaign": 62,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 186,
+    "fields": {
+      "campaign": 62,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 187,
+    "fields": {
+      "campaign": 63,
+      "requirement_type": "action",
+      "description": "walking or standing",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 188,
+    "fields": {
+      "campaign": 63,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 189,
+    "fields": {
+      "campaign": 63,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 190,
+    "fields": {
+      "campaign": 64,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 191,
+    "fields": {
+      "campaign": 64,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 192,
+    "fields": {
+      "campaign": 64,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 193,
+    "fields": {
+      "campaign": 65,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 194,
+    "fields": {
+      "campaign": 65,
+      "requirement_type": "action",
+      "description": "walking or standing",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 195,
+    "fields": {
+      "campaign": 65,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 196,
+    "fields": {
+      "campaign": 66,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 197,
+    "fields": {
+      "campaign": 66,
+      "requirement_type": "object",
+      "description": "dog with harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 198,
+    "fields": {
+      "campaign": 66,
+      "requirement_type": "scene",
+      "description": "park or backyard",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 199,
+    "fields": {
+      "campaign": 67,
+      "requirement_type": "object",
+      "description": "dog with harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 200,
+    "fields": {
+      "campaign": 67,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 201,
+    "fields": {
+      "campaign": 67,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 202,
+    "fields": {
+      "campaign": 68,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 203,
+    "fields": {
+      "campaign": 68,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 204,
+    "fields": {
+      "campaign": 68,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 205,
+    "fields": {
+      "campaign": 69,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 206,
+    "fields": {
+      "campaign": 69,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 207,
+    "fields": {
+      "campaign": 69,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 208,
+    "fields": {
+      "campaign": 70,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 209,
+    "fields": {
+      "campaign": 70,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 210,
+    "fields": {
+      "campaign": 70,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 211,
+    "fields": {
+      "campaign": 71,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 212,
+    "fields": {
+      "campaign": 71,
+      "requirement_type": "action",
+      "description": "walking or standing",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 213,
+    "fields": {
+      "campaign": 71,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 214,
+    "fields": {
+      "campaign": 72,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 215,
+    "fields": {
+      "campaign": 72,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 216,
+    "fields": {
+      "campaign": 72,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 217,
+    "fields": {
+      "campaign": 73,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 218,
+    "fields": {
+      "campaign": 73,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 219,
+    "fields": {
+      "campaign": 73,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 220,
+    "fields": {
+      "campaign": 74,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 221,
+    "fields": {
+      "campaign": 74,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 222,
+    "fields": {
+      "campaign": 74,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 223,
+    "fields": {
+      "campaign": 75,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 224,
+    "fields": {
+      "campaign": 75,
+      "requirement_type": "object",
+      "description": "dog drinking water",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 225,
+    "fields": {
+      "campaign": 75,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 226,
+    "fields": {
+      "campaign": 76,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 227,
+    "fields": {
+      "campaign": 76,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 228,
+    "fields": {
+      "campaign": 76,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 229,
+    "fields": {
+      "campaign": 77,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 230,
+    "fields": {
+      "campaign": 77,
+      "requirement_type": "action",
+      "description": "walking or standing",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 231,
+    "fields": {
+      "campaign": 77,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 232,
+    "fields": {
+      "campaign": 78,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 233,
+    "fields": {
+      "campaign": 78,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 234,
+    "fields": {
+      "campaign": 78,
+      "requirement_type": "object",
+      "description": "dog eating dry food",
+      "is_required": false
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 235,
+    "fields": {
+      "campaign": 79,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 236,
+    "fields": {
+      "campaign": 79,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 237,
+    "fields": {
+      "campaign": 79,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 238,
+    "fields": {
+      "campaign": 80,
+      "requirement_type": "object",
+      "description": "dog with harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 239,
+    "fields": {
+      "campaign": 80,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 240,
+    "fields": {
+      "campaign": 80,
+      "requirement_type": "scene",
+      "description": "outdoor or indoor",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 241,
+    "fields": {
+      "campaign": 81,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 242,
+    "fields": {
+      "campaign": 81,
+      "requirement_type": "object",
+      "description": "dog paw balm visible",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 243,
+    "fields": {
+      "campaign": 81,
+      "requirement_type": "object",
+      "description": "dog with harness",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 244,
+    "fields": {
+      "campaign": 82,
+      "requirement_type": "scene",
+      "description": "home feeding area",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 245,
+    "fields": {
+      "campaign": 82,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 246,
+    "fields": {
+      "campaign": 82,
+      "requirement_type": "action",
+      "description": "walking or standing",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 247,
+    "fields": {
+      "campaign": 83,
+      "requirement_type": "action",
+      "description": "active dog movement",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 248,
+    "fields": {
+      "campaign": 83,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 249,
+    "fields": {
+      "campaign": 83,
+      "requirement_type": "text",
+      "description": "mention product benefits",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 250,
+    "fields": {
+      "campaign": 84,
+      "requirement_type": "text",
+      "description": "highlight product features",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 251,
+    "fields": {
+      "campaign": 84,
+      "requirement_type": "action",
+      "description": "dog playing with ball",
+      "is_required": true
+    }
+  },
+  {
+    "model": "myapp.deliverablerequirement",
+    "pk": 252,
+    "fields": {
+      "campaign": 84,
+      "requirement_type": "scene",
+      "description": "park or backyard",
       "is_required": true
     }
   }
