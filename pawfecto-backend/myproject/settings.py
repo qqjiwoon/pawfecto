@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+import environ
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -240,3 +241,11 @@ AI_MODEL_CHEAP = os.getenv("AI_MODEL_CHEAP", "gpt-4.1-mini")
 #     "http://localhost:5173",
 #     "http://127.0.0.1:5173",
 # ]
+
+env = environ.Env()
+# 환경 변수 파일을 로드
+environ.Env.read_env()
+
+# 환경 변수 사용
+INSTAGRAM_CLIENT_ID = env('INSTAGRAM_CLIENT_ID')
+INSTAGRAM_CLIENT_SECRET = env('INSTAGRAM_CLIENT_SECRET')
