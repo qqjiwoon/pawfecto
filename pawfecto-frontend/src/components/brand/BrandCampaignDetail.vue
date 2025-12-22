@@ -31,7 +31,7 @@
 
           <div class="row">
             <span class="label">최소 팔로워 수</span>
-            <span class="value">{{ campaign.min_follower_count.toLocaleString() }}명</span>
+            <span class="value">{{ campaign.min_follower_count.toLocaleString() }}</span>
           </div>
 
           <div class="row">
@@ -281,6 +281,6 @@ async function goDelete() {
 
 .button-group { display: flex; gap: 12px; margin-top: 40px; }
 .update-btn, .delete-btn { border-radius: 50px; padding: 14px; font-size: 16px; font-weight: 600; cursor: pointer; }
-.update-btn { flex: 2.5; background: #695845; color: white; }
+.update-btn { flex: 2.5; background: #695845; color: white; border: 1px solid #695845}
 .delete-btn { flex: 1; background: #f5f1ec; color: #8B3A3A; border: 1px solid #e0d6cc; }
 </style>

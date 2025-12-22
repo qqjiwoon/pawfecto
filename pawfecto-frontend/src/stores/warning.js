@@ -1,29 +1,37 @@
+// stores/warning.js
 import { defineStore } from 'pinia'
 
 export const useWarningStore = defineStore('warning', {
   state: () => ({
     isOpen: false,
     message: '',
-    isConfirm: false, // true면 확인/취소 두 버튼 노출
-    resolvePromise: null, // Promise 해결을 위한 함수 저장
+    icon: '!', // 기본값
+    isConfirm: false,
+    resolvePromise: null,
   }),
   actions: {
-    // 단순 알림용
-    open(msg) {
+    // [수정] open도 Promise를 반환하여 await 가능하게 만듭니다.
+    open(msg, isSuccess = false) {
       this.message = msg
+      this.icon = isSuccess ? '✔' : '!' 
       this.isConfirm = false
       this.isOpen = true
+      
+      return new Promise((resolve) => {
+        this.resolvePromise = resolve
+      })
     },
-    // 예/아니오 선택용 (Promise 반환)
+    
     confirm(msg) {
       this.message = msg
+      this.icon = '!'  
       this.isConfirm = true
       this.isOpen = true
       return new Promise((resolve) => {
         this.resolvePromise = resolve
       })
     },
-    // 모달 닫기 (결과 전달)
+
     close(result = false) {
       this.isOpen = false
       if (this.resolvePromise) {

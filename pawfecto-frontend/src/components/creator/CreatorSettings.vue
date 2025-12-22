@@ -76,19 +76,19 @@
     <div class="form-group">
       <label>프로필 이미지</label>
       <p class="readonly-field">
-        <img
-          v-if="user.profile_image_url"
-          :src="user.profile_image_url"
-          class="profile-img"
-        />
+        {{ user.profile_image_url || "등록된 이미지 없음" }}
       </p>
     </div>
 
     <!-- UPDATE 버튼 -->
     <button class="update-btn" @click="goToUpdate">
-      UPDATE
+      수정
     </button>
 
+  </div>
+
+  <div v-else class="not-found">
+    <p>브랜드 정보를 찾을 수 없습니다.</p>
   </div>
 </template>
 
@@ -126,7 +126,7 @@ const styleOptions = [
   { value: "aesthetic", label: "감각적인" },
   { value: "minimal", label: "깔끔한" },
   { value: "outdoor", label: "야외감성" },
-  { value: "no_preference", label: "상관없음" },
+  // { value: "no_preference", label: "상관없음" },
 ]
 </script>
 
@@ -152,7 +152,7 @@ const styleOptions = [
 /* 읽기 전용 필드 */
 .readonly-field {
   width: 100%;
-  height: 46px;
+  min-height: 46px;
   padding: 0 12px;
 
   display: flex;
@@ -161,10 +161,13 @@ const styleOptions = [
   background: #f5f5f5;
   border-radius: 8px;
   color: #555;
-
   font-size: 14px;
   box-sizing: border-box;
-  margin: 0;
+
+  /* 긴 URL 대응 핵심 설정 */
+  word-break: break-all; /* 영문/기호가 공백 없이 길어도 강제로 줄바꿈 */
+  line-height: 1.5;      /* 줄 간격 조절로 가독성 향상 */
+  white-space: pre-wrap; /* 공백 및 줄바꿈 유지 (필요 시) */
 }
 
 /* 태그 영역 */
@@ -204,11 +207,6 @@ const styleOptions = [
   font-size: 16px;
   border: none;
   cursor: pointer;
-  margin: 80px auto 80px;
+  margin: 80px auto;
 }
-
-.update-btn:hover {
-  background: #3A3A3A;
-}
-
 </style>

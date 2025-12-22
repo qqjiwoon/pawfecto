@@ -53,8 +53,8 @@
     <div class="form-group">
       <label>주력 동물 종류</label>
       <select class="input-field" v-model="form.pet_type">
-        <option value="dog">dog</option>
-        <option value="cat">cat</option>
+        <option value="dog">강아지</option>
+        <option value="cat">고양이</option>
       </select>
     </div>
 
@@ -78,15 +78,19 @@
     <button class="update-btn" @click="updateProfile">
       저장
     </button>
-
   </div>
+
+  <!-- Toast 메시지 표시 -->
+  <div v-if="showToast" class="toast">
+    {{ toastMessage }}
+  </div>
+
 </template>
 
-
 <script setup>
+import api from "@/plugins/axios"
 import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
-import api from "@/plugins/axios"
 import { useBrandStore } from "@/stores/brand"
 import { useWarningStore } from "@/stores/warning"
 
@@ -144,7 +148,7 @@ const updateProfile = async () => {
     return
   }
 
-  // 2. 저장 의사 확인 (커스텀 모달)
+  // 2. 저장 의사 확인 (경고 모달)
   const isConfirmed = await warningStore.confirm("변경사항을 저장하시겠습니까?")
   if (!isConfirmed) return
 
@@ -165,18 +169,16 @@ const updateProfile = async () => {
 
   try {
     // 4. PUT 요청 (헤더에 토큰 명시)
-    // [중요] 401 에러 방지를 위해 로컬 스토리지의 토큰을 직접 가져와 전달합니다.
     const token = localStorage.getItem("access_token")
 
     await api.put("/accounts/update-profile/", formData, {
       headers: {
         'Authorization': `Bearer ${token}`,
-        // 'Content-Type': 'multipart/form-data'는 브라우저가 자동 설정하게 두어야 합니다.
       }
     })
 
     // 5. 성공 처리
-    warningStore.open("프로필 정보가 수정되었습니다.")
+    await warningStore.open("프로필 정보가 수정되었습니다.", true) // true로 성공 메시지 전달
     
     // 전역 상태 갱신 (헤더 이미지 등 즉시 반영)
     brandStore.isLoaded = false
@@ -191,15 +193,14 @@ const updateProfile = async () => {
     // 에러 상태에 따른 대응
     if (err.response?.status === 401) {
       warningStore.open("로그인 세션이 만료되었습니다. 다시 로그인해 주세요.")
-      router.push("/login")
     } else {
       const errorMsg = err.response?.data?.error || "정보 수정에 실패했습니다. 다시 시도해 주세요."
-      warningStore.open(errorMsg)
+      warningStore.open(errorMsg, false)
     }
   }
 }
-</script>
 
+</script>
 
 <style scoped>
 /* 브랜드 설정 페이지 레이아웃 */
