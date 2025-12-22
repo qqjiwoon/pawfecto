@@ -5,14 +5,13 @@ POST http://127.0.0.1:8000/accounts/login/
 Content-Type: application/json
 
 {
-  "username": "puppy_daily",
+  "username": "Alice",
   "password": "test1234"
 }
 
 
 ### 로그인 응답에서 token을 복사해 아래 변수에 넣어라
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MzQyMjg3LCJpYXQiOjE3NjYzMzUwODcsImp0aSI6ImE1ODM4Y2Y1MWU5ZjRjMzQ5MmNiMmQyZWQ4YjlhODgwIiwidXNlcl9pZCI6IjYifQ.dXDxlnFnwKNlcelTL1zkFbQan_2YdwxrsWIyGutsxU0
-
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MzkwNzM0LCJpYXQiOjE3NjYzODM1MzQsImp0aSI6ImNmZmQxY2Q0NjIzZjQ0MjM4MTIwYmU4MjUzMWE0ZThjIiwidXNlcl9pZCI6IjIzIn0.mnhALOgVDmr6RTT8wJ8twr3MYjWYjnbr_e-gT2OblsI
 ############################################
 ### 1. Deliverable 제출 (캡션 + 이미지 업로드)
 ### campaign_acceptance_id = 21 예시
@@ -37,7 +36,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 ###
-POST http://127.0.0.1:8000/api/v1/deliverables/5/verify/
+POST http://127.0.0.1:8000/api/v1/deliverables/1/verify/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 

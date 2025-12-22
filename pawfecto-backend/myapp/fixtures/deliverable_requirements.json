@@ -5,7 +5,7 @@
     "fields": {
       "campaign": 1,
       "requirement_type": "object",
-      "description": "dog drinking water",
+      "description": "dog",
       "is_required": true
     }
   },
@@ -35,7 +35,7 @@
     "fields": {
       "campaign": 2,
       "requirement_type": "object",
-      "description": "dog paw balm visible",
+      "description": "dog",
       "is_required": true
     }
   },
@@ -65,7 +65,7 @@
     "fields": {
       "campaign": 3,
       "requirement_type": "object",
-      "description": "dog drinking water",
+      "description": "dog",
       "is_required": true
     }
   },
@@ -95,7 +95,7 @@
     "fields": {
       "campaign": 4,
       "requirement_type": "object",
-      "description": "dog drinking water",
+      "description": "dog",
       "is_required": true
     }
   },
@@ -125,7 +125,7 @@
     "fields": {
       "campaign": 5,
       "requirement_type": "object",
-      "description": "dog paw balm visible",
+      "description": "dog",
       "is_required": true
     }
   },
