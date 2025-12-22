@@ -100,7 +100,7 @@ const goToUpdate = () => {
 /* 읽기 전용 필드 */
 .readonly-field {
   width: 100%;
-  height: 46px;
+  min-height: 46px;
   padding: 0 12px;
 
   display: flex;
@@ -111,6 +111,11 @@ const goToUpdate = () => {
   color: #555;
   font-size: 14px;
   box-sizing: border-box;
+
+  /* 긴 URL 대응 핵심 설정 */
+  word-break: break-all; /* 영문/기호가 공백 없이 길어도 강제로 줄바꿈 */
+  line-height: 1.5;      /* 줄 간격 조절로 가독성 향상 */
+  white-space: pre-wrap; /* 공백 및 줄바꿈 유지 (필요 시) */
 }
 
 /* 수정 버튼 */

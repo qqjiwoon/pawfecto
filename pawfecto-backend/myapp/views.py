@@ -74,6 +74,16 @@ def create_campaign(request, brand_id):
 
     campaign = serializer.save(brand=request.user)
 
+    # 요구조건 추가 처리
+    requirements = request.data.getlist('requirements[]')  # 요구조건 리스트 받기
+    for req in requirements:
+        DeliverableRequirement.objects.create(
+            campaign=campaign,
+            requirement_type=req.get('requirement_type'),
+            description=req.get('description'),
+            is_required=req.get('is_required')
+        )
+
     # 자동 매칭 실행
     auto_match_creators(campaign)
 

@@ -3,10 +3,10 @@
     <div v-if="isOpen" class="modal-overlay" @click.self="cancel">
       <div class="modal-box">
         <div class="icon-wrap">
-          <span class="warning-icon">!</span>
+          <span :class="iconClass">{{ icon }}</span>
         </div>
         
-        <h3 class="modal-title">알림</h3>
+        <h3 class="modal-title">{{ title }}</h3>
         <p class="message">{{ message }}</p>
         
         <div class="button-group">
@@ -27,6 +27,12 @@ const warningStore = useWarningStore()
 const isOpen = computed(() => warningStore.isOpen)
 const message = computed(() => warningStore.message)
 const isConfirm = computed(() => warningStore.isConfirm)
+const title = computed(() => warningStore.title || "알림")
+
+// [수정] store의 icon 상태를 직접 참조합니다.
+const icon = computed(() => warningStore.icon) 
+// [수정] 아이콘 모양에 따라 클래스(색상)를 결정합니다.
+const iconClass = computed(() => (warningStore.icon === '✔' ? 'confirm-icon' : 'warning-icon'))
 
 const confirm = () => warningStore.close(true)
 const cancel = () => warningStore.close(false)
@@ -54,10 +60,10 @@ const cancel = () => warningStore.close(false)
 }
 
 .warning-icon { color: #8B3A3A; font-size: 24px; font-weight: 800; }
+.confirm-icon { color: #4CAF50; font-size: 24px; font-weight: 800; }
 .modal-title { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 12px; }
 .message { font-size: 15px; color: #666; line-height: 1.6; margin-bottom: 30px; word-break: keep-all; }
 
-/* 버튼 레이아웃: 이전의 2.5:1 비율 감성을 적용 */
 .button-group { display: flex; gap: 10px; }
 
 .confirm-btn, .cancel-btn {
@@ -65,13 +71,12 @@ const cancel = () => warningStore.close(false)
 }
 
 .confirm-btn { background-color: #65481F; color: white; flex: 2; }
-.confirm-btn.full { flex: 1; } /* 알림 모드일 땐 꽉 차게 */
+.confirm-btn.full { flex: 1; }
 .confirm-btn:hover { background-color: #523a1a; }
 
 .cancel-btn { background-color: #f5f1ec; color: #7e6b5a; flex: 1; border: 1px solid #e0d6cc; }
 .cancel-btn:hover { background-color: #ede6de; }
 
-/* 애니메이션 */
 .modal-enter-active, .modal-leave-active { transition: all 0.3s ease; }
 .modal-enter-from, .modal-leave-to { opacity: 0; transform: scale(0.9) translateY(20px); }
 </style>

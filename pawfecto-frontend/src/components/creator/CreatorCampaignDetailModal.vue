@@ -1,68 +1,46 @@
 <template>
-  <!-- 모달 오버레이 -->
   <div class="modal-overlay" @click.self="close">
 
-    <!-- 모달 컨테이너 -->
     <div class="modal-container" v-if="campaign">
 
-      <!-- 캠페인 상세 영역 -->
       <div class="campaign-info">
 
-        <!-- 상품 이미지 -->
-        <img
-          :src="campaign.product_image_url"
-          class="product-img"
-        />
+        <img :src="campaignImageUrl" class="product-img" />
 
-        <!-- 우측 콘텐츠 -->
         <div class="content-box">
+          <h1>{{ campaign.product_name }}</h1>
 
-          <!-- 상품명 -->
-          <h2>{{ campaign.product_name }}</h2>
-
-          <!-- 상품 설명 -->
           <p class="desc" v-html="campaign.product_description"></p>
 
-          <!-- 크리에이터 조건 -->
           <div class="pref">
             <h3>Creator Preferences</h3>
 
-            <!-- 대상 동물 -->
             <div class="row">
               <span class="label">캠페인 대상 동물 종류</span>
               <div class="pet-type">
-                <button
-                  class="pet-btn"
-                  :class="{ active: campaign.target_pet_type === 'cat' }"
-                >
+                <button 
+                  class="pet-btn" 
+                  :class="{ active: campaign.target_pet_type === 'cat' }">
                   Cat
                 </button>
-                <button
-                  class="pet-btn"
-                  :class="{ active: campaign.target_pet_type === 'dog' }"
-                >
+                <button 
+                  class="pet-btn" 
+                  :class="{ active: campaign.target_pet_type === 'dog' }">
                   Dog
                 </button>
               </div>
             </div>
 
-            <!-- 최소 팔로워 수 -->
             <div class="row">
               <span class="label">최소 팔로워 수</span>
-              <span class="value">
-                {{ campaign.min_follower_count.toLocaleString() }}
-              </span>
+              <span class="value">{{ campaign.min_follower_count.toLocaleString() }}</span>
             </div>
 
-            <!-- 필요 크리에이터 수 -->
             <div class="row">
               <span class="label">필요 크리에이터 수</span>
-              <span class="value">
-                {{ campaign.required_creator_count }}
-              </span>
+              <span class="value">{{ campaign.required_creator_count }}명</span>
             </div>
 
-            <!-- 스타일 -->
             <div class="row">
               <span class="label">스타일</span>
               <div class="style-tags">
@@ -71,16 +49,41 @@
                   :key="tag"
                   class="style-tag"
                 >
-                  # {{ tag.code }}
+                  #{{ tag }}
                 </span>
               </div>
             </div>
+
+            <hr class="divider" />
+
+            <div class="row items-start">
+              <span class="label">AI 검증 조건</span>
+              <div class="req-list">
+                <div v-for="(req, idx) in campaign.requirements" :key="idx" class="req-item">
+                  <span class="req-type">[{{ getReqTypeLabel(req.requirement_type) }}]</span>
+                  <span class="req-desc">{{ req.description }}</span>
+                  <span v-if="req.is_required" class="req-badge">필수</span>
+                </div>
+                <div v-if="!campaign.requirements?.length" class="empty-msg">설정된 조건이 없습니다.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <span class="label">지원 마감일</span>
+              <span class="value date">{{ campaign.application_deadline_at }}</span>
+            </div>
+
+            <div class="row">
+              <span class="label">게시 기간</span>
+              <span class="value date">
+                {{ campaign.posting_start_at }} ~ {{ campaign.posting_end_at }}
+              </span>
+            </div>
           </div>
 
-          <!-- 닫기 버튼 -->
-          <button class="close-btn" @click="close">
-            닫기
-          </button>
+          <div class="button-group">
+            <button class="close-btn" @click="close">닫기</button>
+          </div>
 
         </div>
       </div>
@@ -92,7 +95,6 @@
 <script setup>
 import { computed } from 'vue'
 
-/* Props */
 const props = defineProps({
   campaign: {
     type: Object,
@@ -100,34 +102,48 @@ const props = defineProps({
   }
 })
 
-/* Emits */
 const emit = defineEmits(['close'])
 
-/* 스타일 태그 파싱 */
-const parsedStyles = computed(() => {
-  const styles = props.campaign?.style_tags
+/* 백엔드 베이스 URL */
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000"
 
-  if (!styles) return []
-
-  if (typeof styles === 'string') {
-    return styles.split(',')
-  }
-
-  if (Array.isArray(styles)) {
-    return styles
-  }
-
-  return []
+/* 이미지 URL 처리 로직 (브랜드와 동일) */
+const campaignImageUrl = computed(() => {
+  const url = props.campaign?.product_image_url
+  if (!url) return ""
+  return url.startsWith("http") ? url : `${API_BASE_URL}${url}`
 })
 
-/* 닫기 */
+/* 스타일 태그 파싱 로직 (브랜드와 동일하게 정규식 적용) */
+const parsedStyles = computed(() => {
+  const tags = props.campaign?.style_tags
+  if (!Array.isArray(tags)) return []
+  return tags
+    .filter(tag => tag && tag.name)
+    .map(tag => {
+      const m = tag.name.match(/\(([^)]+)\)/)
+      return m ? m[1] : tag.name
+    })
+})
+
+/* AI 타입 한글 변환 함수 */
+function getReqTypeLabel(type) {
+  const labels = {
+    object: '사물',
+    scene: '배경',
+    action: '행동',
+    text: '텍스트'
+  }
+  return labels[type] || type
+}
+
 const close = () => {
   emit('close')
 }
 </script>
 
 <style scoped>
-/* 모달 오버레이 */
+/* 모달 레이아웃 */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -136,63 +152,86 @@ const close = () => {
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: blur(2px);
 }
 
-/* 모달 컨테이너 */
 .modal-container {
   background: #fff;
-  border-radius: 16px;
-  padding: 40px;
-  max-width: 1000px;
+  border-radius: 20px;
+  padding: 60px;
+  max-width: 1100px;
   width: 95%;
   max-height: 90vh;
   overflow-y: auto;
+  position: relative;
 }
 
-/* 캠페인 레이아웃 */
+/* 캠페인 정보 레이아웃 (브랜드 상세 페이지 스타일 적용) */
 .campaign-info {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 60px;
-  position: relative;
+  gap: 80px;
 }
 
-/* 상품 이미지 */
 .product-img {
-  width: 420px;
-  height: 520px;
+  width: 400px;
+  height: 500px;
   object-fit: cover;
   border-radius: 12px;
+  flex-shrink: 0;
 }
 
-/* 우측 콘텐츠 */
 .content-box {
-  width: 500px;
+  flex: 1;
+  max-width: 500px;
 }
 
-/* 설명 */
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #333;
+}
+
 .desc {
   font-size: 14px;
   line-height: 1.6;
   color: #555;
-  margin-bottom: 45px;
+  margin-bottom: 40px;
 }
 
-/* 조건 행 */
+/* Creator Preferences 스타일 */
+.pref h3 {
+  font-size: 18px;
+  margin-bottom: 24px;
+  color: #333;
+}
+
 .pref .row {
   display: flex;
   align-items: center;
   margin-bottom: 16px;
 }
 
+.row.items-start {
+  align-items: flex-start;
+}
+
 .label {
-  width: 250px;
-  /* font-weight: 600; */
+  width: 160px;
+  font-size: 14px;
+  color: #888;
 }
 
 .value {
   font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+.value.date {
+  color: #555;
 }
 
 /* 펫 타입 버튼 */
@@ -204,6 +243,7 @@ const close = () => {
   cursor: default;
   margin-right: 8px;
   color: #777;
+  font-size: 14px;
 }
 
 .pet-btn.active {
@@ -228,20 +268,79 @@ const close = () => {
   color: #7d6c61;
 }
 
-/* 닫기 버튼 */
-.close-btn {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+/* AI 검증 조건 (Brand 버전 이식) */
+.req-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
-  width: 500px;   /* content-box와 동일한 폭 */
+.req-item {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.req-type {
+  color: #7e6b5a;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.req-desc {
+  color: #444;
+}
+
+.req-badge {
+  font-size: 10px;
+  background: #ffeded;
+  color: #ff4d4f;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid #ffccc7;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid #f0f0f0;
+  margin: 24px 0;
+}
+
+.empty-msg {
+  color: #ccc;
+  font-size: 13px;
+}
+
+/* 닫기 버튼 그룹 */
+.button-group {
+  margin-top: 40px;
+}
+
+.close-btn {
+  width: 100%;
   padding: 14px;
   background: #695845;
   color: white;
-  border: none;
-  border-radius: 10px;
+  border: 1px solid #695845;
+  border-radius: 50px;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
+.close-btn:hover {
+  background: #564839;
+}
+
+/* 스크롤바 커스텀 */
+.modal-container::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-container::-webkit-scrollbar-thumb {
+  background: #eee;
+  border-radius: 4px;
+}
 </style>
