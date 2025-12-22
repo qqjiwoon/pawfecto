@@ -5,6 +5,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework import status
 
+import requests
+from django.http import JsonResponse
+
 from django.contrib.auth import authenticate, logout, get_user_model
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -85,6 +88,43 @@ def login_view(request):
         },
         status=status.HTTP_200_OK
     )
+
+# ============================================
+# 2-0) 인스타로 로그인
+# ============================================
+def instagram_callback(request):
+    # 리디렉션 URI에서 받은 인증 코드
+    code = request.GET.get('code')
+    if not code:
+        return JsonResponse({'error': 'Code missing'}, status=400)
+
+    # 액세스 토큰 요청
+    url = "https://api.instagram.com/oauth/access_token"
+    data = {
+        'client_id': 'YOUR_CLIENT_ID',  # Instagram 앱의 client_id
+        'client_secret': 'YOUR_CLIENT_SECRET',  # Instagram 앱의 client_secret
+        'grant_type': 'authorization_code',
+        'redirect_uri': 'https://localhost:5500/callback/instagram',  # 리디렉션 URI
+        'code': code  # 인증 코드
+    }
+
+    response = requests.post(url, data=data)
+    if response.status_code == 200:
+        access_token_data = response.json()  # 액세스 토큰 데이터
+        access_token = access_token_data.get('access_token')
+        user_id = access_token_data.get('user_id')
+
+        # 액세스 토큰으로 사용자 정보 요청
+        user_data_url = f"https://graph.instagram.com/{user_id}?fields=id,username&access_token={access_token}"
+        user_data_response = requests.get(user_data_url)
+
+        if user_data_response.status_code == 200:
+            user_data = user_data_response.json()  # 사용자 데이터
+            return JsonResponse(user_data)
+        else:
+            return JsonResponse({'error': 'Failed to get user data'}, status=400)
+    else:
+        return JsonResponse({'error': 'Failed to get access token'}, status=400)
 
 
 # ============================================

@@ -15,6 +15,7 @@ urlpatterns = [
     # JWT 로그인 / 리프레시 토큰
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('callback/instagram', views.instagram_callback, name='instagram_callback'),
 
     # 아이디/패스워드 찾기
     path("find-id/", views.find_id),
