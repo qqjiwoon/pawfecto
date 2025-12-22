@@ -1,19 +1,15 @@
 <template>
   <section class="pf-signup-hero">
     <div class="pf-signup-hero-overlay"></div>
-
     <h1 class="pf-signup-hero-title pf-logo">Pawfecto</h1>
-
     <div class="pf-signup-breadcrumb">
       <p>Home</p>
       <span> &gt; </span>
       <p>Signup</p>
     </div>
   </section>
+
   <div class="signup-container">
-
-    <!-- <h1>Creator Signup</h1> -->
-
     <h2 class="title">회원 가입</h2>
     <p class="subtitle">
       협찬, 이제는 복잡하지 않게
@@ -34,47 +30,42 @@
     <form @submit.prevent="handleSignup">
       <div class="form-group">
         <label>아이디</label>
-        <input type="text" v-model="form.signupId" required />
+        <input type="text" class="input-field" v-model="form.signupId" placeholder="사용할 아이디를 입력하세요" required />
       </div>
 
       <div class="form-group">
         <label>비밀번호</label>
-        <input type="password" v-model="form.password" required />
+        <input type="password" class="input-field" v-model="form.password" placeholder="8자 이상, 영문/숫자 포함" required />
       </div>
 
       <div class="form-group">
         <label>비밀번호 확인</label>
-        <input type="password" v-model="form.passwordConfirm" required />
-      </div>
-
-      <div class="form-group">
-        <label>브랜드 명</label>
-        <input type="text" v-model="form.brandName" required />
+        <input type="password" class="input-field" v-model="form.passwordConfirm" placeholder="비밀번호를 한번 더 입력하세요" required />
       </div>
 
       <div class="form-group">
         <label>이메일 주소</label>
-        <input type="email" v-model="form.email" required />
+        <input type="email" class="input-field" v-model="form.email" placeholder="example@pawfecto.com" required />
       </div>
 
       <div class="form-group">
         <label>전화번호</label>
-        <input type="text" v-model="form.phoneNumber" required />
+        <input type="text" class="input-field" v-model="form.phoneNumber" placeholder="010-0000-0000" required />
       </div>
 
       <div class="form-group">
         <label>이름</label>
-        <input type="text" v-model="form.name" required />
+        <input type="text" class="input-field" v-model="form.name" placeholder="이름을 입력하세요" required />
       </div>
 
       <div class="form-group">
         <label>주소</label>
-        <input type="text" v-model="form.address" required />
+        <input type="text" class="input-field" v-model="form.address" placeholder="주소를 입력하세요" required />
       </div>
 
       <div class="form-group">
         <label>반려동물 종류</label>
-        <select v-model="form.petType">
+        <select class="input-field" v-model="form.petType">
           <option value="">선택하세요</option>
           <option value="dog">강아지</option>
           <option value="cat">고양이</option>
@@ -83,17 +74,16 @@
 
       <div class="form-group">
         <label>SNS 계정명</label>
-        <input type="text" v-model="form.snsHandle" placeholder="@puppy_ssafy" />
+        <input type="text" class="input-field" v-model="form.snsHandle" placeholder="puppy_ssafy" />
       </div>
 
       <div class="form-group">
         <label>SNS 계정 URL</label>
-        <input type="text" v-model="form.snsUrl" placeholder="https://instagram.com/..." />
+        <input type="text" class="input-field" v-model="form.snsUrl" placeholder="https://instagram.com/..." />
       </div>
 
       <div class="form-group">
         <label>SNS 스타일</label>
-
         <div class="tag-container">
           <div
             v-for="tag in styleTags"
@@ -105,40 +95,39 @@
             #{{ tag }}
           </div>
         </div>
-    </div>  
+      </div>
 
       <div class="form-group">
         <label>프로필 이미지</label>
-        <input type="file" @change="handleFileUpload" />
+        <input type="file" class="file-input-box" @change="handleFileUpload" />
       </div>
 
       <button type="submit" class="submit-btn">가입하기</button>
     </form>
-
   </div>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import axios from 'axios' 
 
 const router = useRouter()
 
 const form = ref({
-    accountType: 'creator',
-    signupId: '',
-    password: '',
-    passwordConfirm: '',
-    brandName: '',
-    email: '',
-    phoneNumber: '',
-    name: '',
-    address: '',
-    petType: '',
-    snsHandle: '',
-    snsUrl: '',
-    styleTags: [],
-    profileImage: null,
+  accountType: 'creator',
+  signupId: '',
+  password: '',
+  passwordConfirm: '',
+  email: '',
+  phoneNumber: '',
+  name: '',
+  address: '',
+  petType: '',
+  snsHandle: '',
+  snsUrl: '',
+  styleTags: [],
+  profileImage: null,
 })
 
 const handleFileUpload = (e) => {
@@ -147,13 +136,11 @@ const handleFileUpload = (e) => {
 
 const styleTags = [
   '활발한', '야외감성', '차분한', '웃긴', '힐링되는', '포근한',
-  '감동적인', '감각적인', '깔끔한', '상관없음'
+  '감동적인', '감각적인', '깔끔한'
 ]
 
-/* 클릭된 태그 저장 */
 const selectedTags = ref([])
 
-/* 토글 기능 */
 function toggleTag(tag) {
   if (selectedTags.value.includes(tag)) {
     selectedTags.value = selectedTags.value.filter(t => t !== tag)
@@ -162,10 +149,54 @@ function toggleTag(tag) {
   }
 }
 
-const handleSignup = (() =>{
-    console.log('form.value')
-    console.log('form submitted!!!')
-})
+const handleSignup = async () => {
+  if (form.value.password !== form.value.passwordConfirm) {
+    alert("비밀번호가 일치하지 않습니다.")
+    return
+  }
+
+  const formData = new FormData()
+  formData.append('username', form.value.signupId)
+  formData.append('password', form.value.password)
+  formData.append('email', form.value.email)
+  formData.append('name', form.value.name)
+  formData.append('phone_number', form.value.phoneNumber)
+  formData.append('account_type', 'creator')
+
+  if (form.value.petType) {
+    formData.append('pet_type', form.value.petType)
+  }
+
+  if (form.value.profileImage) {
+    formData.append('profile_image', form.value.profileImage)
+  }
+
+  formData.append()
+
+  try {
+    await axios.post(
+      "http://127.0.0.1:8000/accounts/signup/",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    )
+
+    alert("회원가입이 완료되었습니다.")
+    router.push("/login")
+  } catch (err) {
+    console.error(err)
+    if (err.response?.data) {
+      const firstErrorKey = Object.keys(err.response.data)[0]
+      const firstErrorValue = err.response.data[firstErrorKey]
+      alert(`${firstErrorKey}: ${firstErrorValue}`)
+    } else {
+      alert("회원가입 중 오류가 발생했습니다.")
+    }
+  }
+}
 
 watch(
   () => form.value.accountType,
@@ -175,12 +206,10 @@ watch(
     }
   }
 )
-
-
 </script>
 
 <style scoped>
-
+/* Styling matching SignupBrand */
 .pf-signup-hero {
   width: 100%;
   height: 45vh;
@@ -188,12 +217,10 @@ watch(
   background-size: cover;
   background-position: center;
   position: relative;
-
-  /* 중앙 정렬을 위한 Flexbox 추가 */
   display: flex;
   flex-direction: column;
-  justify-content: center; /* 세로 중앙 */
-  align-items: center;     /* 가로 중앙 */
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
@@ -201,39 +228,32 @@ watch(
   position: absolute;
   inset: 0;
   background-color: rgba(255, 255, 255, 0.25);
-  z-index: 1; /* 오버레이가 아래로 가도록 설정 */
+  z-index: 1;
 }
 
 .pf-signup-hero-title {
-  position: relative; 
-  z-index: 2; /* 오버레이보다 위로 올림 */
+  position: relative;
+  z-index: 2;
   font-family: 'Rubik Bubbles', sans-serif;
   font-size: 54px;
   color: #fff;
-  margin: 0; /* 기본 마진 제거 */
+  margin: 0;
 }
 
 .pf-signup-breadcrumb {
   position: relative;
-  z-index: 2; /* 오버레이보다 위로 올림 */
-  margin-top: 10px; /* 타이틀과의 간격 조절 */
+  z-index: 2;
+  margin-top: 10px;
   color: #fff;
   font-size: 14px;
   display: flex;
   gap: 6px;
-  font-family: inherit;
 }
 
-.pf-signup-breadcrumb p,
-.pf-signup-breadcrumb span {
-  margin: 0;
-  padding: 0;
-}
-
+/* Container & Typography */
 .signup-container {
   max-width: 480px;
   margin: 60px auto;
-  text-align: center;
   padding: 0 20px;
   font-family: 'Pretendard', sans-serif;
 }
@@ -275,16 +295,9 @@ watch(
   font-weight: 500;
 }
 
-.form-group input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-}
-
+.form-group input,
 .form-group select {
-  width: 105%;
+  width: 100%;
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #ddd;
@@ -303,7 +316,6 @@ watch(
   gap: 10px;
 }
 
-/* 일반 태그 스타일 */
 .tag {
   padding: 8px 16px;
   border-radius: 10px;
@@ -311,11 +323,8 @@ watch(
   border: 1px solid #ddd;
   cursor: pointer;
   font-size: 14px;
-  color: #333;
-  transition: 0.2s;
 }
 
-/* 선택된 태그 스타일 */
 .tag.active {
   background: #7E6B5A;
   color: white;
@@ -323,9 +332,8 @@ watch(
 }
 
 .submit-btn {
-  width: 105%;
+  width: 100%;
   padding: 14px;
-  margin-top: 50px;
   background: #7b7b7b;
   color: white;
   border: none;
@@ -338,5 +346,4 @@ watch(
 .submit-btn:hover {
   background: #3A3A3A;
 }
-
 </style>
