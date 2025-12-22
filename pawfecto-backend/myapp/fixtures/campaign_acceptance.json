@@ -46,7 +46,7 @@
       "campaign": 1,
       "brand_decision_status": "approved",
       "brand_decided_at": null,
-      "acceptance_status": "approved",
+      "acceptance_status": "accepted",
       "applied_at": "2025-02-02T10:00:00Z",
       "accepted_at": null
     }
