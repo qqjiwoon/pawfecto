@@ -37,7 +37,7 @@ def run_ai_verification(prompt: str, images=None):
     response = client.chat.completions.create(
         model=settings.AI_MODEL_PRIMARY,
         messages=messages,
-        temperature=0.2,
+        temperature=1,
     )
 
     raw = response.choices[0].message.content.strip()

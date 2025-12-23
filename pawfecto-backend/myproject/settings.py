@@ -232,8 +232,8 @@ STORAGES = {
 GMS_API_KEY = os.getenv("GMS_API_KEY")
 GMS_OPENAI_BASE_URL = os.getenv("GMS_OPENAI_BASE_URL")
 
-AI_MODEL_PRIMARY = os.getenv("AI_MODEL_PRIMARY", "gpt-4.1")
-AI_MODEL_CHEAP = os.getenv("AI_MODEL_CHEAP", "gpt-4.1-mini")
+AI_MODEL_PRIMARY = os.getenv("AI_MODEL_PRIMARY", "gpt-5")
+AI_MODEL_CHEAP = os.getenv("AI_MODEL_CHEAP", "gpt-4.1")
 
 
 # # Django가 이 출처(origin)를 신뢰하지 않아서 POST 요청을 차단 방지

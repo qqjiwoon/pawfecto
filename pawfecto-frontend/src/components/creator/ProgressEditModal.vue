@@ -2,260 +2,285 @@
   <div class="modal-overlay" @click.self="closeModal">
     <div class="modal-container">
 
-      <!-- 닫기 버튼 -->
-      <button class="close-btn" @click="closeModal">×</button>
-
-      <h2 class="modal-title">Campaign Progress</h2>
-
-      <div class="modal-content">
-
-        <!-- 캠페인 정보 -->
-        <div class="campaign-info-box">
-          <span class="campaign-label">캠페인 제품</span>
-          <p class="campaign-name">
-            {{ props.item.campaign_acceptance.campaign.product_name }}
-          </p>
+      <transition name="fade">
+        <div v-if="toast.visible" class="toast-message" :class="toast.type">
+          {{ toast.message }}
         </div>
+      </transition>
 
-        <!-- 게시글 내용 -->
-        <div class="modal-row">
-          <label class="modal-label">게시글 내용</label>
-          <textarea
-            v-model="content"
-            placeholder="게시글 내용을 입력하세요"
-            class="modal-textarea"
-          />
-        </div>
+      <button class="close-btn" @click="closeModal">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
 
-        <!-- 이미지 업로드 -->
-        <div class="modal-row">
-          <label class="modal-label">이미지 업로드</label>
-          <input type="file" @change="onFileChange" />
-        </div>
+      <div class="modal-header-top">
+        <h2>Campaign Progress</h2>
+      </div>
 
-        <!-- 이미지 미리보기 -->
-        <div v-if="imagePreviewUrl" class="image-preview">
-          <img :src="imagePreviewUrl" alt="업로드 이미지 미리보기" />
-        </div>
+      <div class="modal-body">
+        
+        <div class="left-section">
+          <div 
+            class="upload-box dashed-box" 
+            :class="{ 'has-image': imagePreviewUrl }" 
+            @click="triggerFileInput"
+          >
+            <div v-if="imagePreviewUrl" class="image-wrapper">
+               <img :src="imagePreviewUrl" class="preview-img" alt="Preview" />
+               <div class="hover-overlay">
+                 <span>변경하기</span>
+               </div>
+            </div>
+            
+            <div v-else class="placeholder-content">
+              <div class="plus-sign">+</div>
+              <span class="upload-label">이미지 업로드</span>
+            </div>
 
-        <!-- 🔄 AI 진행 상태 -->
-        <div v-if="aiStatus === 'running'" class="ai-progress-box">
-          <div class="progress-step" :class="{ active: aiPhase === 'content' }">
-            ✏️ 게시글 내용 검증 중
-          </div>
-          <div class="progress-step" :class="{ active: aiPhase === 'image' }">
-            🖼️ 이미지 분석 중
-          </div>
-          <div class="progress-step" :class="{ active: aiPhase === 'rule' }">
-            📋 캠페인 조건 비교 중
-          </div>
-          <div class="progress-step" :class="{ active: aiPhase === 'final' }">
-            🤖 결과 정리 중
-          </div>
-
-          <div class="progress-bar">
-            <div class="progress-fill" />
+            <input ref="fileInputRef" type="file" accept="image/*" class="hidden-input" @change="onFileChange" />
           </div>
         </div>
 
-        <!-- ✅ AI 결과 -->
-        <div v-if="aiStatus !== 'pending' && aiStatus !== 'running'" class="ai-result-box modern">
+        <div class="right-section">
+          
+          <div class="product-info">
+            <span class="label">Product</span>
+            <span class="product-name">{{ props.item.campaign_acceptance.campaign.product_name }}</span>
+          </div>
 
-          <!-- 요약 카드 -->
-          <div class="ai-summary" :class="aiStatus">
-            <span class="icon">
-              <template v-if="aiStatus === 'passed'">🎉</template>
-              <template v-else-if="aiStatus === 'review'">⚠️</template>
-              <template v-else>❌</template>
-            </span>
+          <div class="input-area">
+            <label class="section-label">게시글 내용</label>
+            <textarea
+              v-model="content"
+              class="modern-textarea custom-scroll"
+              placeholder="내용을 입력해주세요..."
+              @input="onContentChange"
+            ></textarea>
+          </div>
 
-            <div class="summary-text">
-              <p class="title">
-                <template v-if="aiStatus === 'passed'">AI 검증 통과</template>
-                <template v-else-if="aiStatus === 'review'">보완이 필요합니다</template>
-                <template v-else>검증 실패</template>
-              </p>
-              <p class="desc">
-                <template v-if="aiStatus === 'passed'">
-                  콘텐츠가 캠페인 조건을 충족했습니다.
-                </template>
-                <template v-else>
-                  아래 항목을 보완하면 통과될 수 있습니다.
-                </template>
-              </p>
+          <div v-if="aiStatus === 'running'" class="process-visualizer">
+            <p class="process-text">AI가 꼼꼼히 살펴보고 있어요...</p>
+            <div class="steps-container">
+              <div class="step" :class="{ active: aiPhase === 'content' || aiPhase === 'done' }">
+                <div class="icon">✏️</div>
+                <span>내용</span>
+              </div>
+              <div class="line"></div>
+              <div class="step" :class="{ active: aiPhase === 'image' || aiPhase === 'done' }">
+                <div class="icon">🖼️</div>
+                <span>이미지</span>
+              </div>
+              <div class="line"></div>
+              <div class="step" :class="{ active: aiPhase === 'rule' || aiPhase === 'done' }">
+                <div class="icon">📋</div>
+                <span>규칙</span>
+              </div>
+              <div class="line"></div>
+              <div class="step" :class="{ active: aiPhase === 'done' }">
+                <div class="icon">🤖</div>
+                <span>결과</span>
+              </div>
             </div>
           </div>
 
-          <!-- 실패 / 불확실 항목만 표시 -->
-          <ul v-if="aiStatus !== 'passed'" class="ai-issues">
-            <li
-              v-for="cond in aiResult.conditions.filter(c => c.satisfied !== 'yes')"
-              :key="cond.requirement"
+          <div v-if="aiStatus === 'passed' || aiStatus === 'review'" class="status-message" :class="aiStatus">
+             <div v-if="aiStatus === 'passed'" class="msg-content">
+                <span class="icon">🎉</span>
+                <div>
+                  <strong>검증 통과!</strong>
+                  <p>AI검증에 통과했습니다. 이제 포스팅을 제출할 수 있습니다.</p>
+                </div>
+             </div>
+             <div v-else class="msg-content">
+                <span class="icon">⚠️</span>
+                <div>
+                  <strong>내용 보완이 필요해요</strong>
+                  <ul class="error-list">
+                    <li v-for="cond in aiResult?.conditions?.filter(c => c.satisfied !== 'yes')" :key="cond.requirement">
+                      {{ cond.reason }}
+                    </li>
+                  </ul>
+                </div>
+             </div>
+          </div>
+
+          <div class="footer-action">
+            <button
+              class="btn-action btn-save"
+              :disabled="aiStatus === 'running' || !content || !imagePreviewUrl"
+              @click="saveProgress"
             >
-              <strong>{{ cond.requirement }}</strong>
-              <p>{{ cond.reason }}</p>
-            </li>
-          </ul>
+              저장하기
+            </button>
+
+            <button
+              v-if="aiStatus === 'pending' || aiStatus === 'review' || aiStatus === 'passed'"
+              class="btn-action btn-verify"
+              :disabled="aiStatus === 'running' || !content || !imagePreviewUrl"
+              @click="runAIVerification"
+            >
+              <span v-if="aiStatus === 'running'">분석 중...</span>
+              <span v-else>AI 검증받기</span>
+            </button>
+          </div>
 
         </div>
-
-        <!-- 🔘 버튼 영역 -->
-        <div class="btn-row">
-          <button
-            v-if="aiStatus !== 'passed'"
-            class="save-btn"
-            :disabled="aiStatus === 'running'"
-            @click="runAIVerification"
-          >
-            AI 검증받기
-          </button>
-
-          <button
-            v-if="aiStatus === 'passed'"
-            class="submit-btn"
-            @click="submitDeliverable"
-          >
-            제출하기
-          </button>
-        </div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, reactive } from 'vue'
 import api from '@/plugins/axios'
 
-/**
- * props.item
- * - campaign_acceptance, deliverable 정보 포함
- * - 서버에서 내려온 현재 진행 상태 기반으로 UI 초기화
- */
 const props = defineProps({
   item: { type: Object, required: true }
 })
 
 const emit = defineEmits(['close', 'refresh'])
 
-/**
- * AI 검증 전체 상태
- * - pending : 아직 검증 전
- * - running : AI 검증 중 (progress UI 표시)
- * - passed  : 검증 통과
- * - review  : 보완 필요
- * - failed  : 검증 실패
- */
+// 상태: 'pending', 'running', 'passed', 'review', 'failed'
 const aiStatus = ref('pending')
-
-/**
- * AI 검증 결과 원본
- * - conditions 배열을 사용해 실패/불확실 항목 표시
- */
 const aiResult = ref(null)
-
-/**
- * 게시글 내용 / 이미지 상태
- */
-const content = ref('')
-const imageFile = ref(null)
-const imagePreviewUrl = ref(null)
-
-/**
- * AI 진행 단계 (UX용, 서버와 무관)
- * - content → image → rule → final
- */
 const aiPhase = ref(null)
 
-/**
- * 파일 선택 시 미리보기 생성
- */
+const content = ref('')
+const imagePreviewUrl = ref(null)
+const imageFile = ref(null)
+const fileInputRef = ref(null)
+
+// 변경 사항 저장 여부 추적 (Dirty Check)
+const isDirty = ref(false)
+
+// Toast 상태 관리
+const toast = reactive({
+  visible: false,
+  message: '',
+  type: 'info' // info, success, warning
+})
+
+const showToast = (message, type = 'info') => {
+  toast.message = message
+  toast.type = type
+  toast.visible = true
+  setTimeout(() => {
+    toast.visible = false
+  }, 3000) // 3초 뒤 사라짐
+}
+
+const triggerFileInput = () => fileInputRef.value?.click()
+
 const onFileChange = (e) => {
   const file = e.target.files[0]
   if (!file) return
-
   imageFile.value = file
   imagePreviewUrl.value = URL.createObjectURL(file)
+  
+  // 변경됨 표시 및 상태 리셋
+  isDirty.value = true
+  if (aiStatus.value !== 'running') {
+    aiStatus.value = 'pending'
+  }
 }
 
-/**
- * props 변경 시 서버 상태로 UI 동기화
- */
+const onContentChange = () => {
+  // 변경됨 표시 및 상태 리셋
+  isDirty.value = true
+  if (aiStatus.value !== 'running') {
+    aiStatus.value = 'pending'
+  }
+}
+
 watch(
   () => props.item,
   (item) => {
     if (!item) return
     content.value = item.content || ''
     imagePreviewUrl.value = item.image || null
-    aiStatus.value = item.ai_validation_status || 'pending'
+    aiStatus.value = item.ai_validation_status === 'passed' ? 'passed' : 'pending'
     aiResult.value = item.ai_result_raw || null
+    isDirty.value = false // 초기 로드시엔 변경사항 없음
   },
   { immediate: true }
 )
 
-/**
- * AI 검증 실행
- * - 실제로는 단일 API 호출
- * - UX를 위해 단계별 진행 상태를 시뮬레이션
- */
-const runAIVerification = async () => {
-  if (!content.value || !imageFile.value) return
+const saveProgress = async () => {
+  if (!content.value || !imagePreviewUrl.value) return;
 
-  aiStatus.value = 'running'
-  aiPhase.value = 'content'
-
-  // UX용 단계 시뮬레이션
-  setTimeout(() => (aiPhase.value = 'image'), 700)
-  setTimeout(() => (aiPhase.value = 'rule'), 1400)
-  setTimeout(() => (aiPhase.value = 'final'), 2100)
+  const formData = new FormData();
+  formData.append('content', content.value);
+  if (imageFile.value) formData.append('image', imageFile.value);
 
   try {
     const res = await api.post(
-      `/api/v1/deliverables/${props.item.deliverable_id}/verify/`
-    )
-    aiResult.value = res.data.ai_result
-    aiStatus.value = res.data.ai_validation_status
-  } catch {
-    aiStatus.value = 'failed'
-  } finally {
-    aiPhase.value = null
+      `/api/v1/deliverables/${props.item.deliverable_id}/save/`, 
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    );
+    
+    // 저장 성공 처리
+    isDirty.value = false; // 변경사항 저장됨
+    showToast('내용이 저장되었습니다.', 'success');
+    
+    // 저장 후 상태가 바뀌었다면 업데이트 (필요시)
+    // aiStatus.value = 'pending'; 
+  } catch (error) {
+    console.error('저장 실패:', error);
+    showToast('저장에 실패했습니다.', 'warning');
   }
-}
+};
 
-/**
- * Deliverable 최종 제출
- * - AI 검증 passed 상태에서만 노출됨
- */
-const submitDeliverable = async () => {
+const runAIVerification = async () => {
+  if (!content.value || !imagePreviewUrl.value) return;
+
+  // 1. 저장되지 않은 변경사항이 있는지 확인
+  if (isDirty.value) {
+    showToast('내용을 먼저 저장해 주세요.', 'warning');
+    return;
+  }
+
+  aiStatus.value = 'running';
+  aiPhase.value = 'content';
+
+  setTimeout(() => { if(aiStatus.value === 'running') aiPhase.value = 'image' }, 800);
+  setTimeout(() => { if(aiStatus.value === 'running') aiPhase.value = 'rule' }, 1600);
+
   try {
-    await api.post(
-      `/api/v1/deliverables/${props.item.deliverable_id}/submit/`
-    )
-    emit('refresh')
-    closeModal()
-  } catch (e) {
-    alert(e.response?.data?.error || '제출에 실패했습니다.')
-  }
-}
+    const res = await api.post(
+      `/api/v1/deliverables/${props.item.deliverable_id}/verify/`,
+      { content: content.value }
+    );
 
-/**
- * 모달 닫기 + ObjectURL 정리
- */
+    setTimeout(() => {
+      aiPhase.value = 'done';
+      aiResult.value = res.data.ai_result;
+      aiStatus.value = res.data.ai_validation_status;
+    }, 2500);
+
+  } catch (error) {
+    console.error(error);
+    showToast('검증 중 오류가 발생했습니다.', 'warning');
+    aiStatus.value = 'pending';
+  }
+};
+
+
 const closeModal = () => {
-  if (imagePreviewUrl.value) URL.revokeObjectURL(imagePreviewUrl.value)
+  if (imagePreviewUrl.value && imageFile.value) URL.revokeObjectURL(imagePreviewUrl.value)
   emit('close')
 }
 </script>
 
 <style scoped>
-/* ================================
-   Overlay & Modal
-================================ */
+* { box-sizing: border-box; }
+
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -263,305 +288,214 @@ const closeModal = () => {
 }
 
 .modal-container {
-  width: 520px;
-  max-height: 90vh;
-  background: #ffffff;
+  width: 1000px;
+  height: 700px;
+  background: #FFFFFF;
   border-radius: 20px;
-  padding: 48px 56px 36px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
   position: relative;
-  display: flex;
-  flex-direction: column;
 }
 
-.modal-content {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 6px;
-}
-
-.modal-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 4px;
-}
-
-/* ================================
-   Header
-================================ */
-.close-btn {
+/* --- Toast Message Styles --- */
+.toast-message {
   position: absolute;
-  top: 18px;
-  right: 22px;
-  border: none;
-  background: none;
-  font-size: 26px;
-  cursor: pointer;
-  color: #777;
-}
-
-.close-btn:hover {
-  color: #111;
-}
-
-.modal-title {
-  text-align: center;
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 36px;
-  color: #111827;
-}
-
-/* ================================
-   Campaign Info
-================================ */
-.campaign-info-box {
-  text-align: center;
-  margin-bottom: 28px;
-}
-
-.campaign-label {
-  font-size: 12px;
-  color: #7d6c61;
-}
-
-.campaign-name {
-  font-size: 16px;
-  font-weight: 600;
-  color: #4c3d2c;
-  margin-top: 6px;
-}
-
-/* ================================
-   Form
-================================ */
-.modal-row {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 22px;
-}
-
-.modal-label {
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(33, 33, 33, 0.9);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 50px;
   font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #374151;
-}
-
-.modal-textarea {
-  min-height: 140px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: 1px solid #d1d5db;
-  font-size: 14px;
-  line-height: 1.6;
-  resize: none;
-}
-
-.modal-textarea:focus {
-  outline: none;
-  border-color: #7d6c61;
-  background: #fafafa;
-}
-
-.modal-row input[type="file"] {
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px dashed #7d6c61;
-  font-size: 13px;
-  background: #fafafa;
-  cursor: pointer;
-}
-
-/* ================================
-   Image Preview
-================================ */
-.image-preview {
-  margin-top: 12px;
-  display: flex;
-  justify-content: center;
-}
-
-.image-preview img {
-  max-width: 100%;
-  max-height: 220px;
-  border-radius: 14px;
-  object-fit: cover;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-}
-
-/* ================================
-   AI Progress (Running)
-================================ */
-.ai-progress-box {
-  margin-top: 26px;
-  padding: 18px;
-  border-radius: 16px;
-  background: #f8fafc;
-  border: 1px solid #e5e7eb;
-}
-
-.progress-step {
-  font-size: 14px;
-  color: #9ca3af;
-  margin-bottom: 6px;
-  transition: color 0.3s;
-}
-
-.progress-step.active {
-  color: #111827;
-  font-weight: 600;
-}
-
-.progress-bar {
-  margin-top: 14px;
-  height: 6px;
-  background: #e5e7eb;
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    #7d6c61,
-    #1ea35a,
-    #7d6c61
-  );
-  animation: progressMove 1.6s linear infinite;
-}
-
-@keyframes progressMove {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-/* ================================
-   AI Result (Modern)
-================================ */
-.ai-result-box.modern {
-  margin-top: 28px;
-  padding: 20px;
-  border-radius: 16px;
-  background: #f9fafb;
-}
-
-.ai-summary {
+  font-weight: 500;
+  z-index: 2100;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 16px;
-  border-radius: 14px;
+  gap: 8px;
+}
+.toast-message.success { background: #405445; } /* 성공 시 짙은 녹색 */
+.toast-message.warning { background: #E65100; } /* 경고 시 주황색 */
+
+.fade-enter-active, .fade-leave-active { transition: opacity 0.3s, transform 0.3s; }
+.fade-enter-from, .fade-leave-to { opacity: 0; transform: translate(-50%, 20px); }
+
+/* --- Rest of Styles --- */
+
+.close-btn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  z-index: 100;
 }
 
-.ai-summary.passed {
-  background: #ecfdf3;
-  color: #027a48;
+.modal-header-top {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
-.ai-summary.review {
-  background: #fffaeb;
-  color: #b54708;
+.modal-body {
+  display: flex;
+  flex: 1;
+  gap: 40px;
+  min-height: 0;
 }
 
-.ai-summary.failed {
-  background: #fef3f2;
-  color: #b42318;
+/* --- 왼쪽: 이미지 업로드 --- */
+.left-section {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
 }
 
-.ai-summary .icon {
-  font-size: 28px;
+.dashed-box {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #BDBDBD;
+  border-radius: 12px;
+  background: #FAFAFA;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
 }
 
-.summary-text .title {
+.dashed-box:hover {
+  border-color: #405445;
+  background: #F0F4F1;
+}
+
+.dashed-box.has-image {
+  border: none;
+  background: transparent;
+}
+
+.placeholder-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.plus-sign {
+  font-size: 48px;
+  font-weight: 300;
+  color: #8D6E63;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.upload-label {
   font-size: 16px;
   font-weight: 700;
+  color: #5D4037;
 }
 
-.summary-text .desc {
-  font-size: 13px;
-  opacity: 0.85;
+.image-wrapper { width: 100%; height: 100%; position: relative; }
+.preview-img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+.hover-overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.3);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.2s;
 }
+.dashed-box:hover .hover-overlay { opacity: 1; }
+.hover-overlay span { color: #FFF; font-weight: 600; border: 1px solid #FFF; padding: 6px 12px; border-radius: 20px; }
+.hidden-input { display: none; }
 
-/* 문제 항목 */
-.ai-issues {
-  list-style: none;
-  padding: 0;
-  margin-top: 16px;
-}
-
-.ai-issues li {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 12px 14px;
-  border: 1px solid #eee;
-  margin-bottom: 10px;
-}
-
-.ai-issues strong {
-  font-size: 14px;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.ai-issues p {
-  font-size: 13px;
-  color: #555;
-}
-
-/* ================================
-   Buttons
-================================ */
-.btn-row {
+/* --- 오른쪽: 콘텐츠 --- */
+.right-section {
+  flex: 1;
   display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 32px;
+  flex-direction: column;
+  min-width: 0;
 }
 
-.save-btn {
-  width: 180px;
-  padding: 14px 0;
-  border-radius: 999px;
-  background: #7d6c61;
-  color: white;
-  font-size: 15px;
-  font-weight: 600;
+.product-info { margin-bottom: 15px; }
+.product-info .label { color: #888; font-weight: 600; margin-right: 6px; }
+.product-info .product-name { color: #333; font-weight: 700; font-size: 15px; }
+
+.input-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  min-height: 0;
+}
+.section-label { font-size: 16px; font-weight: 700; color: #333; margin-bottom: 10px; display: block; }
+.modern-textarea {
+  width: 100%; flex: 1; padding: 16px; font-size: 15px;
+  border: 1px solid #E0E0E0; border-radius: 8px; resize: none; outline: none;
+}
+.modern-textarea:focus { border-color: #405445; background: #FFF; }
+
+.process-visualizer {
+  background: #F5F5F5;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.process-text { margin: 0 0 15px 0; color: #666; font-size: 14px; }
+.steps-container { display: flex; justify-content: center; align-items: center; gap: 10px; }
+.step { opacity: 0.3; transition: all 0.3s; transform: scale(0.9); display: flex; flex-direction: column; align-items: center;}
+.step.active { opacity: 1; transform: scale(1.1); font-weight: bold; color: #2E7D32; }
+.step .icon { font-size: 24px; margin-bottom: 4px; }
+.step span { font-size: 12px; }
+.line { width: 30px; height: 2px; background: #DDD; }
+
+.status-message {
+  padding: 15px; border-radius: 8px; margin-bottom: 20px; animation: slideUp 0.3s;
+}
+@keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.status-message.passed { background: #E8F5E9; border: 1px solid #C8E6C9; color: #1B5E20; }
+.status-message.review { background: #FFF3E0; border: 1px solid #FFE0B2; color: #E65100; }
+.msg-content { display: flex; gap: 12px; align-items: flex-start; }
+.msg-content .icon { font-size: 24px; }
+.msg-content p, .msg-content li { margin: 0; font-size: 13px; }
+.error-list { padding-left: 20px; margin-top: 4px; }
+
+/* 버튼 영역 Flex 배치 */
+.footer-action {
+  margin-top: auto;
+  display: flex; /* 가로 배치 */
+  gap: 12px;     /* 버튼 사이 간격 */
+}
+
+.btn-action {
+  flex: 1;       /* 공간 균등 분할 */
+  height: 54px;
   border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s;
+  color: #FFF;
+  /* 공통 색상 적용 */
+  background: #405445; 
 }
 
-.save-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+.btn-action:hover:not(:disabled) {
+  background: #2F3E33;
+  transform: translateY(-2px);
 }
 
-.save-btn:disabled {
-  background: #d1d5db;
+.btn-action:disabled {
+  background: #CCC;
   cursor: not-allowed;
-}
-
-.submit-btn {
-  width: 180px;
-  padding: 14px 0;
-  border-radius: 999px;
-  background: #1ea35a;
-  color: white;
-  font-size: 15px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.submit-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  transform: none;
 }
 </style>
