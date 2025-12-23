@@ -15,6 +15,14 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from myproject.utils import upload_to_gcs
 
+from django.conf import settings
+from accounts.models import User
+
+from django.views.decorators.csrf import csrf_exempt
+
+import json
+
+
 from .serializers import (
     UserSerializer,
     BrandSerializer,
@@ -89,42 +97,120 @@ def login_view(request):
         status=status.HTTP_200_OK
     )
 
+
+
 # ============================================
-# 2-0) 인스타로 로그인
+# 2-0) 인스타그램 정보 연동
 # ============================================
+@csrf_exempt
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])  # 로그인된 유저만 접근 가능
 def instagram_callback(request):
-    # 리디렉션 URI에서 받은 인증 코드
-    code = request.GET.get('code')
-    if not code:
-        return JsonResponse({'error': 'Code missing'}, status=400)
+    """
+    프론트엔드에서 전달받은 code로 인스타그램 Access Token을 발급받고,
+    유저 정보를 조회하여 현재 로그인된 유저(request.user)의 프로필을 업데이트합니다.
+    """
+    
+    # [수정 1] DRF에서는 request.data로 접근
+    auth_code = request.data.get('code')
+    
+    # 프론트엔드 주소 (기본값 설정)
+    redirect_uri = request.data.get('redirect_uri', "https://localhost:5173/callback/instagram")
 
-    # 액세스 토큰 요청
-    url = "https://api.instagram.com/oauth/access_token"
-    data = {
-        'client_id': 'YOUR_CLIENT_ID',  # Instagram 앱의 client_id
-        'client_secret': 'YOUR_CLIENT_SECRET',  # Instagram 앱의 client_secret
+    if not auth_code:
+        return Response({'error': 'Code가 없습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # ------------------------------------------------------------------
+    # [3단계] Access Token 요청
+    # 주소: https://api.instagram.com/oauth/access_token
+    # ------------------------------------------------------------------
+    token_url = "https://api.instagram.com/oauth/access_token"
+    
+    payload = {
+        'client_id': settings.INSTAGRAM_CLIENT_ID,
+        'client_secret': settings.INSTAGRAM_CLIENT_SECRET,
         'grant_type': 'authorization_code',
-        'redirect_uri': 'https://localhost:5500/callback/instagram',  # 리디렉션 URI
-        'code': code  # 인증 코드
+        'redirect_uri': redirect_uri,
+        'code': auth_code
     }
+    
+    try:
+        # POST 요청 (form-data 형식으로 전송됨)
+        token_res = requests.post(token_url, data=payload)
+        token_res.raise_for_status()  # 200 OK가 아니면 예외 발생
+    except requests.exceptions.RequestException as e:
+        # 인스타그램 에러 메시지 확인용
+        error_detail = token_res.json() if token_res.content else str(e)
+        return Response({
+            'error': '토큰 발급 실패', 
+            'details': error_detail
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    access_token = token_res.json().get('access_token')
 
-    response = requests.post(url, data=data)
-    if response.status_code == 200:
-        access_token_data = response.json()  # 액세스 토큰 데이터
-        access_token = access_token_data.get('access_token')
-        user_id = access_token_data.get('user_id')
+    # ------------------------------------------------------------------
+    # [4단계] 유저 정보 요청
+    # 주소: https://graph.instagram.com/v24.0/me
+    # ------------------------------------------------------------------
+    fields = "user_id,username,profile_picture_url,followers_count,follows_count,media_count"
+    user_info_url = f"https://graph.instagram.com/v24.0/me?fields={fields}&access_token={access_token}"
+    
+    try:
+        user_res = requests.get(user_info_url)
+        user_res.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        return Response({
+            'error': '유저 정보 조회 실패',
+            'details': str(e)
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    insta_data = user_res.json()
 
-        # 액세스 토큰으로 사용자 정보 요청
-        user_data_url = f"https://graph.instagram.com/{user_id}?fields=id,username&access_token={access_token}"
-        user_data_response = requests.get(user_data_url)
+    # ------------------------------------------------------------------
+    # [5단계] 정보 업데이트 로직
+    # ------------------------------------------------------------------
+    
+    # API 버전에 따라 id 필드명이 다를 수 있어 안전하게 가져오기
+    insta_id = insta_data.get('id') or insta_data.get('user_id')
+    username = insta_data.get('username')
+    profile_url = insta_data.get('profile_picture_url')
+    followers = insta_data.get('followers_count', 0)
+    following = insta_data.get('follows_count', 0)
+    media_count = insta_data.get('media_count', 0)
+    
+    sns_url = f"https://www.instagram.com/{username}/"
 
-        if user_data_response.status_code == 200:
-            user_data = user_data_response.json()  # 사용자 데이터
-            return JsonResponse(user_data)
-        else:
-            return JsonResponse({'error': 'Failed to get user data'}, status=400)
-    else:
-        return JsonResponse({'error': 'Failed to get access token'}, status=400)
+    # [수정 2] 로그인된 유저 본인 객체 (JWT Authentication 통해 식별됨)
+    user = request.user 
+
+    # [수정 3] 모델 필드 업데이트
+    user.instagram_id = insta_id  # DB 모델에 이 필드가 있어야 함
+    user.sns_handle = username
+    user.profile_image_url = profile_url
+    user.follower_count = followers
+    user.following_count = following
+    user.total_post_count = media_count
+    user.sns_url = sns_url
+
+    # [수정 4] 변경된 필드만 DB에 저장 (최적화)
+    user.save(update_fields=[
+        'instagram_id',
+        'sns_handle', 
+        'profile_image_url', 
+        'follower_count', 
+        'following_count', 
+        'total_post_count', 
+        'sns_url'
+    ])
+            
+    return Response({
+        "message": "인스타그램 정보가 성공적으로 연동되었습니다.",
+        "username": user.username,
+        "instagram_username": username,
+        "is_created": False 
+    }, status=status.HTTP_200_OK)
+
 
 
 # ============================================
@@ -189,7 +275,7 @@ def password_reset(request):
 
     # 프론트 ResetPasswordView 주소
     reset_link = (
-        f"http://localhost:5173/reset-password?"
+        f"https://localhost:5173/reset-password?"
         f"uid={uid}&token={token}"
     )
     return Response(

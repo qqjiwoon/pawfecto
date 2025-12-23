@@ -23,6 +23,22 @@
             <h2 class="creator-name">{{ creator.name }}</h2>
             <p class="creator-role">Creator</p>
             <!-- <p class="creator-desc">{{ creator.bio || '소개 문구가 없습니다.' }}</p> -->
+
+            <!-- Instagram 연동 버튼 -->
+            <button
+              v-if="!creator.instagram_id"
+              class="instagram-connect-btn"
+              @click="connectInstagram"
+            >
+              <img src="@/assets/instagram-icon.png" alt="instagram" />
+              Instagram 계정 연동
+            </button>
+            <p
+              v-else
+              class="instagram-connected"
+            >
+              Instagram 연동 완료
+            </p>
         </div>
 
     </div>
@@ -67,6 +83,34 @@ const props = defineProps({
 const router = useRouter()
 const goDashboard = () => {
   router.push(`/dashboard/creator/${props.creator.id}`)
+}
+
+
+// Instagram 연동 버튼 클릭 
+const connectInstagram = () => {
+  const clientId = import.meta.env.VITE_INSTAGRAM_CLIENT_ID  // Instagram 개발자 대시보드에서 제공된 클라이언트 ID
+  const redirectUri = 'https://localhost:5173/callback/instagram'  // 리디렉션 URI
+    const scope = [
+      'instagram_business_basic',
+      'instagram_business_manage_messages',
+      'instagram_business_manage_comments',
+      'instagram_business_content_publish',
+      'instagram_business_manage_insights'
+    ].join(',')
+    
+  const responseType = 'code'  // 인증 코드 받기
+
+  // Instagram OAuth 인증 URL 생성
+  const loginUrl =
+    `https://www.instagram.com/oauth/authorize` +
+    `?client_id=${clientId}` +
+    `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+    `&response_type=${responseType}` +
+    `&scope=${encodeURIComponent(scope)}` +
+    `&force_reauth=true` 
+
+  // Instagram 로그인 페이지로 리디렉션
+  window.location.href = loginUrl
 }
 
 </script>
@@ -165,5 +209,36 @@ const goDashboard = () => {
   height: 100%;   /* grid에서 stat-item 높이에 자동 맞춤 */
   background-color: #ccc;
 }
+
+.instagram-connect-btn {
+  margin-top: 12px;
+  width: 30%;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  cursor: pointer;
+  /* [추가] 부드러운 호버 효과를 위한 트랜지션 */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* [추가] 인스타그램 버튼 호버 효과 */
+.instagram-connect-btn:hover {
+  background-color: #f9f9f9; /* 아주 연한 회색 배경 */
+  border-color: #ccc; /* 약간 진한 테두리 */
+}
+
+
+.instagram-connect-btn img {
+  width: 20px;
+  height: 20px;
+}
+
 
 </style>

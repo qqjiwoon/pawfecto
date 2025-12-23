@@ -1,14 +1,14 @@
-GET http://localhost:8000/accounts/user
+GET https://localhost:8000/accounts/user
 
 ###
 
-GET http://localhost:8000/api/v1/campaign
+GET https://localhost:8000/api/v1/campaign
 ###
-GET http://localhost:8000/myapp/campaign
+GET https://localhost:8000/myapp/campaign
 
 ###
 
-POST http://localhost:8000/api/v1/campaign
+POST https://localhost:8000/api/v1/campaign
 Content-Type: application/json
 
 {
@@ -28,14 +28,14 @@ Content-Type: application/json
 }
 
 ### 크리에이터 캠페인 수락 테스트
-POST http://127.0.0.1:8000/api/v1/campaigns/1/accept/
+POST https://127.0.0.1:8000/api/v1/campaigns/1/accept/
 Content-Type: application/json
 
 {
   "creator_id": 1
 }
 ### 크리에이터 캠페인 거절
-POST http://127.0.0.1:8000/api/v1/campaigns/1/reject/
+POST https://127.0.0.1:8000/api/v1/campaigns/1/reject/
 Content-Type: application/json
 
 {
@@ -44,8 +44,8 @@ Content-Type: application/json
 
 
 ### 크리에이터 오퍼 조회
-GET http://127.0.0.1:8000/api/v1/creators/1/offers/
+GET https://127.0.0.1:8000/api/v1/creators/1/offers/
 
 
 ### 브랜드 캠페인 목록
-GET http://127.0.0.1:8000/api/v1/brands/6/campaigns/
+GET https://127.0.0.1:8000/api/v1/brands/6/campaigns/

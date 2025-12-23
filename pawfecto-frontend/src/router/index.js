@@ -31,6 +31,11 @@ const router = createRouter({
       component: LoginView,
     },
     {
+      path: '/callback/instagram',
+      name: 'instagram-callback',
+      component: () => import('@/views/auth/InstagramCallbackView.vue')
+    },
+    {
       path: '/signup/brand',
       name: 'signup-brand',
       component: SignupBrandView,

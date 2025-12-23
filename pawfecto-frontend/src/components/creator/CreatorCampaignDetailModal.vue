@@ -105,7 +105,7 @@ const props = defineProps({
 const emit = defineEmits(['close'])
 
 /* 백엔드 베이스 URL */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000"
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://127.0.0.1:8000"
 
 /* 이미지 URL 처리 로직 (브랜드와 동일) */
 const campaignImageUrl = computed(() => {

@@ -30,7 +30,7 @@
 
         <button class="pf-login-submit" @click.prevent="handleLogin">로그인</button>
 
-        <button class="pf-login-instagram" @click="loginWithInstagram">
+        <button type="button" class="pf-login-instagram" @click="loginWithInstagram">
           <img src="@/assets/instagram-icon.png" alt="instagram" />
           Log in with Instagram
         </button>
@@ -64,22 +64,36 @@ const router = useRouter()
 const username = ref('')
 const password = ref('')
 
-const loginWithInstagram = () => {
-  const clientId = 'YOUR_CLIENT_ID'  // Instagram 개발자 대시보드에서 제공된 클라이언트 ID
-  const redirectUri = 'https://localhost:5500/callback/instagram'  // 리디렉션 URI
-  const scope = 'basic'  // Instagram API에서 요청할 권한 범위
-  const responseType = 'code'  // 인증 코드 받기
 
-  // Instagram OAuth 인증 URL 생성
-  const loginUrl = `https://api.instagram.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`
-  
-  // Instagram 로그인 페이지로 리디렉션
-  window.location.href = loginUrl
-}
+// 인스타그램 로그인 기능 구현
+// const loginWithInstagram = () => {
+//   const clientId = import.meta.env.VITE_INSTAGRAM_CLIENT_ID  // Instagram 개발자 대시보드에서 제공된 클라이언트 ID
+//   const redirectUri = 'https://localhost:5173/callback/instagram'  // 리디렉션 URI
+//     const scope = [
+//       'instagram_business_basic',
+//       'instagram_business_manage_messages',
+//       'instagram_business_manage_comments',
+//       'instagram_business_content_publish',
+//       'instagram_business_manage_insights'
+//     ].join(',')
+//   const responseType = 'code'  // 인증 코드 받기
+
+//   // Instagram OAuth 인증 URL 생성
+//   const loginUrl =
+//     `https://api.instagram.com/oauth/authorize` +
+//     `?client_id=${clientId}` +
+//     `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+//     `&response_type=${responseType}` +
+//     `&scope=${encodeURIComponent(scope)}` +
+//     `&force_reauth=true` 
+//   // Instagram 로그인 페이지로 리디렉션
+//   window.location.href = loginUrl
+// }
+
 const handleLogin = async () => {
   try {
     const res = await axios.post(
-      "http://127.0.0.1:8000/accounts/login/",
+      "https://127.0.0.1:8000/accounts/login/",
       {
         username: username.value,
         password: password.value,

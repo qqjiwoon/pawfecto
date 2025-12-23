@@ -99,7 +99,7 @@
 
       <div class="form-group">
         <label>프로필 이미지</label>
-        <input type="file" class="file-input-box" @change="handleFileUpload" />
+        <input type="file" class="input-field file-input-box" @change="handleFileUpload" accept="image/*" />
       </div>
 
       <button type="submit" class="submit-btn">가입하기</button>
@@ -156,12 +156,19 @@ const handleSignup = async () => {
   }
 
   const formData = new FormData()
+
+  // 기본 정보들
   formData.append('username', form.value.signupId)
   formData.append('password', form.value.password)
   formData.append('email', form.value.email)
   formData.append('name', form.value.name)
   formData.append('phone_number', form.value.phoneNumber)
   formData.append('account_type', 'creator')
+  
+  // 추가 정보들
+  formData.append('address', form.value.address)
+  formData.append('sns_handle', form.value.snsHandle)
+  formData.append('sns_url', form.value.snsUrl)
 
   if (form.value.petType) {
     formData.append('pet_type', form.value.petType)
@@ -171,11 +178,18 @@ const handleSignup = async () => {
     formData.append('profile_image', form.value.profileImage)
   }
 
-  formData.append()
+  // ★ [핵심 수정] 태그 이름을 ID로 변환해서 전송
+  // Django FormData에서 리스트를 보낼 때는 같은 키('style_tags')로 여러 번 append 해야 합니다.
+  selectedTags.value.forEach(tagName => {
+    const tagId = tagMap[tagName] // 이름을 ID로 변환 (예: '활발한' -> 1)
+    if (tagId) {
+      formData.append('style_tags', tagId) 
+    }
+  })
 
   try {
     await axios.post(
-      "http://127.0.0.1:8000/accounts/signup/",
+      "https://127.0.0.1:8000/accounts/signup/",
       formData,
       {
         headers: {
@@ -191,7 +205,9 @@ const handleSignup = async () => {
     if (err.response?.data) {
       const firstErrorKey = Object.keys(err.response.data)[0]
       const firstErrorValue = err.response.data[firstErrorKey]
-      alert(`${firstErrorKey}: ${firstErrorValue}`)
+      // 배열 형태의 에러 메시지 처리
+      const errorMessage = Array.isArray(firstErrorValue) ? firstErrorValue[0] : firstErrorValue
+      alert(`${firstErrorKey}: ${errorMessage}`)
     } else {
       alert("회원가입 중 오류가 발생했습니다.")
     }
@@ -209,7 +225,7 @@ watch(
 </script>
 
 <style scoped>
-/* Styling matching SignupBrand */
+/* Hero Section (Brand와 동일) */
 .pf-signup-hero {
   width: 100%;
   height: 45vh;
@@ -250,7 +266,7 @@ watch(
   gap: 6px;
 }
 
-/* Container & Typography */
+/* Container & Typography (Brand와 동일) */
 .signup-container {
   max-width: 480px;
   margin: 60px auto;
@@ -262,15 +278,18 @@ watch(
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 12px;
+  text-align: center;
 }
 
 .subtitle {
   font-size: 14px;
   color: #666;
   line-height: 1.6;
-  margin-bottom: 35px;
+  margin-bottom: 40px;
+  text-align: center;
 }
 
+/* Account Type Selector */
 .account-type {
   display: flex;
   justify-content: center;
@@ -284,32 +303,38 @@ watch(
   margin-right: 6px;
 }
 
+/* Form Groups & Inputs (Brand 스타일 적용) */
 .form-group {
+  margin-bottom: 25px;
   text-align: left;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-size: 14px;
   font-weight: 500;
+  color: #333;
 }
 
-.form-group input,
-.form-group select {
+.input-field {
   width: 100%;
-  padding: 12px;
-  border-radius: 8px;
+  height: 46px;
+  padding: 0 12px;
   border: 1px solid #ddd;
+  border-radius: 8px;
   font-size: 14px;
+  box-sizing: border-box;
+  background: #fff;
+  transition: border-color 0.2s;
 }
 
-.form-group input:focus,
-.form-group select:focus {
+.input-field:focus {
   outline: none;
-  border-color: #000;
+  border-color: #3A3A3A;
 }
 
+/* Tag Container (크리에이터 전용, 브랜드 스타일에 맞춰 다듬음) */
 .tag-container {
   display: flex;
   flex-wrap: wrap;
@@ -318,32 +343,55 @@ watch(
 
 .tag {
   padding: 8px 16px;
-  border-radius: 10px;
+  border-radius: 20px; /* 버튼처럼 둥글게 변경 */
   background: #f7f7f7;
   border: 1px solid #ddd;
   cursor: pointer;
   font-size: 14px;
+  transition: all 0.2s;
 }
 
 .tag.active {
-  background: #7E6B5A;
+  background: #3A3A3A; /* 브랜드 컬러와 통일 */
   color: white;
-  border-color: #7E6B5A;
+  border-color: #3A3A3A;
 }
 
-.submit-btn {
-  width: 100%;
-  padding: 14px;
-  background: #7b7b7b;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
+/* File Input Customization */
+.file-input-box {
+  display: flex;
+  align-items: center;
+  line-height: 44px;
   cursor: pointer;
-  transition: 0.2s;
+}
+
+.file-input-box::-webkit-file-upload-button {
+  height: 28px;
+  margin-right: 12px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Submit Button (Brand 스타일 적용) */
+.submit-btn {
+  display: block;
+  width: 65%;
+  padding: 16px;
+  background: #3A3A3A;
+  color: white;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin: 60px auto;
+  transition: background 0.2s;
 }
 
 .submit-btn:hover {
-  background: #3A3A3A;
+  background: #252525;
 }
 </style>

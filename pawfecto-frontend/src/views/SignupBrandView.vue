@@ -133,7 +133,7 @@ const handleSignup = async () => {
 
   try {
     await axios.post(
-      "http://127.0.0.1:8000/accounts/signup/",
+      "https://127.0.0.1:8000/accounts/signup/",
       formData, // 4. JSON 대신 formData 전송
       {
         headers: {
