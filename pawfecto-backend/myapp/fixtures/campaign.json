@@ -4,9 +4,9 @@
     "pk": 1,
     "fields": {
       "brand": 1,
-      "product_name": "포프레시 제품 1",
+      "product_name": "PawFresh Premium Dog Treats",
       "product_image_url": "https://images.dog.ceo/breeds/pitbull/dog-5437227_640.jpg",
-      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "product_description": "This high-quality dog treat is made from the finest ingredients, helping to promote overall health. Packed with essential nutrients, it is perfect for your pet's daily health regimen. A natural way to show love to your furry companion.",
       "target_pet_type": "dog",
       "min_follower_count": 14883,
       "style_tags": [
@@ -25,9 +25,9 @@
     "pk": 2,
     "fields": {
       "brand": 1,
-      "product_name": "포프레시 제품 2",
+      "product_name": "PawFresh Premium Wellness Supplement",
       "product_image_url": "https://images.dog.ceo/breeds/pitbull/dog-5437227_640.jpg",
-      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "product_description": "This wellness supplement is designed to support the overall health of your dog. With a mix of natural ingredients, it enhances energy, immunity, and digestion. Give your pet the gift of a healthy, active life.",
       "target_pet_type": "dog",
       "min_follower_count": 60283,
       "style_tags": [
@@ -46,9 +46,9 @@
     "pk": 3,
     "fields": {
       "brand": 1,
-      "product_name": "포프레시 제품 3",
+      "product_name": "PawFresh Sensitive Skin Formula",
       "product_image_url": "https://images.dog.ceo/breeds/dachshund/dachshund-in-jacket.jpg",
-      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "product_description": "This formula is specifically crafted for dogs with sensitive skin. Its gentle ingredients help soothe irritation and improve the overall skin condition. Perfect for maintaining healthy fur and a happy pet.",
       "target_pet_type": "dog",
       "min_follower_count": 50000,
       "style_tags": [
@@ -67,9 +67,9 @@
     "pk": 4,
     "fields": {
       "brand": 1,
-      "product_name": "포프레시 제품 4",
+      "product_name": "PawFresh Dental Care Chews",
       "product_image_url": "https://images.dog.ceo/breeds/rajapalayam-indian/Rajapalayam-dog.jpg",
-      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "product_description": "These dental chews help maintain your dog's oral hygiene while being a delicious treat. The special formula ensures fresh breath and healthy teeth. Perfect for daily dental care.",
       "target_pet_type": "dog",
       "min_follower_count": 88781,
       "style_tags": [
@@ -89,9 +89,9 @@
     "pk": 5,
     "fields": {
       "brand": 1,
-      "product_name": "포프레시 제품 5",
+      "product_name": "PawFresh Omega-3 Fish Oil",
       "product_image_url": "https://images.dog.ceo/breeds/rough-collie/Collie-Rough.jpg",
-      "product_description": "이 제품은 반려동물의 건강을 위한 최고의 선택입니다. 고품질의 원료를 사용하여 제작되었으며, 반려동물의 건강을 지키는 데 도움을 줍니다. 다양한 건강 보조 성분이 포함되어 있어 매일의 건강 관리에 최적화된 제품입니다.",
+      "product_description": "Packed with Omega-3, this fish oil supplement supports your dog's heart, joints, and brain health. It helps reduce inflammation and promotes a shiny, healthy coat. A must-have for overall pet well-being.",
       "target_pet_type": "dog",
       "min_follower_count": 54621,
       "style_tags": [

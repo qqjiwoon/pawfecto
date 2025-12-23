@@ -90,9 +90,9 @@ def run_deliverable_ai_verification(deliverable_id: int):
 
         avg_score = sum(scores) / len(scores)
 
-        if avg_score >= 0.65:
+        if avg_score >= 0.8:
             status = "passed"
-        elif avg_score >= 0.4:
+        elif avg_score >= 0.6:
             status = "review"
         else:
             status = "failed"

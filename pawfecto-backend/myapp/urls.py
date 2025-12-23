@@ -146,6 +146,12 @@ urlpatterns = [
         views.submit_deliverable,
         name='submit_deliverable',
     ),
+    # deliverable 저장하기
+    path(
+        'deliverables/<int:deliverable_id>/save/', 
+        views.save_deliverable, 
+        name='save_deliverable'
+    ),
     # Deliverable AI 검증 요청
     path(
         'deliverables/<int:deliverable_id>/verify/',

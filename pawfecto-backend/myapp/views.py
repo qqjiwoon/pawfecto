@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
-from django.utils import timezone
+from django.utils import timezone, auto_match_creators
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from ai.validators import validate_ai_result, AIResultValidationError
@@ -688,8 +688,8 @@ def submit_deliverable(request, deliverable_id):
 def auto_match_creators(campaign):
     """
     캠페인 조건에 맞는 모든 크리에이터에 대해
-    CampaignAcceptance를 자동 생성한다.
-    (이미 해당 캠페인에 acceptance가 있는 크리에이터는 제외)
+    CampaignAcceptance를 자동 생성하고,
+    추천된 크리에이터 목록을 반환한다.
     """
 
     # --------------------------------------------------------
@@ -746,8 +746,35 @@ def auto_match_creators(campaign):
             )
         )
 
+    # Bulk create CampaignAcceptances
     CampaignAcceptance.objects.bulk_create(acceptance_list)
 
+    # --------------------------------------------------------
+    # 6. 추천된 크리에이터 목록 반환
+    # --------------------------------------------------------
+    recommended_creators = creators.values(
+        'id', 'name', 'sns_handle', 'profile_image_url', 'pet_type', 'follower_count', 'style_tags'
+    )
+    
+    return recommended_creators
+
+# --------------------------------------------------------
+# auto_match_creators 호출
+# --------------------------------------------------------
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def recommend_creators(request, brand_id, campaign_id):
+    try:
+        # 캠페인 객체 가져오기
+        campaign = Campaign.objects.get(id=campaign_id, brand_id=brand_id)
+        
+        # 캠페인 조건에 맞는 크리에이터 추천
+        recommended_creators = auto_match_creators(campaign)
+        
+        return JsonResponse({"recommended_creators": recommended_creators}, status=200)
+
+    except Campaign.DoesNotExist:
+        return JsonResponse({"error": "캠페인이 존재하지 않습니다."}, status=404)
 
 
 # ------------------------------------------------------------
@@ -796,41 +823,73 @@ def cleanup_invalid_acceptances(campaign):
 
 
 
+# ####################################
+# Deliverable 저장 및 AI 검증
+# ####################################
 
-# ####################################
-# AI 검증
-# ####################################
 # ------------------------------------------------------------
-# 12) Deliverable AI 검증 요청
+# [추가] 12) Deliverable 임시 저장 (AI 검증 전 단계)
+# ------------------------------------------------------------
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser]) # 이미지 업로드를 위해 필수
+def save_deliverable(request, deliverable_id):
+    deliverable = get_object_or_404(Deliverable, deliverable_id=deliverable_id)
+
+    # 본인 확인
+    if deliverable.campaign_acceptance.creator != request.user:
+        return Response({"error": "본인의 게시물만 저장할 수 있습니다."}, status=403)
+
+    # 데이터 업데이트 (내용, 이미지)
+    content = request.data.get('content')
+    image = request.FILES.get('image')
+
+    if content is not None:
+        deliverable.content = content
+    
+    if image is not None:
+        deliverable.image = image
+
+    # 내용이 수정되면 AI 상태를 다시 'pending'으로 초기화하는 것이 좋습니다.
+    deliverable.ai_validation_status = 'pending'
+    
+    deliverable.save()
+
+    return Response({
+        "message": "저장되었습니다.",
+        "deliverable_id": deliverable.deliverable_id,
+        "content": deliverable.content,
+        "image": deliverable.image.url if deliverable.image else None,
+        "ai_validation_status": deliverable.ai_validation_status
+    }, status=200)
+
+
+# ------------------------------------------------------------
+# 13) Deliverable AI 검증 요청 (수정됨)
 # ------------------------------------------------------------
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def verify_deliverable(request, deliverable_id):
-    deliverable = get_object_or_404(
-        Deliverable,
-        deliverable_id=deliverable_id
-    )
+    deliverable = get_object_or_404(Deliverable, deliverable_id=deliverable_id)
 
+    # 권한 체크
     if request.user.account_type != "creator":
-        return Response(
-            {"error": "크리에이터만 검증을 요청할 수 있습니다."},
-            status=403
-        )
+        return Response({"error": "크리에이터만 검증을 요청할 수 있습니다."}, status=403)
 
     if deliverable.campaign_acceptance.creator != request.user:
-        return Response(
-            {"error": "본인 Deliverable만 검증할 수 있습니다."},
-            status=403
-        )
+        return Response({"error": "본인 Deliverable만 검증할 수 있습니다."}, status=403)
 
     try:
-        ai_result = run_deliverable_ai_verification(deliverable.deliverable_id)
+        # [수정] 서비스 함수에 ID만 전달 (서비스 내부에서 DB 조회 및 저장 수행)
+        # run_deliverable_ai_verification 함수는 결과를 반환하도록 작성되어 있다고 가정합니다.
+        run_deliverable_ai_verification(deliverable_id)
 
+        # [수정] 서비스가 DB를 업데이트했으므로, 뷰에서는 최신 데이터를 다시 불러오기만 하면 됩니다.
         deliverable.refresh_from_db()
 
-        # 무조건 200으로 내려줌
         return Response(
             {
+                "message": "AI 검증이 완료되었습니다.",
                 "ai_validation_status": deliverable.ai_validation_status,
                 "ai_result": deliverable.ai_result_raw,
             },
@@ -838,8 +897,8 @@ def verify_deliverable(request, deliverable_id):
         )
 
     except Exception as e:
-        # 진짜 서버 에러만 400
+        # 에러 발생 시 로깅 등 추가 처리가 필요할 수 있습니다.
         return Response(
             {"error": str(e)},
-            status=400
+            status=400 # 또는 500
         )
