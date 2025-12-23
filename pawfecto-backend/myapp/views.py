@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
-from django.utils import timezone, auto_match_creators
+from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from ai.validators import validate_ai_result, AIResultValidationError

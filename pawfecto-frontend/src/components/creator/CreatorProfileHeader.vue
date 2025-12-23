@@ -1,11 +1,9 @@
 <template>
     <div class="creator-header">
 
-        <!-- Hero 영역 -->
         <section class="creator-hero">
           <div class="creator-hero-overlay"></div>
 
-          <!-- 프로필 이미지 -->
           <div class="profile-image-wrap">
             <img
               class="profile-img"
@@ -18,33 +16,28 @@
         </section>
 
 
-        <!-- 텍스트 -->
         <div class="text-wrap">
             <h2 class="creator-name">{{ creator.name }}</h2>
             <p class="creator-role">Creator</p>
-            <!-- <p class="creator-desc">{{ creator.bio || '소개 문구가 없습니다.' }}</p> -->
-
-            <!-- Instagram 연동 버튼 -->
             <button
               v-if="!creator.instagram_id"
               class="instagram-connect-btn"
               @click="connectInstagram"
             >
               <img src="@/assets/instagram-icon.png" alt="instagram" />
-              Instagram 계정 연동
+              <span>Instagram 계정 연동</span>
             </button>
             <p
               v-else
               class="instagram-connected"
             >
-              Instagram 연동 완료
+              <i class="check-icon">✓</i> Instagram 연동 완료
             </p>
         </div>
 
     </div>
 
 
-    <!-- 인스타그램 통계 -->
     <div class="creator-stats">
       <div class="stat-item">
         <p class="number">{{ Number(creator.total_post_count).toLocaleString() }}</p>
@@ -106,8 +99,8 @@ const connectInstagram = () => {
     `?client_id=${clientId}` +
     `&redirect_uri=${encodeURIComponent(redirectUri)}` +
     `&response_type=${responseType}` +
-    `&scope=${encodeURIComponent(scope)}` +
-    `&force_reauth=true` 
+    `&scope=${encodeURIComponent(scope)}`
+    // `&force_reauth=true` 
 
   // Instagram 로그인 페이지로 리디렉션
   window.location.href = loginUrl
@@ -119,11 +112,10 @@ const connectInstagram = () => {
 .creator-header {
   position: relative;
   text-align: center;
-  margin-bottom: 60px; /* 이미지가 걸쳐 보이도록 여백 */
+  margin-bottom: 60px;
 }
 
 /* ----------------- Hero 영역 ----------------- */
-/* Hero 영역 */
 .creator-hero {
   position: relative;
   width: 100%;
@@ -136,17 +128,15 @@ const connectInstagram = () => {
 .creator-hero-overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(255, 255, 255, 0.25); /* 검은색에서 흰색으로 변경 */
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
-/* Hero 하단에 정확히 걸쳐지는 프로필 이미지 */
 .profile-image-wrap {
   position: absolute;
   bottom: -70px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-
   width: clamp(90px, 18vw, 160px);
   height: clamp(90px, 18vw, 160px);
   border-radius: 50%;
@@ -162,24 +152,74 @@ const connectInstagram = () => {
 }
 
 .text-wrap {
-  margin-top: 80px; /* 140px에서 감소 - 프로필 이미지 크기에 맞춰 조정 */
+  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .creator-name {
   font-size: 22px;
   font-weight: 700;
+  margin-bottom: 4px;
 }
 
+.creator-role {
+  color: #888;
+  margin-bottom: 16px;
+}
 
-/* 인스타그램 통계 영역 */
+/* ----------------- 인스타그램 버튼 디자인 수정 ----------------- */
+.instagram-connect-btn {
+  margin-top: 16px;
+  width: fit-content;
+  min-width: 180px;
+  background-color: #ffffff;
+  border: 1px solid #dbdbdb; /* 인스타그램 기본 테두리 컬러 */
+  padding: 10px 20px;
+  border-radius: 4px; /* 살짝 각진 형태가 더 심플함 */
+  font-size: 14px;
+  font-weight: 600;
+  color: #262626;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.instagram-connect-btn:hover {
+  background-color: #fafafa;
+  border-color: #aeaeae;
+}
+
+.instagram-connect-btn:active {
+  transform: translateY(0);
+}
+
+.instagram-connect-btn img {
+  width: 18px;
+  height: 18px;
+  opacity: 0.8; /* 아이콘이 너무 튀지 않게 조절 */
+}
+
+/* 연동 완료 텍스트 스타일 */
+.instagram-connected {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #8e8e8e; /* 차분한 그레이 */
+  font-weight: 500;
+}
+
+/* ----------------- 통계 영역 ----------------- */
 .creator-stats {
   display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1fr; /* stat-div-stat-div-stat */
+  grid-template-columns: 1fr auto 1fr auto 1fr;
   align-items: center;
-
-  max-width: 500px;  /* 화면 크기와 상관없이 고정 폭 */
-  margin: 28px auto 0 auto; /* 가운데 정렬 */
-  column-gap: 40px; /* stat-item 간 일정 간격 유지 */
+  max-width: 500px;
+  margin: 28px auto 0 auto;
+  column-gap: 40px;
 }
 
 .stat-item {
@@ -202,43 +242,9 @@ const connectInstagram = () => {
   margin-bottom: 10px;
 }
 
-
-/* 세로 구분선 */
 .divider {
   width: 1px;
-  height: 100%;   /* grid에서 stat-item 높이에 자동 맞춤 */
+  height: 24px;
   background-color: #ccc;
 }
-
-.instagram-connect-btn {
-  margin-top: 12px;
-  width: 30%;
-  box-sizing: border-box;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  padding: 14px;
-  border-radius: 8px;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: center;
-  cursor: pointer;
-  /* [추가] 부드러운 호버 효과를 위한 트랜지션 */
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-/* [추가] 인스타그램 버튼 호버 효과 */
-.instagram-connect-btn:hover {
-  background-color: #f9f9f9; /* 아주 연한 회색 배경 */
-  border-color: #ccc; /* 약간 진한 테두리 */
-}
-
-
-.instagram-connect-btn img {
-  width: 20px;
-  height: 20px;
-}
-
-
 </style>

@@ -339,15 +339,54 @@ const closeProfile = () => {
 
 /* 아래는 기존 스타일 유지 */
 .creator-table { width: 100%; border-collapse: collapse; }
-.creator-table th { padding: 16px 8px; font-size: 16px; font-weight: 600; border-bottom: 2px solid #eee; text-align: center; color: #333; }
-.creator-table td { padding: 18px 8px; font-size: 15px; border-bottom: 1px solid #eee; text-align: center; vertical-align: middle; color: #444; }
-.creator-cell { display: flex; align-items: center; gap: 12px; text-align: left; }
+.creator-table th { 
+  padding: 16px 8px; 
+  font-size: 16px; 
+  font-weight: 600; 
+  border-bottom: 2px solid #eee; 
+  text-align: center; 
+  color: #333; 
+}
+.creator-table td {
+  padding: 16px 8px;
+  vertical-align: middle !important;
+  text-align: center; /* [추가] 모든 셀의 텍스트를 기본적으로 가운데로 */
+  border-bottom: 1px solid #eee;
+  color: #444;
+}
+.creator-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* 내부 아이템들을 왼쪽부터 배치 */
+  gap: 12px;
+  text-align: left; /* 텍스트 왼쪽 정렬 */
+  padding-left: 20px !important; /* 왼쪽 벽에서 살짝 띄워 정돈된 느낌 부여 */
+  min-height: 60px;
+}
 .creator-cell:hover .name { color: #6495ff; }
 .creator-cell:hover .handle { color: #B8A58D; }
 .profile-img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-.info .name { font-weight: 600; color: #333; font-size: 15px; margin: 0; }
-.info .handle { font-size: 13px; color: #888; margin: 0; }
-.tag-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left; /* 텍스트 정렬 강제 */
+}
+.info .name {
+  margin: 0;
+  line-height: 1.2;
+  font-weight: 600;
+}
+.info .handle {
+  margin: 2px 0 0 0;
+  line-height: 1.2;
+}
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* 태그들이 가운데로 모이도록 설정 */
+  gap: 4px;
+}
 .tag { background: #f1f5ff; color: #6495ff; padding: 4px 10px; border-radius: 12px; font-size: 12px; }
 .status-btn, .status-option { display: inline-block; width: 100%; max-width: 90px; padding: 6px 0; border-radius: 8px; font-size: 13px; border: none; text-align: center; cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
 .is-locked { cursor: default; opacity: 0.9; }
