@@ -1,87 +1,46 @@
-import { ref } from "vue"
-export const deliverables = ref([
-  {
-    id: 1,
-    campaign_acceptance_id: 1,
-    posted_at: "2025-01-12 14:22:00",
-    post_url: "https://www.instagram.com/p/C3A1dog001/",
-    deliverable_status: "completed"
+// stores/deliverable.js
+import axios from 'axios'
+
+export const deliverableStore = {
+  state: {
+    deliverable: null,
+    loading: false,
+    error: null
   },
-  {
-    id: 2,
-    campaign_acceptance_id: 2,
-    posted_at: "2025-01-18 09:15:00",
-    post_url: "https://www.instagram.com/p/C3B2petlove02/",
-    deliverable_status: "completed"
-  },
-  {
-    id: 3,
-    campaign_acceptance_id: 3,
-    posted_at: "2025-02-01 19:40:00",
-    post_url: "https://www.instagram.com/p/C3C3toyfun03/",
-    deliverable_status: "completed"
-  },
-  {
-    id: 4,
-    campaign_acceptance_id: 4,
-    posted_at: null,
-    post_url: null,
-    deliverable_status: "incomplete"
-  },
-  {
-    id: 5,
-    campaign_acceptance_id: 5,
-    posted_at: "2025-01-27 11:12:00",
-    post_url: "https://www.instagram.com/p/C2Z9catmeal05/",
-    deliverable_status: "completed"
-  },
-  {
-    id: 6,
-    campaign_acceptance_id: 6,
-    posted_at: "2025-02-05 16:03:00",
-    post_url: "https://www.instagram.com/p/C3E3healthy06/",
-    deliverable_status: "completed"
-  },
-  {
-    id: 7,
-    campaign_acceptance_id: 7,
-    posted_at: null,
-    post_url: null,
-    deliverable_status: "incomplete"
-  },
-  {
-    id: 8,
-    campaign_acceptance_id: 8,
-    posted_at: "2025-02-10 08:50:00",
-    post_url: "https://www.instagram.com/p/C3F4walkgear08/",
-    deliverable_status: "completed"
-  },
-  {
-    id: 9,
-    campaign_acceptance_id: 9,
-    posted_at: "2025-02-14 20:18:00",
-    post_url: "https://www.instagram.com/p/C3G5supple09/",
-    deliverable_status: "completed"
-  },
-  {
-    id: 10,
-    campaign_acceptance_id: 10,
-    posted_at: null,
-    post_url: null,
-    deliverable_status: "incomplete"
-  },
-  {
-    id: 11,
-    campaign_acceptance_id: 11,
-    posted_at: "2025-02-20 12:40:00",
-    post_url: "https://www.instagram.com/p/C3H6treat011/",
-    deliverable_status: "completed"
-  },
-  {
-    id: 12,
-    campaign_acceptance_id: 12,
-    posted_at: null,
-    post_url: null,
-    deliverable_status: "incomplete"
+  
+  // 게시글 작성 후 AI 검증이 완료되면, 해당 상태를 업데이트
+  actions: {
+    async createDeliverable(data) {
+      this.loading = true
+      this.error = null
+
+      try {
+        const response = await axios.post('/api/v1/deliverables/', data)
+        this.deliverable = response.data
+        this.loading = false
+        return response.data
+      } catch (err) {
+        this.error = err.response?.data?.detail || 'AI 검증 요청 실패'
+        this.loading = false
+      }
+    },
+
+   // AI 검증을 위한 요청
+    async validateWithAI(deliverableId) {
+      this.loading = true
+      this.error = null
+
+      try {
+        const response = await axios.post(`/api/v1/deliverables/${deliverableId}/ai-validation/`)
+        // AI 검증 상태를 'passed'로 설정
+        this.deliverable = response.data
+        this.deliverable.validation_status = 'passed' 
+        this.loading = false
+        return response.data
+      } catch (err) {
+        this.error = err.response?.data?.detail || 'AI 검증 실패'
+        this.loading = false
+      }
+    }
   }
-])
+}

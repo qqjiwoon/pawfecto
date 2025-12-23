@@ -59,18 +59,20 @@
           </td>
 
           <td>{{ offer.campaign.requested_at.slice(0, 10) }}</td>
-
           <td>{{ offer.campaign.application_deadline_at }}</td>
 
           <td class="status-cell">
             <div class="status-wrapper">
               <button
-                class="status-btn"
-                :class="[statusClass(offer.acceptance_status), {
-                  'is-locked': offer.acceptance_status === 'accepted'
-                }]"
+                class="status-tag"
+                :class="[
+                  statusClass(offer.acceptance_status), 
+                  { 'is-interactive': offer.acceptance_status !== 'accepted' }
+                ]"
                 @click="toggleStatusMenu(offer)"
+                :disabled="offer.acceptance_status === 'accepted'"
               >
+                <span class="status-dot">●</span>
                 {{ getCreatorStatusKor(offer.acceptance_status) }}
               </button>
 
@@ -81,7 +83,7 @@
                 <template v-if="offer.acceptance_status === 'pending'">
                   <li>
                     <button
-                      class="status-option Approved"
+                      class="menu-option option-accept"
                       @click="changeStatus(offer, 'accepted')"
                     >
                       수락
@@ -89,7 +91,7 @@
                   </li>
                   <li>
                     <button
-                      class="status-option Rejected"
+                      class="menu-option option-reject"
                       @click="changeStatus(offer, 'rejected')"
                     >
                       거절
@@ -100,7 +102,7 @@
                 <template v-else-if="offer.acceptance_status === 'rejected'">
                   <li>
                     <button
-                      class="status-option Approved"
+                      class="menu-option option-accept"
                       @click="changeStatus(offer, 'accepted')"
                     >
                       다시 수락
@@ -156,11 +158,9 @@ const props = defineProps({
 const offers = ref([])
 const safeOffers = computed(() => offers.value ?? [])
 
-// [수정] 스타일 태그 변환 함수 (Creator Recommendations 코드와 동일한 로직)
+// 스타일 태그 변환 함수
 function toKoreanTag(t) {
-  // 문자열이면 그대로, 객체면 name_ko > label > name 순으로 확인
   const raw = typeof t === "string" ? t : (t?.name_ko || t?.label || t?.name || "")
-  // "English(Korean)" 형태인 경우 괄호 안의 내용 추출
   const m = raw.match(/\(([^)]+)\)/)
   return m ? m[1] : raw
 }
@@ -168,9 +168,7 @@ function toKoreanTag(t) {
 onMounted(async () => {
   window.addEventListener('click', handleOutsideClick)
   try {
-    const res = await api.get(
-      `/api/v1/creator/${props.creatorId}/offers/`
-    )
+    const res = await api.get(`/api/v1/creator/${props.creatorId}/offers/`)
     offers.value = res.data
   } catch (err) {
     console.error(err)
@@ -191,26 +189,25 @@ const itemsPerPage = 6
 const isDetailOpen = ref(false)
 const selectedCampaign = ref(null)
 
-// 토스트 상태
+/* 토스트 */
 const showToast = ref(false)
 const toastMessage = ref('')
 
 const openToast = (message) => {
   toastMessage.value = message
   showToast.value = true
-  setTimeout(() => {
-    showToast.value = false
-  }, 2000)
+  setTimeout(() => { showToast.value = false }, 2000)
 }
 
-// 상태 변경 함수
+// [수정] 상태별 클래스 매핑 (CSS와 일치시킴)
 const statusClass = (status) => {
   return {
-    pending: 'Pending',
-    accepted: 'Approved',
-    rejected: 'Rejected',
+    pending: 'in-progress',   // 주황 (대기)
+    accepted: 'completed',    // 초록 (수락)
+    rejected: 'incomplete',   // 빨강 (거절)
   }[status]
 }
+
 const openStatusId = ref(null)
 
 const toggleStatusMenu = (offer) => {
@@ -239,17 +236,13 @@ const changeStatus = async (offer, nextStatus) => {
   const prevStatus = offer.acceptance_status
 
   if (nextStatus === 'accepted' && prevStatus !== 'accepted') {
-    const confirmed = window.confirm(
-      '한 번 수락하면 거절할 수 없습니다.\n수락하시겠습니까?'
-    )
+    const confirmed = window.confirm('한 번 수락하면 거절할 수 없습니다.\n수락하시겠습니까?')
     if (!confirmed) return
   }
 
   try {
     const action = nextStatus === 'accepted' ? 'accept' : 'reject'
-    await api.post(
-      `/api/v1/creator/offers/${offer.campaign_acceptance_id}/${action}/`
-    )
+    await api.post(`/api/v1/creator/offers/${offer.campaign_acceptance_id}/${action}/`)
     offer.acceptance_status = nextStatus
     openToast(nextStatus === 'accepted' ? '캠페인을 수락했습니다.' : '캠페인을 거절했습니다.')
     openStatusId.value = null
@@ -271,26 +264,19 @@ const filteredOffers = computed(() => {
   )
 })
 
-/* 페이지네이션 계산 */
-const totalPages = computed(() =>
-  Math.ceil(filteredOffers.value.length / itemsPerPage)
-)
-
+/* 페이지네이션 */
+const totalPages = computed(() => Math.ceil(filteredOffers.value.length / itemsPerPage))
 const paginatedOffers = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage
   return filteredOffers.value.slice(start, start + itemsPerPage)
 })
-
-const goToPage = (page) => {
-  currentPage.value = page
-}
+const goToPage = (page) => { currentPage.value = page }
 
 /* 모달 제어 */
 const openDetail = (offer) => {
   selectedCampaign.value = offer
   isDetailOpen.value = true
 }
-
 const closeDetail = () => {
   isDetailOpen.value = false
   selectedCampaign.value = null
@@ -313,7 +299,7 @@ const closeDetail = () => {
   color: #222;
 }
 
-/* 2. 검색창 (8px 라운드, 우측 정렬) */
+/* 2. 검색창 */
 .search-box {
   display: flex;
   align-items: center;
@@ -326,172 +312,137 @@ const closeDetail = () => {
 }
 
 .search-box input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  outline: none;
-  font-size: 14px;
+  flex: 1; border: none; background: transparent; outline: none; font-size: 14px;
 }
-
-.search-icon {
-  color: #888;
-  font-size: 14px;
-}
+.search-icon { color: #888; font-size: 14px; }
 
 /* 3. 테이블 스타일 */
-.offers-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
+.offers-table { width: 100%; border-collapse: collapse; }
 .offers-table th {
-  padding: 16px 8px;
-  font-size: 16px;
-  font-weight: 600;
-  border-bottom: 2px solid #eee;
-  text-align: center;
-  color: #333;
+  padding: 16px 8px; font-size: 16px; font-weight: 600; border-bottom: 2px solid #eee;
+  text-align: center; color: #333;
 }
-
 .offers-table td {
-  padding: 18px 15px;
-  font-size: 15px;
-  border-bottom: 1px solid #eee;
-  text-align: center;
-  vertical-align: middle;
-  color: #444;
+  padding: 18px 15px; font-size: 15px; border-bottom: 1px solid #eee;
+  text-align: center; vertical-align: middle; color: #444;
 }
 
 /* 4. 내부 컬럼 스타일 */
+.brand-col { display: flex; align-items: center; gap: 10px; }
+.brand-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.brand-name { font-weight: 500; color: #333; }
 
-/* 브랜드 컬럼 */
-.brand-col {
-  display: flex;
-  align-items: center;
-  /* justify-content: center; */
-  gap: 10px;
-}
-
-.brand-img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.brand-name {
-  font-weight: 500;
-  color: #333;
-}
-
-/* 상품명 */
 .product-name {
-  cursor: pointer;
-  color: #222;
-  font-weight: 500;
-  transition: color 0.2s;
+  cursor: pointer; color: #222; font-weight: 500; transition: color 0.2s;
 }
-.product-name:hover {
-  color: #6495ff;
-  text-decoration: underline;
-}
+.product-name:hover { color: #6495ff; text-decoration: underline; }
 
-/* 태그 컨테이너 */
-.tag-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 4px;
-}
-
-/* 스타일 태그 */
+.tag-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
 .tag {
-  background: #f1f5ff;
-  color: #6495ff;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
+  background: #f1f5ff; color: #6495ff; padding: 4px 10px; border-radius: 12px; font-size: 12px;
 }
 
-/* 상태 셀 및 버튼 스타일 */
+/* 5. [수정] 상태 태그 & 드롭다운 스타일 (통일) */
 .status-cell {
   position: relative;
   min-width: 120px;
 }
-
 .status-wrapper {
   position: relative;
   display: inline-block;
 }
 
-.status-btn,
-.status-option {
+/* 메인 상태 버튼 (알약 모양) */
+.status-tag {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   width: 100px;
-  height: 34px;
-  padding: 0;
-  border-radius: 8px;
+  height: 36px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
-  border: none;
+  color: #555;
+  transition: all 0.2s;
+  cursor: default;
+  outline: none;
+}
+
+/* 상호작용 가능한 상태 (수락됨 이외) */
+.status-tag.is-interactive {
   cursor: pointer;
-  text-align: center;
+}
+.status-tag.is-interactive:hover {
+  background: #f9f9f9;
+  border-color: #ccc;
 }
 
-.status-option {
-  width: 100%;
-  margin: 4px 0;
-}
+/* 상태별 점(Dot) 색상 */
+.status-dot { font-size: 12px; line-height: 1; }
 
-/* 상태별 색상 */
-.Pending { background: #fff7da; color: #967a00; }
-.Approved { background: #e5f4e8; color: #3c7c46; }
-.Rejected { background: #ffe7e7; color: #b60000; }
+.completed .status-dot { color: #4CAF50; }  /* 초록 (수락) */
+.incomplete .status-dot { color: #F44336; } /* 빨강 (거절) */
+.in-progress .status-dot { color: #FF9800; }/* 주황 (대기) */
 
-.is-locked {
-  cursor: default !important;
+/* 수락 완료(Locked) 상태 시각적 처리 */
+button.completed {
   opacity: 0.9;
+  border-color: #eee;
+  background: #fafafa;
 }
 
 /* 드롭다운 메뉴 */
 .status-menu {
   position: absolute;
-  top: 115%;
+  top: 120%; /* 버튼 바로 아래 */
   left: 50%;
   transform: translateX(-50%);
-  width: 110px;
+  width: 100px;
   background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid #eee;
+  border-radius: 12px;
   padding: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   z-index: 20;
   list-style: none;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
+
+/* 드롭다운 옵션 버튼 */
+.menu-option {
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.menu-option:hover {
+  background: #f5f5f5;
+}
+
+.option-accept { color: #4CAF50; } /* 수락 글자색 초록 */
+.option-reject { color: #F44336; } /* 거절 글자색 빨강 */
 
 /* 결과 없음 */
 .no-result {
-  text-align: center;
-  padding: 60px !important;
-  color: #999;
-  font-size: 16px;
+  text-align: center; padding: 60px !important; color: #999; font-size: 16px;
 }
 
 /* 토스트 메시지 */
 .toast {
-  position: fixed;
-  top: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #333;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 20px;
-  font-size: 14px;
-  z-index: 3000;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+  background: #333; color: white; padding: 12px 24px; border-radius: 20px;
+  font-size: 14px; z-index: 3000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 </style>

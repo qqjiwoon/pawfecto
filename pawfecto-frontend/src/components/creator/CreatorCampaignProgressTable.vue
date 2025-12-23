@@ -1,7 +1,5 @@
-<!-- CreatorcampaignProgressTable.vue -->
 <template>
   <div class="progress-wrapper">
-
     <h2 class="title">Campaign Progress</h2>
 
     <div class="search-box">
@@ -17,16 +15,14 @@
     <table class="progress-table">
       <thead>
         <tr>
-          <th style="width: 45%">캠페인</th>
+          <th style="width: 35%">캠페인</th>
           <th style="width: 15%">업로드 일시</th>
-          <th style="width: 25%">포스팅 링크</th>
-          <th style="width: 15%">상태</th>
-        </tr>
+          <th style="width: 20%">포스팅 링크</th>
+          <th style="width: 15%">AI 검증 상태</th> <th style="width: 15%">제출</th> </tr>
       </thead>
 
       <tbody>
-        <tr v-for="item in paginatedData" :key="item.campaign_acceptance_id">
-
+        <tr v-for="item in paginatedData" :key="item.deliverable_id">
           <td>
             <div class="campaign-info">
               <img
@@ -38,11 +34,11 @@
               </span>
             </div>
           </td>
-
+          
           <td>
-            {{ item.posted_at ? item.posted_at.slice(0, 10) : '-' }}
+            {{ item.created_at ? item.created_at.slice(0, 10) : '-' }}
           </td>
-
+          
           <td>
             <div class="link-wrapper">
               <a
@@ -51,7 +47,7 @@
                 target="_blank"
                 class="link-text"
               >
-                {{ item.post_url }}
+                Link
               </a>
               <span v-else class="empty-dash">-</span>
             </div>
@@ -60,18 +56,48 @@
           <td>
             <div
               class="status-tag"
-              :class="getStatus(item)"
+              :class="getAiStatusClass(item.ai_validation_status)"
               @click="openEditModal(item)"
               style="cursor: pointer;"
+              title="클릭하여 내용 수정 및 AI 재검증"
             >
               <span class="status-dot">●</span>
-              {{ getStatusLabel(item) }}
+              {{ getAiStatusLabel(item.ai_validation_status) }}
             </div>
           </td>
+
+          <td>
+            <div 
+              v-if="item.deliverable_status === 'completed'" 
+              class="status-tag completed disabled"
+            >
+              <span class="status-dot">●</span>
+              제출 완료
+            </div>
+
+            <button 
+              v-else-if="item.ai_validation_status === 'passed'" 
+              class="status-tag btn-action active-submit"
+              @click="openSubmitModal(item)"
+            >
+              <span class="status-dot">●</span>
+              제출하기
+            </button>
+            
+            <div 
+              v-else 
+              class="status-tag disabled"
+              style="opacity: 0.5;"
+            >
+              <span class="status-dot">●</span>
+              제출 불가
+            </div>
+          </td>
+
         </tr>
 
         <tr v-if="filteredData.length === 0">
-          <td colspan="4" class="no-result">진행 중인 캠페인이 없습니다.</td>
+          <td colspan="5" class="no-result">진행 중인 캠페인이 없습니다.</td>
         </tr>
       </tbody>
     </table>
@@ -90,6 +116,13 @@
     :key="editingItem?.deliverable_id"
     :item="editingItem"
     @close="isModalOpen = false"
+    @refresh="fetchProgress" 
+  />
+
+  <SubmitModal
+    v-if="isSubmitModalOpen"
+    :item="submitItem"
+    @close="isSubmitModalOpen = false"
     @refresh="fetchProgress"
   />
 
@@ -98,15 +131,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import api from '@/plugins/axios'
-import Pagination from '@/components/Pagination.vue' // 페이지네이션 컴포넌트
+import Pagination from '@/components/Pagination.vue'
 import ProgressEditModal from '@/components/creator/ProgressEditModal.vue'
-import defaultImg from '@/assets/profile1.jpg' // 임시 이미지
+import SubmitModal from '@/components/creator/SubmitModal.vue'
+import defaultImg from '@/assets/profile1.jpg'
 
 const props = defineProps({
-  creatorId: {
-    type: Number,
-    required: true,
-  },
+  creatorId: { type: Number, required: true },
 })
 
 const items = ref([])
@@ -118,215 +149,167 @@ onMounted(async () => {
 /* 데이터 조회 함수 */
 const fetchProgress = async () => {
   try {
-    const res = await api.get(
-      `/api/v1/creator/${props.creatorId}/progress/`
-    )
+    const res = await api.get(`/api/v1/creator/${props.creatorId}/progress/`)
+    console.log("받아온 데이터:", res.data); // 데이터 확인용 로그
     items.value = res.data
   } catch (err) {
     console.error(err)
   }
 }
 
-/* 검색 / 페이지 상태 */
+/* 검색 및 페이지네이션 */
 const searchQuery = ref('')
 const currentPage = ref(1)
 const itemsPerPage = 6
 
-/* 모달 상태 */
-const isModalOpen = ref(false)
-const editingItem = ref(null)
-
-/* 검색 필터 */
 const filteredData = computed(() => {
   if (!searchQuery.value) return items.value
   const query = searchQuery.value.toLowerCase()
   return items.value.filter(item =>
-    item.campaign_acceptance.campaign.product_name
-      .toLowerCase()
-      .includes(query)
+    item.campaign_acceptance.campaign.product_name.toLowerCase().includes(query)
   )
 })
 
-/* 페이지네이션 계산 */
-const totalPages = computed(() =>
-  Math.ceil(filteredData.value.length / itemsPerPage)
-)
+const totalPages = computed(() => Math.ceil(filteredData.value.length / itemsPerPage))
 
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage
   return filteredData.value.slice(start, start + itemsPerPage)
 })
 
-const goToPage = (page) => {
-  currentPage.value = page
-}
+const goToPage = (page) => { currentPage.value = page }
 
-/* 모달 제어 */
+/* 모달 상태 */
+const isModalOpen = ref(false)
+const editingItem = ref(null)
+const isSubmitModalOpen = ref(false)
+const submitItem = ref(null)
+
 const openEditModal = (item) => {
   editingItem.value = { ...item }
   isModalOpen.value = true
 }
 
-/* 상태 로직 (기존 유지) */
-const getStatus = (item) => {
-  if (!item.ai_validation_status) return 'in-progress'
-  if (item.ai_validation_status === 'pending') return 'in-progress'
-  if (item.ai_validation_status === 'passed') return 'completed'
-  if (item.ai_validation_status === 'failed') return 'incomplete'
+const openSubmitModal = (item) => {
+  submitItem.value = { ...item }
+  isSubmitModalOpen.value = true
 }
 
-const getStatusLabel = (item) => {
-  if (!item.ai_validation_status || item.ai_validation_status === 'pending') {
-    return '진행중'
-  }
-  if (item.ai_validation_status === 'passed') return '완료'
-  if (item.ai_validation_status === 'failed') return '미완료'
+/* [중요] 상태 관련 로직 수정 */
+// 변수명을 ai_validation_status로 통일해야 합니다.
+
+const getAiStatusClass = (status) => {
+  if (!status || status === 'pending') return 'in-progress' // 주황 (대기)
+  if (status === 'passed') return 'completed'   // 초록 (통과)
+  if (status === 'failed') return 'incomplete'  // 빨강 (실패)
+  return 'in-progress'
 }
 
+const getAiStatusLabel = (status) => {
+  if (!status || status === 'pending') return '검증 대기'
+  if (status === 'passed') return '검증 통과'
+  if (status === 'failed') return '검증 실패'
+  return '진행중'
+}
 </script>
 
 <style scoped>
-/* 1. 레이아웃 & 제목 (통일) */
+/* 기본 레이아웃 (기존 유지) */
 .progress-wrapper {
-  width: 95%;
-  max-width: 1200px;
-  margin: 40px auto;
+  width: 95%; max-width: 1200px; margin: 40px auto;
 }
-
 .title {
-  text-align: center;
-  font-size: 40px;
-  font-weight: 700;
-  margin: 140px 0 80px 0;
-  color: #222;
+  text-align: center; font-size: 40px; font-weight: 700; margin: 140px 0 80px 0; color: #222;
 }
-
-/* 2. 검색창 (통일: 8px 라운드, 우측 정렬) */
 .search-box {
-  display: flex;
-  align-items: center;
-  width: 240px;
-  background: #fff;
-  border: 1px solid #ddd;
-  padding: 6px 12px;
-  border-radius: 8px;
-  margin: 0 0 20px auto;
+  display: flex; align-items: center; width: 240px; background: #fff;
+  border: 1px solid #ddd; padding: 6px 12px; border-radius: 8px; margin: 0 0 20px auto;
 }
+.search-box input { flex: 1; border: none; outline: none; font-size: 14px; }
+.search-icon { color: #888; font-size: 14px; }
 
-.search-box input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  outline: none;
-  font-size: 14px;
-}
-
-.search-icon {
-  color: #888;
-  font-size: 14px;
-}
-
-/* 3. 테이블 스타일 (통일) */
-.progress-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
+/* 테이블 스타일 */
+.progress-table { width: 100%; border-collapse: collapse; }
 .progress-table th {
-  padding: 16px 8px;
-  font-size: 16px;
-  font-weight: 600;
-  border-bottom: 2px solid #eee; /* 헤더 라인 두껍게 */
-  text-align: center; /* 중앙 정렬로 통일 */
-  color: #333;
+  padding: 16px 8px; font-size: 15px; font-weight: 600; border-bottom: 2px solid #eee;
+  text-align: center; color: #555;
 }
-
 .progress-table td {
-  padding: 18px 15px;
-  font-size: 15px;
-  border-bottom: 1px solid #eee;
-  text-align: center; /* 중앙 정렬로 통일 */
-  vertical-align: middle;
-  color: #444;
+  padding: 18px 15px; font-size: 14px; border-bottom: 1px solid #eee;
+  text-align: center; vertical-align: middle; color: #444;
 }
 
-/* 4. 내부 요소 스타일 */
-
-/* 캠페인 정보 (왼쪽 정렬 유지하되 중앙 배치 느낌) */
-.campaign-info {
-  display: flex;
-  align-items: center;
-  /* justify-content: center; 가운데 정렬 */
-  gap: 10px;
+/* 캠페인 정보 */
+.campaign-info { 
+  display: flex; 
+  align-items: center; 
+  justify-content: flex-start; 
+  gap: 15px; 
 }
+.campaign-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.campaign-name { font-weight: 500; color: #333; }
+.link-text { color: #6495ff; text-decoration: none; }
+.link-text:hover { text-decoration: underline; }
+.empty-dash { color: #ccc; }
 
-.campaign-img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-}
+/* --- [핵심] 상태 태그 & 버튼 디자인 통일 --- */
 
-.campaign-name {
-  font-weight: 500;
-  color: #333;
-}
-
-/* 링크 스타일 */
-.link-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.link-text {
-  max-width: 250px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: #6495ff; /* 링크 색상 통일 */
-  text-decoration: none;
-}
-
-.link-text:hover {
-  text-decoration: underline;
-  color: #333;
-}
-
-.empty-dash {
-  color: #ccc;
-}
-
-/* 상태 태그 (Recommendation 스타일과 통일) */
+/* 1. 기본 모양 (4번, 5번 컬럼 공통) */
 .status-tag {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  width: 80px; /* 너비 통일 */
-  padding: 6px 0;
+  width: 100px;         /* 너비 고정 */
+  height: 36px;         /* 높이 고정 */
   background: #fff;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 10px;  /* 둥근 알약 모양 */
   font-size: 13px;
-  font-weight: 500;
-  color: #444;
+  font-weight: 600;
+  color: #555;
+  transition: all 0.2s;
+  user-select: none;
 }
 
-.status-dot {
-  font-size: 10px;
+/* 2. 상태별 점(Dot) 색상 */
+.status-dot { font-size: 12px; line-height: 1; }
+
+.completed .status-dot, 
+.active-submit .status-dot { color: #4CAF50; } /* 초록 */
+
+.incomplete .status-dot { color: #F44336; }    /* 빨강 */
+.in-progress .status-dot { color: #FF9800; }   /* 주황 */
+.disabled .status-dot { color: #BDBDBD; }      /* 회색 */
+
+/* 3. 상호작용 스타일 (버튼 역할인 경우) */
+button.status-tag {
+  cursor: pointer;
+  outline: none;
+  font-family: inherit;
 }
 
-/* 상태별 점 색상 */
-.completed .status-dot { color: #1ea35a; } /* 초록 */
-.incomplete .status-dot { color: #d93232; } /* 빨강 */
-.in-progress .status-dot { color: #ff9800; } /* 주황 */
+/* 제출하기 버튼 (활성 상태) */
+.active-submit {
+  border-color: #4CAF50; /* 테두리 초록 */
+  color: #2E7D32;        /* 글자 짙은 초록 */
+  background: #F1F8E9;   /* 배경 연한 초록 */
+}
 
-/* 결과 없음 */
-.no-result {
-  text-align: center;
-  padding: 60px !important;
+.active-submit:hover {
+  background: #4CAF50;   /* 호버 시 배경 초록 */
+  color: #FFF;           /* 글자 흰색 */
+}
+.active-submit:hover .status-dot { color: #FFF; } /* 호버 시 점도 흰색 */
+
+/* 비활성 태그 (제출 불가 등) */
+.disabled {
+  background: #F5F5F5;
+  border-color: #EEE;
   color: #999;
-  font-size: 16px;
+  cursor: default;
 }
+
+/* No Result */
+.no-result { padding: 60px; color: #999; }
 </style>
