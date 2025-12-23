@@ -79,7 +79,7 @@ const handleFindId = async () => {
 
   try {
     const res = await axios.post(
-      "http://127.0.0.1:8000/accounts/find-id/",
+      "https://127.0.0.1:8000/accounts/find-id/",
       { email: email.value },
       { headers: { "Content-Type": "application/json" } }
     )

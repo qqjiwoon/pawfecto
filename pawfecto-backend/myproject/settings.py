@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "corsheaders",
     'rest_framework',
     'storages',
+    'sslserver',
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -145,7 +147,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    "https://localhost:5173",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -236,11 +238,11 @@ AI_MODEL_PRIMARY = os.getenv("AI_MODEL_PRIMARY", "gpt-5")
 AI_MODEL_CHEAP = os.getenv("AI_MODEL_CHEAP", "gpt-4.1")
 
 
-# # Django가 이 출처(origin)를 신뢰하지 않아서 POST 요청을 차단 방지
-# CSRF_TRUSTED_ORIGINS = [
-#     "http://localhost:5173",
-#     "http://127.0.0.1:5173",
-# ]
+# Django가 이 출처(origin)를 신뢰하지 않아서 POST 요청을 차단 방지
+CSRF_TRUSTED_ORIGINS = [
+    "https://localhost:5173",
+    "https://127.0.0.1:5173",
+]
 
 env = environ.Env()
 # 환경 변수 파일을 로드
@@ -249,3 +251,20 @@ environ.Env.read_env()
 # 환경 변수 사용
 INSTAGRAM_CLIENT_ID = env('INSTAGRAM_CLIENT_ID')
 INSTAGRAM_CLIENT_SECRET = env('INSTAGRAM_CLIENT_SECRET')
+
+# settings.py 맨 아래에 추가
+
+# 1. 모든 쿠키를 보안 모드(HTTPS)로만 전송하도록 강제
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# 2. 크로스 도메인(5173 -> 8000) 간의 쿠키 공유를 위해 SameSite를 'None'으로 설정
+SESSION_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SAMESITE = 'None'
+
+# 3. CORS 설정 확인 (프론트엔드 주소 허용)
+CORS_ALLOW_CREDENTIALS = True  # 쿠키를 실어 보내기 위해 필수
+CORS_ALLOWED_ORIGINS = [
+    "https://localhost:5173",
+    "https://127.0.0.1:5173",
+]

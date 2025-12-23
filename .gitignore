@@ -1,6 +1,14 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,venv,django,vuejs
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,venv,django,vuejs
 
+
+#mkcert
+pawfecto-backend/certs/local-cert.pem
+pawfecto-backend/certs/local-key.pem
+pawfecto-frontend/certs/local-cert.pem
+pawfecto-frontend/certs/local-key.pem
+
+
 # env
 .env
 

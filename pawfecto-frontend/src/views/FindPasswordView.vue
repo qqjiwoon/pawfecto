@@ -87,7 +87,7 @@ const handleFindPassword = async () => {
 
   try {
     await axios.post(
-      "http://127.0.0.1:8000/accounts/password-reset/",
+      "https://127.0.0.1:8000/accounts/password-reset/",
       {
         username: username.value,
         email: email.value,
