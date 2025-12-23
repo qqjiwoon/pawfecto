@@ -118,9 +118,8 @@ const sortedCampaigns = computed(() => {
 /* 등록 카드 스타일 */
 .add-card {
   width: 100%;
-  max-width: 250px; /* 카드 최대 너비 제한 */
-  height: 380px; /* BrandCampaignCard 높이와 일치 */
-  
+  aspect-ratio: 5 / 7; /* BrandCampaignCard와 동일한 비율로 맞추기 */
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -129,9 +128,6 @@ const sortedCampaigns = computed(() => {
   background-color: #fdfaf8;
   text-decoration: none;
   transition: all 0.3s ease;
-  
-  /* 그리드 내 중앙 정렬 */
-  justify-self: center; 
 }
 
 .add-content {

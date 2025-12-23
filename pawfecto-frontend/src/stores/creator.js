@@ -9,6 +9,20 @@ export const useCreatorStore = defineStore('creator', {
     loading: false, // 로딩 상태
   }),
   actions: {
+
+    // 1. 기존에 삭제된 함수 복구
+    async loadCreator() {
+      if (this.isLoaded) return;
+      try {
+        const res = await api.get("/accounts/me/");
+        this.creator = res.data;
+        this.isLoaded = true;
+      } catch (error) {
+        console.error("크리에이터 정보 로드 실패:", error);
+      }
+    },
+
+    // 2. 신규 추가된 함수 유지
     // 크리에이터 추천 API 호출
     async recommendCreators(campaignId, brandId) {
       const warningStore = useWarningStore();
