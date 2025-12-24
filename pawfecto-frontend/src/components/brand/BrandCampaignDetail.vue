@@ -111,6 +111,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://127.0.0.1:800
 const campaignImageUrl = computed(() => {
   const url = campaign.value?.product_image_url
   if (!url) return ""
+  // http로 시작하면 그대로 쓰고, 아니면 백엔드 주소(API_BASE_URL)를 붙임
   return url.startsWith("http") ? url : `${API_BASE_URL}${url}`
 })
 
