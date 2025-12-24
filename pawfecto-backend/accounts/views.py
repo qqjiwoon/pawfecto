@@ -100,117 +100,153 @@ def login_view(request):
 
 
 # ============================================
-# 2-0) 인스타그램 정보 연동
+# Instagram 정보 연동 (Form-data 방식)
 # ============================================
-@csrf_exempt
 @api_view(["POST"])
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])  # 로그인된 유저만 접근 가능
+@permission_classes([IsAuthenticated])
 def instagram_callback(request):
     """
-    프론트엔드에서 전달받은 code로 인스타그램 Access Token을 발급받고,
-    유저 정보를 조회하여 현재 로그인된 유저(request.user)의 프로필을 업데이트합니다.
+    Instagram Basic Display API를 통한 계정 연동
     """
     
-    # [수정 1] DRF에서는 request.data로 접근
-    auth_code = request.data.get('code')
+    print("=" * 50)
+    print("[Instagram Callback] 요청 받음")
+    print(f"User: {request.user.username if request.user else 'Anonymous'}")
     
-    # 프론트엔드 주소 (기본값 설정)
-    redirect_uri = request.data.get('redirect_uri', "https://localhost:5173/callback/instagram")
+    auth_code = request.data.get('code')
+    redirect_uri = request.data.get('redirect_uri')
+    
+    print(f"받은 코드(원본, #_ 포함): {auth_code[:50] if auth_code else 'None'}...")
+    print(f"코드 끝 10자: ...{auth_code[-10:] if auth_code and len(auth_code) > 10 else auth_code}")
+    print(f"받은 redirect_uri: {redirect_uri}")
+    print("=" * 50)
 
     if not auth_code:
-        return Response({'error': 'Code가 없습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': '인증 코드가 없습니다.'}, status=400)
+    
+    if not redirect_uri:
+        return Response({'error': 'redirect_uri가 필요합니다.'}, status=400)
+
+    # Instagram 버그: 코드 끝에 #_ 붙는 경우 제거
+    clean_code = auth_code.replace('#_', '').strip()
+    print(f"정리된 코드: {clean_code[:30]}...")
 
     # ------------------------------------------------------------------
-    # [3단계] Access Token 요청
-    # 주소: https://api.instagram.com/oauth/access_token
+    # [3단계] 토큰 교환 (multipart/form-data로 전송)
     # ------------------------------------------------------------------
     token_url = "https://api.instagram.com/oauth/access_token"
     
+    print(f"\n[토큰 교환 시작]")
+    print(f"URL: {token_url}")
+    print(f"Client ID: {settings.INSTAGRAM_CLIENT_ID}")
+    print(f"Redirect URI: {redirect_uri}")
+    
+    # ⭐ 핵심: files 파라미터를 사용해서 multipart/form-data로 전송
     payload = {
-        'client_id': settings.INSTAGRAM_CLIENT_ID,
-        'client_secret': settings.INSTAGRAM_CLIENT_SECRET,
-        'grant_type': 'authorization_code',
-        'redirect_uri': redirect_uri,
-        'code': auth_code
+        'client_id': (None, settings.INSTAGRAM_CLIENT_ID),
+        'client_secret': (None, settings.INSTAGRAM_CLIENT_SECRET),
+        'grant_type': (None, 'authorization_code'),
+        'redirect_uri': (None, redirect_uri),
+        'code': (None, clean_code)
     }
     
     try:
-        # POST 요청 (form-data 형식으로 전송됨)
-        token_res = requests.post(token_url, data=payload)
-        token_res.raise_for_status()  # 200 OK가 아니면 예외 발생
+        # files 파라미터 사용 (curl -F와 동일)
+        token_res = requests.post(token_url, files=payload, timeout=10)
+        
+        # 응답 로깅 (디버깅용)
+        print(f"\n[Instagram Token Response]")
+        print(f"Status: {token_res.status_code}")
+        print(f"Response: {token_res.text}")
+        
+        if token_res.status_code != 200:
+            # Instagram API 에러를 그대로 반환
+            try:
+                error_json = token_res.json()
+            except:
+                error_json = {'raw_error': token_res.text}
+            
+            return Response({
+                'error': '토큰 교환 실패',
+                'details': error_json,
+                'status_code': token_res.status_code
+            }, status=400)
+        
+        token_data = token_res.json()
+        
     except requests.exceptions.RequestException as e:
-        # 인스타그램 에러 메시지 확인용
-        error_detail = token_res.json() if token_res.content else str(e)
+        # 네트워크 에러
+        error_detail = str(e)
+        print(f"\n[Instagram Error] {error_detail}")
+        
         return Response({
-            'error': '토큰 발급 실패', 
+            'error': '네트워크 오류',
             'details': error_detail
-        }, status=status.HTTP_400_BAD_REQUEST)
+        }, status=400)
     
-    access_token = token_res.json().get('access_token')
+    access_token = token_data.get('access_token')
+    user_id = token_data.get('user_id')
+    
+    if not access_token:
+        return Response({
+            'error': 'access_token을 받지 못했습니다.',
+            'details': token_data
+        }, status=400)
 
     # ------------------------------------------------------------------
-    # [4단계] 유저 정보 요청
-    # 주소: https://graph.instagram.com/v24.0/me
+    # [4단계] 유저 정보 조회
     # ------------------------------------------------------------------
-    fields = "user_id,username,profile_picture_url,followers_count,follows_count,media_count"
-    user_info_url = f"https://graph.instagram.com/v24.0/me?fields={fields}&access_token={access_token}"
+    # user_id가 있으면 해당 ID로, 없으면 'me' 사용
+    endpoint = user_id if user_id else 'me'
+    user_info_url = f"https://graph.instagram.com/v24.0/{endpoint}"
+    
+    params = {
+        'fields': 'user_id,username,profile_picture_url,followers_count,follows_count,media_count',
+        'access_token': access_token
+    }
     
     try:
-        user_res = requests.get(user_info_url)
+        user_res = requests.get(user_info_url, params=params, timeout=10)
+        
+        print(f"[Instagram User Info] Status: {user_res.status_code}")
+        print(f"[Instagram User Info] Response: {user_res.text}")
+        
         user_res.raise_for_status()
-    except requests.exceptions.RequestException as e:
+        insta_data = user_res.json()
+        
+    except requests.exceptions.RequestException:
+        error_detail = user_res.text if user_res else None
+        
+        print(f"[Instagram Error] {error_detail}")
+        
         return Response({
-            'error': '유저 정보 조회 실패',
-            'details': str(e)
-        }, status=status.HTTP_400_BAD_REQUEST)
-    
-    insta_data = user_res.json()
+            'error': '사용자 정보 조회 실패',
+            'details': error_detail
+        }, status=400)
 
     # ------------------------------------------------------------------
-    # [5단계] 정보 업데이트 로직
+    # [5단계] DB 저장
     # ------------------------------------------------------------------
+    user = request.user
+    user.instagram_id = insta_data.get('user_id') or insta_data.get('id')
+    user.sns_handle = insta_data.get('username')
+    user.profile_image_url = insta_data.get('profile_picture_url')
+    user.follower_count = insta_data.get('followers_count', 0)
+    user.following_count = insta_data.get('follows_count', 0)
+    user.total_post_count = insta_data.get('media_count', 0)
+    user.sns_url = f"https://www.instagram.com/{user.sns_handle}/"
     
-    # API 버전에 따라 id 필드명이 다를 수 있어 안전하게 가져오기
-    insta_id = insta_data.get('id') or insta_data.get('user_id')
-    username = insta_data.get('username')
-    profile_url = insta_data.get('profile_picture_url')
-    followers = insta_data.get('followers_count', 0)
-    following = insta_data.get('follows_count', 0)
-    media_count = insta_data.get('media_count', 0)
+    user.save()
     
-    sns_url = f"https://www.instagram.com/{username}/"
+    print(f"[Success] User {user.sns_handle} connected")
 
-    # [수정 2] 로그인된 유저 본인 객체 (JWT Authentication 통해 식별됨)
-    user = request.user 
-
-    # [수정 3] 모델 필드 업데이트
-    user.instagram_id = insta_id  # DB 모델에 이 필드가 있어야 함
-    user.sns_handle = username
-    user.profile_image_url = profile_url
-    user.follower_count = followers
-    user.following_count = following
-    user.total_post_count = media_count
-    user.sns_url = sns_url
-
-    # [수정 4] 변경된 필드만 DB에 저장 (최적화)
-    user.save(update_fields=[
-        'instagram_id',
-        'sns_handle', 
-        'profile_image_url', 
-        'follower_count', 
-        'following_count', 
-        'total_post_count', 
-        'sns_url'
-    ])
-            
     return Response({
-        "message": "인스타그램 정보가 성공적으로 연동되었습니다.",
-        "username": user.username,
-        "instagram_username": username,
-        "is_created": False 
-    }, status=status.HTTP_200_OK)
-
+        "message": "연동 성공",
+        "internal_id": user.id,
+        "username": user.sns_handle,
+        "instagram_id": user.instagram_id
+    }, status=200)
+    
 
 
 # ============================================
