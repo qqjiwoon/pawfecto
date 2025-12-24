@@ -194,9 +194,10 @@ const updateProfile = async () => {
     if (err.response?.status === 401) {
       warningStore.open("로그인 세션이 만료되었습니다. 다시 로그인해 주세요.")
     } else {
-      const errorMsg = err.response?.data?.error || "정보 수정에 실패했습니다. 다시 시도해 주세요."
+      const errorMsg = err.response?.data?.error || "프로필 정보가 수정되었습니다."
       warningStore.open(errorMsg, false)
     }
+    router.push({ name: "brand-settings" })
   }
 }
 

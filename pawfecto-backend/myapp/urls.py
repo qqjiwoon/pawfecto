@@ -44,6 +44,12 @@ urlpatterns = [
         name='delete_campaign'
     ),
 
+    path(
+        'brand/<int:brand_id>/campaign/<int:campaign_id>/auto-match/', 
+        views.auto_match_creators, 
+        name='auto-match-creators'
+    ),
+
     # ============================================================
     # [브랜드] Campaign_requirement 관련
     # ============================================================

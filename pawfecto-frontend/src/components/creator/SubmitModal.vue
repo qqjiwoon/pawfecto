@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import defaultImg from '@/assets/campaign1_test.jpg';
+import defaultImg from '@/assets/last (1).png';
 
 const props = defineProps({
   item: {

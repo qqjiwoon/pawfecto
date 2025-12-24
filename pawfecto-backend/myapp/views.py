@@ -684,79 +684,94 @@ def submit_deliverable(request, deliverable_id):
 # ============================================================
 # 캠페인 자동 크리에이터 매칭
 # ============================================================-
-
-def auto_match_creators(campaign):
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def auto_match_creators(request, brand_id, campaign_id):
     """
     캠페인 조건에 맞는 모든 크리에이터에 대해
-    CampaignAcceptance를 자동 생성하고,
-    추천된 크리에이터 목록을 반환한다.
+    CampaignAcceptance를 자동 생성하고 결과를 반환한다.
     """
+    try:
+        # [수정 1] Campaign 객체 정의 (이게 없으면 아래 코드들이 실행되지 않습니다)
+        # brand_id까지 체크하여 내 브랜드의 캠페인이 맞는지 확인하는 것이 안전합니다.
+        campaign = get_object_or_404(Campaign, campaign_id=campaign_id, brand_id=brand_id)
+        # 만약 브랜드 검증도 하려면: get_object_or_404(Campaign, id=campaign_id, brand_id=brand_id)
 
-    # --------------------------------------------------------
-    # 1. 캠페인 기본 조건
-    # --------------------------------------------------------
-    target_pet_type = campaign.target_pet_type
-    min_follower_count = campaign.min_follower_count
+        # --------------------------------------------------------
+        # 1. 캠페인 기본 조건 확인
+        # --------------------------------------------------------
+        target_pet_type = campaign.target_pet_type
+        min_follower_count = campaign.min_follower_count
+        
+        campaign_style_tags = campaign.style_tags.all()
+        
+        # 태그 중에 'no_preference' 코드가 있는지 확인
+        has_no_preference = campaign_style_tags.filter(code="no_preference").exists()
 
-    campaign_style_tags = campaign.style_tags.all()
-    has_no_preference = campaign_style_tags.filter(
-        code="no_preference"
-    ).exists()
-
-    # --------------------------------------------------------
-    # 2. 크리에이터 기본 필터
-    # --------------------------------------------------------
-    creators = User.objects.filter(
-        account_type="creator",
-        pet_type=target_pet_type,
-        follower_count__gte=min_follower_count
-    )
-
-    # --------------------------------------------------------
-    # 3. 스타일 태그 필터 (no_preference 아닐 때만)
-    # --------------------------------------------------------
-    if not has_no_preference and campaign_style_tags.exists():
-        creators = creators.filter(
-            style_tags__in=campaign_style_tags
-        ).distinct()
-
-    # --------------------------------------------------------
-    # 4. 이미 해당 캠페인에 acceptance가 있는 creator 제외
-    # --------------------------------------------------------
-    existing_creator_ids = CampaignAcceptance.objects.filter(
-        campaign=campaign
-    ).values_list("creator_id", flat=True)
-
-    creators = creators.exclude(id__in=existing_creator_ids)
-
-    # --------------------------------------------------------
-    # 5. CampaignAcceptance 생성
-    # --------------------------------------------------------
-    now = timezone.now()
-    acceptance_list = []
-
-    for creator in creators:
-        acceptance_list.append(
-            CampaignAcceptance(
-                campaign=campaign,
-                creator=creator,
-                brand_decision_status="pending",
-                acceptance_status="pending",
-                applied_at=now
-            )
+        # --------------------------------------------------------
+        # 2. 크리에이터 기본 필터 (펫 종류, 팔로워 수)
+        # --------------------------------------------------------
+        creators = User.objects.filter(
+            account_type="creator",
+            pet_type=target_pet_type,
+            follower_count__gte=min_follower_count
         )
 
-    # Bulk create CampaignAcceptances
-    CampaignAcceptance.objects.bulk_create(acceptance_list)
+        # --------------------------------------------------------
+        # 3. 스타일 태그 필터 (무관이 아닐 때만 적용)
+        # --------------------------------------------------------
+        if not has_no_preference and campaign_style_tags.exists():
+            creators = creators.filter(
+                style_tags__in=campaign_style_tags
+            ).distinct()
 
-    # --------------------------------------------------------
-    # 6. 추천된 크리에이터 목록 반환
-    # --------------------------------------------------------
-    recommended_creators = creators.values(
-        'id', 'name', 'sns_handle', 'profile_image_url', 'pet_type', 'follower_count', 'style_tags'
-    )
-    
-    return recommended_creators
+        # --------------------------------------------------------
+        # 4. 이미 해당 캠페인에 매칭된 크리에이터 제외
+        # --------------------------------------------------------
+        existing_creator_ids = CampaignAcceptance.objects.filter(
+            campaign=campaign
+        ).values_list("creator_id", flat=True)
+
+        creators = creators.exclude(id__in=existing_creator_ids)
+
+        # --------------------------------------------------------
+        # 5. CampaignAcceptance 생성 (Bulk Create)
+        # --------------------------------------------------------
+        now = timezone.now()
+        acceptance_list = []
+        
+        # creators 쿼리셋을 리스트로 변환하여 순회
+        matched_creators_list = list(creators)
+
+        for creator in matched_creators_list:
+            acceptance_list.append(
+                CampaignAcceptance(
+                    campaign=campaign,
+                    creator=creator,
+                    brand_decision_status="pending",  # 대소문자 주의 (모델 정의에 따름)
+                    acceptance_status="pending",
+                    applied_at=now
+                )
+            )
+
+        if acceptance_list:
+            CampaignAcceptance.objects.bulk_create(acceptance_list)
+
+        # --------------------------------------------------------
+        # 6. 결과 반환 (Response 객체 사용 필수)
+        # --------------------------------------------------------
+        # 프론트엔드에서 어차피 목록을 다시 조회하므로, 
+        # 여기서는 성공 여부와 몇 명이 추가되었는지만 알려주면 충분합니다.
+        return Response({
+            "success": True,
+            "message": f"성공적으로 {len(acceptance_list)}명의 크리에이터를 추천 목록에 추가했습니다.",
+            "matched_count": len(acceptance_list)
+        }, status=200)
+
+    except Exception as e:
+        # 에러 발생 시 로그 출력 및 500 응답
+        print(f"Auto Match Error: {e}")
+        return Response({"error": str(e)}, status=500)
 
 # --------------------------------------------------------
 # auto_match_creators 호출

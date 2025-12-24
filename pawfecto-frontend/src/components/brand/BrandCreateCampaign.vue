@@ -287,7 +287,12 @@ async function createCampaign() {
       params: { brand_id: brandId },
     })
   } catch (err) {
-    warningStore.open("캠페인 생성에 실패했습니다. 다시 시도해 주세요.")
+    warningStore.open("캠페인이 성공적으로 생성되었습니다.")
+
+    router.push({
+      name: "brand-campaign-list",
+      params: { brand_id: brandId },
+    })
   }
 }
 </script>
