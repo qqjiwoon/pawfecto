@@ -134,7 +134,7 @@ import api from '@/plugins/axios'
 import Pagination from '@/components/Pagination.vue'
 import ProgressEditModal from '@/components/creator/ProgressEditModal.vue'
 import SubmitModal from '@/components/creator/SubmitModal.vue'
-import defaultImg from '@/assets/profile1.jpg'
+import defaultImg from '@/assets/product1.jpg'
 
 const props = defineProps({
   creatorId: { type: Number, required: true },
