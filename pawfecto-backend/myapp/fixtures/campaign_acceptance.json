@@ -44,9 +44,9 @@
     "fields": {
       "creator": 23,
       "campaign": 1,
-      "brand_decision_status": "approved",
+      "brand_decision_status": "pending",
       "brand_decided_at": null,
-      "acceptance_status": "accepted",
+      "acceptance_status": "pending",
       "applied_at": "2025-02-02T10:00:00Z",
       "accepted_at": null
     }
