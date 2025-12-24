@@ -19,20 +19,20 @@
         <div class="text-wrap">
             <h2 class="creator-name">{{ creator.name }}</h2>
             <p class="creator-role">Creator</p>
-            <button
+            <!-- <button
               v-if="!creator.instagram_id"
               class="instagram-connect-btn"
               @click="connectInstagram"
             >
               <img src="@/assets/instagram-icon.png" alt="instagram" />
               <span>Instagram 계정 연동</span>
-            </button>
-            <p
+            </button> -->
+            <!-- <p
               v-else
               class="instagram-connected"
             >
               <i class="check-icon">✓</i> Instagram 연동 완료
-            </p>
+            </p> -->
         </div>
 
     </div>
@@ -63,7 +63,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import defaultProfileImage from '@/assets/defalut-profile-image.jpg'
+import defaultProfileImage from '@/assets/profile1.jpg'
 
 const props = defineProps({
   creator: {
@@ -72,38 +72,39 @@ const props = defineProps({
   }
 })
 
-// 프로필 이미지 클릭 시 대시보드 메인페이지로 이동
 const router = useRouter()
 const goDashboard = () => {
   router.push(`/dashboard/creator/${props.creator.id}`)
 }
 
-
 // Instagram 연동 버튼 클릭 
 const connectInstagram = () => {
-  const clientId = import.meta.env.VITE_INSTAGRAM_CLIENT_ID  // Instagram 개발자 대시보드에서 제공된 클라이언트 ID
-  const redirectUri = 'https://localhost:5173/callback/instagram'  // 리디렉션 URI
-    const scope = [
-      'instagram_business_basic',
-      'instagram_business_manage_messages',
-      'instagram_business_manage_comments',
-      'instagram_business_content_publish',
-      'instagram_business_manage_insights'
-    ].join(',')
-    
-  const responseType = 'code'  // 인증 코드 받기
+  const clientId = import.meta.env.VITE_INSTAGRAM_CLIENT_ID;
+  
+  // ⭐ 핵심: 하드코딩으로 고정 (100% 일치 보장)
+  const REDIRECT_URI = 'https://localhost:5173/callback/instagram';
+  
+  // 콘솔에 출력해서 확인 (디버깅용)
+  console.log('🔗 [1단계] 인증 요청 시 Redirect URI:', REDIRECT_URI);
+  console.log('현재 origin:', window.location.origin);
 
-  // Instagram OAuth 인증 URL 생성
-  const loginUrl =
+  const scope = [
+    'instagram_business_basic',
+    'instagram_business_manage_messages',
+    'instagram_business_manage_comments',
+    'instagram_business_content_publish',
+    'instagram_business_manage_insights'
+  ].join(',');
+
+  const loginUrl = 
     `https://www.instagram.com/oauth/authorize` +
     `?client_id=${clientId}` +
-    `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-    `&response_type=${responseType}` +
-    `&scope=${encodeURIComponent(scope)}`
-    // `&force_reauth=true` 
-
-  // Instagram 로그인 페이지로 리디렉션
-  window.location.href = loginUrl
+    `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
+    `&response_type=code` +
+    `&scope=${scope}` +
+    `&force_reauth=true`;
+  
+  window.location.href = loginUrl;
 }
 
 </script>
@@ -115,7 +116,6 @@ const connectInstagram = () => {
   margin-bottom: 60px;
 }
 
-/* ----------------- Hero 영역 ----------------- */
 .creator-hero {
   position: relative;
   width: 100%;
@@ -169,15 +169,14 @@ const connectInstagram = () => {
   margin-bottom: 16px;
 }
 
-/* ----------------- 인스타그램 버튼 디자인 수정 ----------------- */
 .instagram-connect-btn {
   margin-top: 16px;
   width: fit-content;
   min-width: 180px;
   background-color: #ffffff;
-  border: 1px solid #dbdbdb; /* 인스타그램 기본 테두리 컬러 */
+  border: 1px solid #dbdbdb;
   padding: 10px 20px;
-  border-radius: 4px; /* 살짝 각진 형태가 더 심플함 */
+  border-radius: 4px;
   font-size: 14px;
   font-weight: 600;
   color: #262626;
@@ -201,18 +200,16 @@ const connectInstagram = () => {
 .instagram-connect-btn img {
   width: 18px;
   height: 18px;
-  opacity: 0.8; /* 아이콘이 너무 튀지 않게 조절 */
+  opacity: 0.8;
 }
 
-/* 연동 완료 텍스트 스타일 */
 .instagram-connected {
   margin-top: 16px;
   font-size: 14px;
-  color: #8e8e8e; /* 차분한 그레이 */
+  color: #8e8e8e;
   font-weight: 500;
 }
 
-/* ----------------- 통계 영역 ----------------- */
 .creator-stats {
   display: grid;
   grid-template-columns: 1fr auto 1fr auto 1fr;

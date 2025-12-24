@@ -30,10 +30,10 @@
 
         <button class="pf-login-submit" @click.prevent="handleLogin">로그인</button>
 
-        <button type="button" class="pf-login-instagram" @click="loginWithInstagram">
+        <!-- <button type="button" class="pf-login-instagram" @click="loginWithInstagram">
           <img src="@/assets/instagram-icon.png" alt="instagram" />
           Log in with Instagram
-        </button>
+        </button> -->
 
         <div class="pf-login-find">
           <router-link to="/find-id">아이디 찾기</router-link>

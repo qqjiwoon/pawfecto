@@ -34,6 +34,7 @@
               </span>
             </div>
           </td>
+
           
           <td>
             {{ item.created_at ? item.created_at.slice(0, 10) : '-' }}

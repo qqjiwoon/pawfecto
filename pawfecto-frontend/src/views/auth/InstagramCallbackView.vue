@@ -14,41 +14,89 @@ const route = useRoute();
 const router = useRouter();
 
 onMounted(async () => {
-  const code = route.query.code;
+  const REDIRECT_URI = 'https://localhost:5173/callback/instagram';
+  
+  // ⭐ 핵심: query string의 code + hash의 #_ 조합
+  let code = route.query.code;
+  const hash = window.location.hash; // "#_" 가져오기
+  
+  console.log('🔗 [3단계] 토큰 교환 시 Redirect URI:', REDIRECT_URI);
+  console.log('현재 전체 URL:', window.location.href);
+  console.log('📝 Query에서 받은 코드:', code);
+  console.log('📝 Hash 값:', hash);
+  
+  if (!code) {
+    alert('인증 코드가 없습니다.');
+    router.push('/');
+    return;
+  }
 
-  if (code) {
-    try {
-      // 인스타그램 버그 문자(#_) 제거 
-      const cleanCode = code.replace(/#_$/, '');
-      
-      // [핵심] 로그인된 유저이므로 Header에 토큰 포함
-      const token = localStorage.getItem('access_token'); // 저장된 JWT 토큰
+  // hash가 있으면 코드에 붙이기
+  if (hash) {
+    code = code + hash;
+    console.log('📝 최종 코드 (hash 포함):', code);
+  }
 
-      // 백엔드로 코드 전송
-      const response = await axios.post(
-        'https://localhost:8000/api/instagram/update/', // URL 확인 필요
-        { code: cleanCode },
-        {
-          headers: {
-            Authorization: `Bearer ${token}` // [중요] 이게 없으면 401 에러 남
-          }
-        }
-      );
-
-      console.log('연동 성공:', response.data);
-      alert('인스타그램 연동이 완료되었습니다!');
-
-      // 성공 후 대시보드나 프로필 설정 페이지로 이동
-      // response에 username이 있다면 해당 경로로 이동 가능
-      router.push(`/dashboard/creator/${response.data.username}`); 
-
-    } catch (error) {
-      console.error('연동 실패:', error.response?.data || error);
-      alert('연동에 실패했습니다. 다시 시도해주세요.');
-      router.push('/'); // 실패 시 홈으로
+  try {
+    const token = localStorage.getItem('access_token');
+    
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      router.push('/login');
+      return;
     }
-  } else {
-    // 코드가 없으면 잘못된 접근
+
+    const requestData = { 
+      code: code,  // hash가 포함된 code
+      redirect_uri: REDIRECT_URI
+    };
+
+    console.log('📤 백엔드로 전송할 데이터:', requestData);
+
+    const response = await axios.post(
+      'https://localhost:8000/api/instagram/update/', 
+      requestData,
+      { 
+        headers: { 
+          Authorization: `Bearer ${token}` 
+        } 
+      }
+    );
+    
+    console.log('✅ 연동 성공:', response.data);
+    alert('인스타그램 연동이 완료되었습니다!');
+
+    // 성공 후 대시보드로 이동
+    if (response.data.internal_id) {
+      router.push(`/dashboard/creator/${response.data.internal_id}`);
+    } else {
+      router.push('/dashboard');
+    }
+
+  } catch (error) {
+    console.error('❌ 연동 실패:', error);
+    
+    // 에러 상세 정보 표시
+    if (error.response) {
+      const errorData = error.response.data;
+      console.error('에러 상세:', errorData);
+      console.error('에러 status:', error.response.status);
+      console.error('전체 response:', error.response);
+      
+      const errorMsg = errorData?.details?.error_message || 
+                       errorData?.details || 
+                       errorData?.error || 
+                       '알 수 없는 오류';
+      
+      alert(`연동 실패: ${errorMsg}`);
+    } else if (error.request) {
+      console.error('서버 응답 없음:', error.request);
+      alert('서버에 연결할 수 없습니다. 백엔드가 실행 중인지 확인하세요.');
+    } else {
+      console.error('요청 생성 오류:', error.message);
+      alert('요청 생성 중 오류가 발생했습니다.');
+    }
+    
     router.push('/');
   }
 });
@@ -63,7 +111,7 @@ onMounted(async () => {
   height: 100vh;
   font-size: 1.2rem;
 }
-/* 간단한 스피너 스타일 */
+
 .spinner {
   margin-top: 20px;
   width: 40px;
@@ -73,6 +121,7 @@ onMounted(async () => {
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
