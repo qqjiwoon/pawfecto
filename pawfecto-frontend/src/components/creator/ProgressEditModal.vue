@@ -85,24 +85,35 @@
           </div>
 
           <div v-if="aiStatus === 'passed' || aiStatus === 'review'" class="status-message" :class="aiStatus">
-             <div v-if="aiStatus === 'passed'" class="msg-content">
-                <span class="icon">🎉</span>
-                <div>
-                  <strong>검증 통과!</strong>
-                  <p>AI검증에 통과했습니다. 이제 포스팅을 제출할 수 있습니다.</p>
-                </div>
-             </div>
-             <div v-else class="msg-content">
-                <span class="icon">⚠️</span>
-                <div>
-                  <strong>내용 보완이 필요해요</strong>
-                  <ul class="error-list">
-                    <li v-for="cond in aiResult?.conditions?.filter(c => c.satisfied !== 'yes')" :key="cond.requirement">
-                      {{ cond.reason }}
-                    </li>
-                  </ul>
-                </div>
-             </div>
+            <div v-if="aiStatus === 'passed'" class="msg-content">
+              <span class="icon">🎉</span>
+              <div>
+                <strong>검증 통과!</strong>
+                <p>AI검증에 통과했습니다. 이제 포스팅을 제출할 수 있습니다.</p>
+              </div>
+            </div>
+            <div v-else class="msg-content">
+              <span class="icon">⚠️</span>
+              <div>
+                <strong>내용 보완이 필요해요</strong>
+                <ul class="error-list">
+                  <li v-for="cond in aiResult?.conditions?.filter(c => c.satisfied !== 'yes')" :key="cond.requirement">
+                    {{ cond.reason }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 추가된 부분: AI 검증 실패 상태 처리 -->
+          <div v-if="aiStatus === 'failed'" class="status-message failed">
+            <div class="msg-content">
+              <span class="icon">❌</span>
+              <div>
+                <strong>검증 실패</strong>
+                <p>AI 검증에 통과하지 못했습니다. 내용을 다시 확인하고 수정해주세요.</p>
+              </div>
+            </div>
           </div>
 
           <div class="footer-action">
@@ -193,15 +204,37 @@ const onContentChange = () => {
   }
 }
 
+// [핵심 수정 부분] props.item이 변경될 때 데이터를 불러오는 로직
 watch(
   () => props.item,
   (item) => {
     if (!item) return
+
+    // 1. 텍스트 콘텐츠 불러오기
     content.value = item.content || ''
-    imagePreviewUrl.value = item.image || null
+
+    // 2. 이미지 불러오기 (URL 처리 로직 추가)
+    if (item.image) {
+      // 이미 http로 시작하는 완전한 URL이라면 그대로 사용
+      if (item.image.startsWith('http')) {
+        imagePreviewUrl.value = item.image
+      } 
+      // 상대 경로(/media/...)라면 서버 도메인을 앞에 붙임
+      else {
+        // 주의: 배포 환경에서는 환경변수(import.meta.env.VITE_API_URL 등)를 사용하는 것이 좋음
+        imagePreviewUrl.value = `https://localhost:8000${item.image}`
+      }
+    } else {
+      imagePreviewUrl.value = null
+    }
+
+    // 3. AI 상태 및 결과 불러오기
     aiStatus.value = item.ai_validation_status === 'passed' ? 'passed' : 'pending'
     aiResult.value = item.ai_result_raw || null
-    isDirty.value = false // 초기 로드시엔 변경사항 없음
+    
+    // 초기 로드 시에는 '변경됨' 상태가 아님
+    isDirty.value = false 
+    imageFile.value = null // 파일 객체는 초기화 (새로 올린 게 아니므로)
   },
   { immediate: true }
 )

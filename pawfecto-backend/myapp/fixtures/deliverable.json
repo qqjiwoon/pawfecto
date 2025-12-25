@@ -3,7 +3,7 @@
   "model": "myapp.deliverable",
   "pk": 1,
   "fields": {
-    "campaign_acceptance": 4,
+    "campaign_acceptance": 46,
     "posted_at": null,
     "post_url": null,
     "deliverable_status": "incomplete",

@@ -32,7 +32,7 @@
         >
           <td>
             <div class="brand-col">
-              <img :src="offer.brand_image || defaultProfile" class="brand-img" />
+              <img :src="offer.campaign.brand.profile_image_url || defaultProfile" class="brand-img" />
               <span class="brand-name">{{ offer.campaign.brand.name }}</span>
             </div>
           </td>

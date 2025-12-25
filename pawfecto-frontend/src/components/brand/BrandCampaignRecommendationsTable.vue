@@ -172,28 +172,33 @@ const fetchCreators = async () => {
 
 
 // [핵심 2] 크리에이터 자동 추천 요청 함수
-const requestAutoMatch = async () => {
-  const warningStore = useWarningStore();
 
+const isMatching = ref(false); // 로딩 상태 변수
+// [수정된 함수]
+const requestAutoMatch = async () => {
+  // 로딩 표시 등을 위해 try-catch 블록 사용
   try {
-    // 서버로 추천 크리에이터 API 요청
-    const response = await api.post(
+    // 1. 서버에 AI 매칭 생성 요청 (POST)
+    // 헤더 설정은 api instance(interceptor)에서 처리된다면 생략 가능하나, 명시적으로 작성하신대로 둡니다.
+    await api.post(
       `/api/v1/brand/${brandId}/campaign/${campaignId}/auto-match/`,
-      {},
+      {}, 
       {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, // JWT 토큰 추가
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
         }
       }
     );
 
-    // 추천된 크리에이터들을 store에 저장
-    await creatorStore.recommendCreators(campaignId, brandId);
+    // 2. [핵심] 매칭이 완료되었으므로, 목록을 다시 불러와서 화면(테이블)을 갱신합니다.
+    await fetchCreators();
 
-    // 추천된 크리에이터 목록을 새로고침하여 갱신
-    recommendedCreators.value = creatorStore.recommendedCreators;
+    // 3. 페이지를 1페이지로 돌려줍니다 (새로운 데이터 확인을 위해)
+    currentPage.value = 1;
 
-    warningStore.open("새로운 크리에이터가 추천 목록에 추가되었습니다!");
+    // 4. 성공 메시지
+    warningStore.open("✨ 새로운 크리에이터가 추천 목록에 추가되었습니다!");
+
   } catch (error) {
     console.error(error);
     const msg = error.response?.data?.error || "추천 과정에서 오류가 발생했습니다.";
