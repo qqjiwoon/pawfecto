@@ -250,7 +250,7 @@ async function updateCampaign() {
     warningStore.open("캠페인이 성공적으로 수정되었습니다.")
     router.push({ name: "brand-campaign-detail", params: { brand_id: brandId, campaign_id: campaignId } })
   } catch (err) {
-    warningStore.open("캠페인이 성공적으로 수정되었습니다.")
+    warningStore.open("캠페인 수정에 실패하였습니다.")
     router.push({ name: "brand-campaign-detail", params: { brand_id: brandId, campaign_id: campaignId } })
   }
 }
