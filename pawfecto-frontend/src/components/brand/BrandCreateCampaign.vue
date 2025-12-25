@@ -288,6 +288,7 @@ async function createCampaign() {
     })
   } catch (err) {
     warningStore.open("캠페인이 생성에 실패하였습니다.")
+
   }
 }
 </script>

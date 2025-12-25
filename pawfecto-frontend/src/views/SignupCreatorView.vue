@@ -82,6 +82,21 @@
         <input type="text" class="input-field" v-model="form.snsUrl" placeholder="https://instagram.com/..." />
       </div>
 
+      <!-- <div class="form-group">
+        <label>SNS 팔로워 수</label>
+        <input type="text" class="input-field" v-model="form.snsUrl" placeholder="숫자를 입력하세요" />
+      </div>
+
+      <div class="form-group">
+        <label>SNS 팔로잉 수</label>
+        <input type="text" class="input-field" v-model="form.snsUrl" placeholder="숫자를 입력하세요" />
+      </div>
+
+      <div class="form-group">
+        <label>SNS 게시글 수</label>
+        <input type="text" class="input-field" v-model="form.snsUrl" placeholder="숫자를 입력하세요" />
+      </div> -->
+
       <div class="form-group">
         <label>SNS 스타일</label>
         <div class="tag-container">
