@@ -164,32 +164,6 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": False,
 }
 
-'''
-MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = 'media/'
-
-
-# GCS 설정
-GS_BUCKET_NAME = 'pawfecto-storage-admin' 
-GS_PROJECT_ID = 'pawfecto' 
-GS_FILE_OVERWRITE = True
-
-# 1. 경로 설정: Path 객체를 사용하여 절대 경로 확보 후 슬래시(/) 변환
-GOOGLE_APPLICATION_CREDENTIALS_PATH = (BASE_DIR / 'keys' / 'service-account-key.json').as_posix()
-
-# 2. 환경 변수 등록: os.environ에 직접 박아야 라이브러리가 즉시 인식함
-import os
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GOOGLE_APPLICATION_CREDENTIALS_PATH
-
-# 3. 라이브러리용 변수 설정
-GOOGLE_APPLICATION_CREDENTIALS = GOOGLE_APPLICATION_CREDENTIALS_PATH
-
-# 4. 저장 엔진 설정
-DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-
-# 5. [추가] 수동으로 세션을 유지하지 않도록 설정 (권한 에러 방지)
-GS_DEFAULT_ACL = None  # 버킷의 기본 권한 설정을 따름
-'''
 
 # ==============================================================================
 # MEDIA & GCS STORAGE SETTINGS

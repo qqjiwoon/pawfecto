@@ -4,7 +4,7 @@
 
     <div class="action-bar">
       <button class="recommend-btn" @click="requestAutoMatch">
-        ✨ AI 크리에이터 추천받기
+        ✨ 크리에이터 추천받기
       </button>
 
       <div class="search-box">
@@ -178,7 +178,7 @@ const isMatching = ref(false); // 로딩 상태 변수
 const requestAutoMatch = async () => {
   // 로딩 표시 등을 위해 try-catch 블록 사용
   try {
-    // 1. 서버에 AI 매칭 생성 요청 (POST)
+    // 1. 서버에 매칭 생성 요청 (POST)
     // 헤더 설정은 api instance(interceptor)에서 처리된다면 생략 가능하나, 명시적으로 작성하신대로 둡니다.
     await api.post(
       `/api/v1/brand/${brandId}/campaign/${campaignId}/auto-match/`,
