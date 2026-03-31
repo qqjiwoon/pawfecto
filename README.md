@@ -126,5 +126,5 @@ python manage.py loaddata myapp/fixtures/deliverable.json
 
 | 이름 | 역할 | Github | 담당 기능 |
 | :---: | :---: | :---: | :--- |
-| <span style="white-space:nowrap;"><b>홍지운</b></span> | Team Leader | [@qqjiwoon](https://github.com/qqjiwoon) | 프로젝트 기획 및 설계, ERD 설계, API 설계, 크리에이터 대시보드 디자인 및 브랜드 대시보드 구현, AI 연결 및 기능 구현|
-| <span style="white-space:nowrap;"><b>전주연</b></span> | Team Member | [@jeonjy99](https://github.com/jeonjy99) | 프로젝트 기획 및 설계, API 설계, 브랜드 대시보드 디자인 및 크리에이터 대시보드 구현, AI 연결 및 기능 구현 |
+| <nobr><b>홍지운</b></nobr> | Team Leader | [@qqjiwoon](https://github.com/qqjiwoon) | 프로젝트 기획 및 설계, ERD 설계, API 설계, 크리에이터 대시보드 디자인 및 브랜드 대시보드 구현, AI 연결 및 기능 구현|
+| <nobr><b>전주연</b></nobr></span> | Team Member | [@jeonjy99](https://github.com/jeonjy99) | 프로젝트 기획 및 설계, API 설계, 브랜드 대시보드 디자인 및 크리에이터 대시보드 구현, AI 연결 및 기능 구현 |
