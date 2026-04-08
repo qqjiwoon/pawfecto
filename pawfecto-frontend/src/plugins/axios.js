@@ -1,8 +1,12 @@
 import axios from "axios"
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000"
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: API_BASE_URL,
 })
+
+console.log("[API] baseURL", API_BASE_URL)
 
 // 요청 인터셉터: 모든 요청에 토큰 부착
 api.interceptors.request.use(config => {

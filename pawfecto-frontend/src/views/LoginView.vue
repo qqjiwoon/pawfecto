@@ -93,7 +93,7 @@ const password = ref('')
 const handleLogin = async () => {
   try {
     const res = await axios.post(
-      "https://127.0.0.1:8000/accounts/login/",
+      "http://127.0.0.1:8000/accounts/login/",
       {
         username: username.value,
         password: password.value,
@@ -108,6 +108,29 @@ const handleLogin = async () => {
     // 토큰 저장
     localStorage.setItem("access_token", res.data.access)
     localStorage.setItem("refresh_token", res.data.refresh)
+
+    console.log("[Login] token issued", {
+      hasAccessToken: Boolean(res.data.access),
+      hasRefreshToken: Boolean(res.data.refresh),
+    })
+
+    try {
+      const meRes = await axios.get("http://127.0.0.1:8000/accounts/me/", {
+        headers: {
+          Authorization: `Bearer ${res.data.access}`,
+        },
+      })
+
+      console.log("[Login] current user", {
+        id: meRes.data?.id,
+        username: meRes.data?.username,
+        name: meRes.data?.name,
+        account_type: meRes.data?.account_type,
+        fullUser: meRes.data,
+      })
+    } catch (meErr) {
+      console.error("[Login] failed to fetch /accounts/me/", meErr)
+    }
 
     
     // 로그인 성공 → 메인
