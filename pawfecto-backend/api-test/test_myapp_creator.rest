@@ -1,7 +1,7 @@
 ############################################
 ### 0-0. 회원가입
 ############################################
-POST https://127.0.0.1:8000/accounts/signup/
+POST http://127.0.0.1:8000/accounts/signup/
 Content-Type: application/json
 
 {
@@ -20,7 +20,7 @@ Content-Type: application/json
 ############################################
 ### 0-1. 로그인 (크리에이터: puppy_daily, pk = 6)
 ############################################
-POST https://127.0.0.1:8000/accounts/login/
+POST http://127.0.0.1:8000/accounts/login/
 Content-Type: application/json
 
 {
@@ -32,7 +32,7 @@ Content-Type: application/json
 ############################################
 ### 0-2. 아이디 찾기
 ############################################
-POST https://127.0.0.1:8000/accounts/find-id/
+POST http://127.0.0.1:8000/accounts/find-id/
 Content-Type: application/json
 
 {
@@ -42,7 +42,7 @@ Content-Type: application/json
 ############################################
 ### 0-3. 비밀번호 찾기
 ############################################
-POST https://127.0.0.1:8000/accounts/password-reset/
+POST http://127.0.0.1:8000/accounts/password-reset/
 Content-Type: application/json
 
 {
@@ -56,7 +56,7 @@ Content-Type: application/json
 ###  → users.json + campaign_acceptance.json에 따르면
 ###    creator 1은 acceptance pk = 1(1), 3(2), 8(7), 11(9) 세 개 존재
 ############################################
-GET https://127.0.0.1:8000/api/v1/creator/6/offers/
+GET http://127.0.0.1:8000/api/v1/creator/6/offers/
 Authorization: Bearer {{token}}
 
 
@@ -66,7 +66,7 @@ Authorization: Bearer {{token}}
 ### creator 1 은 campaign_id 1, 7, 9(accepted), campaign_id 2(rejected)
 ### → campaign 1,7,9 수락 테스트
 ############################################
-POST https://127.0.0.1:8000/api/v1/creator/6/campaign/1/accept/
+POST http://127.0.0.1:8000/api/v1/creator/6/campaign/1/accept/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -75,7 +75,7 @@ Content-Type: application/json
 ############################################
 ### 3. 캠페인 거절 테스트 (creator 6 → campaign_id 2)
 ############################################
-POST https://127.0.0.1:8000/api/v1/creator/6/campaign/2/reject/
+POST http://127.0.0.1:8000/api/v1/creator/6/campaign/2/reject/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -85,27 +85,27 @@ Content-Type: application/json
 ### deliverable.json 확인 결과:
 ### campaign_id 1, 7 -> completed, campaign_id 9-> incomplete
 ############################################
-GET https://127.0.0.1:8000/api/v1/creator/6/progress/
+GET http://127.0.0.1:8000/api/v1/creator/6/progress/
 Authorization: Bearer {{token}}
 
 ############################################
 ### 4-1. 오퍼 수락
 ### campaign_acceptance_id=1,3,8
 ############################################
-POST https://127.0.0.1:8000/api/v1/creator/offers/2/accept/
+POST http://127.0.0.1:8000/api/v1/creator/offers/2/accept/
 Authorization: Bearer {{token}}
 
 
 ############################################
 ### 4-2. 오퍼 거절
 ############################################
-POST https://127.0.0.1:8000/api/v1/creator/offers/9/reject/
+POST http://127.0.0.1:8000/api/v1/creator/offers/9/reject/
 Authorization: Bearer {{token}}
 
 ############################################
 ### 5. 포스팅 업로드 테스트 (creator 1 → accepted campaign_id 1)
 ############################################
-POST https://127.0.0.1:8000/api/v1/creator/campaign/1/upload/
+POST http://127.0.0.1:8000/api/v1/creator/campaign/1/upload/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 

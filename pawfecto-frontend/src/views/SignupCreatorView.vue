@@ -204,7 +204,7 @@ const handleSignup = async () => {
 
   try {
     await axios.post(
-      "https://127.0.0.1:8000/accounts/signup/",
+      "http://127.0.0.1:8000/accounts/signup/",
       formData,
       {
         headers: {
