@@ -17,6 +17,14 @@ import BrandUpdateCampaignView from '@/views/brand/BrandUpdateCampaignView.vue'
 // Creator
 import CreatorDashboardLayout from '@/views/creator/CreatorDashboardLayout.vue'
 
+const getDashboardPath = (user) => {
+  if (!user?.account_type || !user?.id) {
+    return '/'
+  }
+
+  return `/dashboard/${user.account_type}/${user.id}`
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -52,7 +60,14 @@ const router = createRouter({
     {
       path: '/find-password',
       component: FindPasswordView,
-    }, 
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard-entry',
+      component: {
+        render: () => null,
+      },
+    },
      /* ------------------------------------------
       BRAND DASHBOARD 구조
     ------------------------------------------ */
@@ -193,11 +208,26 @@ router.beforeEach(async (to, from, next) => {
     const res = await api.get('/accounts/me/')
     const user = res.data
 
+    console.log('[Router.beforeEach] dashboard auth check', {
+      from: from.fullPath,
+      to: to.fullPath,
+      id: user?.id,
+      username: user?.username,
+      name: user?.name,
+      account_type: user?.account_type,
+      params: to.params,
+      fullUser: user,
+    })
+
+    if (to.path === '/dashboard') {
+      return next(getDashboardPath(user))
+    }
+
     /* BRAND */
     if (to.path.startsWith('/dashboard/brand')) {
       if (user.account_type !== 'brand') {
         warningStore.open('브랜드 계정만 접근할 수 있는 페이지입니다.')
-        return next(`/dashboard/${user.account_type}/${user.id}`)
+        return next(getDashboardPath(user))
       }
 
       if (Number(to.params.brand_id) !== user.id) {
@@ -210,7 +240,7 @@ router.beforeEach(async (to, from, next) => {
     if (to.path.startsWith('/dashboard/creator')) {
       if (user.account_type !== 'creator') {
         warningStore.open('크리에이터 계정만 접근할 수 있는 페이지입니다.')
-        return next(`/dashboard/${user.account_type}/${user.id}`)
+        return next(getDashboardPath(user))
       }
 
       if (Number(to.params.creator_id) !== user.id) {
@@ -220,7 +250,8 @@ router.beforeEach(async (to, from, next) => {
     }
 
     next()
-  } catch {
+  } catch (error) {
+    console.error('[Router.beforeEach] failed to fetch /accounts/me/', error)
     next('/login')
   }
 })

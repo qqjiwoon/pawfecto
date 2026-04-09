@@ -1,7 +1,7 @@
 ### myapp 테스트 - [ 브랜드 ] => 12월 20일 오전 기준 테스트 완료
 
 ### 회원가입
-POST https://127.0.0.1:8000/accounts/signup/
+POST http://127.0.0.1:8000/accounts/signup/
 Content-Type: application/json
 
 {
@@ -21,7 +21,7 @@ Content-Type: application/json
 ### 0. 로그인 (브랜드: naturapet_brand, pk = 2)
 ### POST /accounts/login/
 ### ------------------------------------------------------------
-POST https://127.0.0.1:8000/accounts/login/
+POST http://127.0.0.1:8000/accounts/login/
 Content-Type: application/json
 
 {
@@ -39,7 +39,7 @@ Content-Type: application/json
 
 
 ### 브랜드 정보 조회  ===> ok
-GET https://127.0.0.1:8000/accounts/me/
+GET http://127.0.0.1:8000/accounts/me/
 Authorization: Bearer {{token}}
 
 
@@ -48,7 +48,7 @@ Authorization: Bearer {{token}}
 ### 0. 프로필 수정 (update_settings)
 ### PUT /accounts/update-profile/
 ### ------------------------------------------------------------
-PUT https://127.0.0.1:8000/accounts/update-profile/
+PUT http://127.0.0.1:8000/accounts/update-profile/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -64,7 +64,7 @@ Content-Type: application/json
 ### 1) 브랜드 캠페인 목록 조회
 ### GET /api/v1/brand/{brand_id}/campaign/
 ### ------------------------------------------------------------
-GET https://127.0.0.1:8000/api/v1/brand/2/campaign/
+GET http://127.0.0.1:8000/api/v1/brand/2/campaign/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -74,7 +74,7 @@ Content-Type: application/json
 ### 2. 캠페인 생성
 ### POST /api/v1/brand/{brand_id}/campaign/create/
 ### ------------------------------------------------------------
-POST https://127.0.0.1:8000/api/v1/brand/2/campaign/create/
+POST http://127.0.0.1:8000/api/v1/brand/2/campaign/create/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -111,7 +111,7 @@ Content-Type: application/json
 ### 3) 캠페인 상세 조회 (요구조건 포함)
 ### GET /api/v1/brand/{brand_id}/campaign/{campaign_id}/
 ### ------------------------------------------------------------
-GET https://127.0.0.1:8000/api/v1/brand/2/campaign/20/
+GET http://127.0.0.1:8000/api/v1/brand/2/campaign/20/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -121,7 +121,7 @@ Content-Type: application/json
 ### 4) 캠페인 수정 (요구조건까지 한 번에 수정)
 ### PUT /api/v1/brand/{brand_id}/campaign/{campaign_id}/update/
 ### ------------------------------------------------------------
-PUT https://127.0.0.1:8000/api/v1/brand/2/campaign/20/update/
+PUT http://127.0.0.1:8000/api/v1/brand/2/campaign/20/update/
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -142,7 +142,7 @@ Authorization: Bearer {{token}}
 ### 5. 포스팅 요구조건 목록 조회
 ### GET /api/v1/brand/{brand_id}/campaign/{campaign_id}/requirements/
 ### ------------------------------------------------------------
-GET https://127.0.0.1:8000/api/v1/brand/2/campaign/20/requirements/
+GET http://127.0.0.1:8000/api/v1/brand/2/campaign/20/requirements/
 Authorization: Bearer {{token}}
 
 
@@ -151,7 +151,7 @@ Authorization: Bearer {{token}}
 ### 6. 포스팅 요구조건 생성 (추가)
 ### POST /api/v1/brand/{brand_id}/campaign/{campaign_id}/requirements/
 ### ------------------------------------------------------------
-POST https://127.0.0.1:8000/api/v1/brand/2/campaign/20/requirements/
+POST http://127.0.0.1:8000/api/v1/brand/2/campaign/20/requirements/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -167,7 +167,7 @@ Content-Type: application/json
 ### 7. 포스팅 요구조건 수정
 ### PATCH /api/v1/brand/{brand_id}/campaign/{campaign_id}/requirements/{requirement_id}/update/
 ### ------------------------------------------------------------
-PATCH https://127.0.0.1:8000/api/v1/brand/2/campaign/20/requirements/3/update/
+PATCH http://127.0.0.1:8000/api/v1/brand/2/campaign/20/requirements/3/update/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -181,7 +181,7 @@ Content-Type: application/json
 ### 8. 포스팅 요구조건 삭제
 ### DELETE /api/v1/brand/{brand_id}/campaign/{campaign_id}/requirements/{requirement_id}/delete/
 ### ------------------------------------------------------------
-DELETE https://127.0.0.1:8000/api/v1/brand/2/campaign/20/requirements/3/delete/
+DELETE http://127.0.0.1:8000/api/v1/brand/2/campaign/20/requirements/3/delete/
 Authorization: Bearer {{token}}
 
 
@@ -190,7 +190,7 @@ Authorization: Bearer {{token}}
 ### 캠페인 삭제
 ### DELETE /api/v1/brand/{brand_id}/campaign/{campaign_id}/delete/
 ### ------------------------------------------------------------
-DELETE https://127.0.0.1:8000/api/v1/brand/2/campaign/21/delete/
+DELETE http://127.0.0.1:8000/api/v1/brand/2/campaign/21/delete/
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -205,7 +205,7 @@ Authorization: Bearer {{token}}
 ###    (creator recommendations)
 ### GET /api//v1/brand/{brand_id}/campaign/{campaign_id}/acceptances/
 ### ------------------------------------------------------------
-GET https://127.0.0.1:8000/api/v1/brand/2/campaign/20/acceptances/
+GET http://127.0.0.1:8000/api/v1/brand/2/campaign/20/acceptances/
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -215,7 +215,7 @@ Authorization: Bearer {{token}}
 ### 2) 브랜드가 크리에이터 승인
 ### PATCH /api/v1/brand/{brand_id}/campaign/{campaign_id}/acceptances/{acceptance_id}/approve/
 ### ------------------------------------------------------------
-PATCH https://127.0.0.1:8000/api/v1/brand/2/campaign/20/acceptances/21/approve/
+PATCH http://127.0.0.1:8000/api/v1/brand/2/campaign/20/acceptances/21/approve/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -227,7 +227,7 @@ Content-Type: application/json
 ### 3) 브랜드가 크리에이터 거절
 ### PATCH /api/v1/brand/{brand_id}/campaign/{campaign_id}/acceptances/{acceptance_id}/reject/
 ### ------------------------------------------------------------
-PATCH https://127.0.0.1:8000/api/v1/brand/2/campaign/20/acceptances/22/reject/
+PATCH http://127.0.0.1:8000/api/v1/brand/2/campaign/20/acceptances/22/reject/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -239,7 +239,7 @@ Content-Type: application/json
 ### 6) 캠페인 진행 상황(Deliverables) 조회
 ### GET /api/v1/brand/{brand_id}/campaign/{campaign_id}/progress/
 ### ------------------------------------------------------------
-GET https://127.0.0.1:8000/api/v1/brand/2/campaign/20/progress/
+GET http://127.0.0.1:8000/api/v1/brand/2/campaign/20/progress/
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -254,7 +254,7 @@ Authorization: Bearer {{token}}
 ### 0. 로그인 (크리에이터: puppy_daily, pk = 6)
 ### POST /accounts/login/
 ### ------------------------------------------------------------
-POST https://127.0.0.1:8000/accounts/login/
+POST http://127.0.0.1:8000/accounts/login/
 Content-Type: application/json
 
 {
@@ -273,7 +273,7 @@ Content-Type: application/json
 ### 10. 캠페인 오퍼 수락 (크리에이터)
 ### POST /api/v1/creator/offers/{acceptance_id}/accept/
 ### ------------------------------------------------------------
-POST https://127.0.0.1:8000/api/v1/creator/offers/21/accept/
+POST http://127.0.0.1:8000/api/v1/creator/offers/21/accept/
 Authorization: Bearer {{token}}
 
 
@@ -282,7 +282,7 @@ Authorization: Bearer {{token}}
 ### 11. Deliverable 제출 ==> postman에서 테스트 확인 완료
 ### POST /api/v1/campaign-acceptances/{acceptance_id}/deliverable/
 ### ------------------------------------------------------------
-POST https://127.0.0.1:8000/api/v1/campaign-acceptances/21/deliverable/
+POST http://127.0.0.1:8000/api/v1/campaign-acceptances/21/deliverable/
 Authorization: Bearer {{token}}
 Content-Type: multipart/form-data
 
@@ -295,6 +295,6 @@ image=@./test_image.jpg
 ### 12. Deliverable AI 검증 요청
 ### POST /api/v1/deliverables/{deliverable_id}/verify/
 ### ------------------------------------------------------------
-POST https://127.0.0.1:8000/api/v1/deliverables/10/verify/
+POST http://127.0.0.1:8000/api/v1/deliverables/10/verify/
 Authorization: Bearer {{token}}
 

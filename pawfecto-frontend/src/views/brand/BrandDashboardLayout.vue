@@ -23,6 +23,7 @@
 // Brand Dashboard Layout
 // ===============================
 import { computed, onMounted } from "vue"
+import { useRoute } from "vue-router"
 
 import BrandProfileHeader from "@/components/brand/BrandProfileHeader.vue"
 import BrandDashboardButtons from "@/components/brand/BrandDashboardButtons.vue"
@@ -30,6 +31,7 @@ import BrandDashboardButtons from "@/components/brand/BrandDashboardButtons.vue"
 import { useBrandStore } from "@/stores/brand"
 
 // store
+const route = useRoute()
 const brandStore = useBrandStore()
 
 // brand 정보 (creator와 동일한 패턴)
@@ -37,7 +39,9 @@ const brand = computed(() => brandStore.brand)
 
 // 최초 로드
 onMounted(async () => {
+  console.log("route brand_id:", route.params.brand_id)
   await brandStore.loadBrand()
+  console.log("store brand:", brand.value)
 })
 </script>
 

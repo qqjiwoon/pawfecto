@@ -1,5 +1,5 @@
 ### Case 1: [성공] 현실적인 프리미엄 펫푸드 브랜드 가입
-POST https://127.0.0.1:8000/accounts/signup/
+POST http://127.0.0.1:8000/accounts/signup/
 Content-Type: application/json
 
 {
@@ -14,7 +14,7 @@ Content-Type: application/json
 }
 
 ### Case 2: [성공] 고양이 전문 용품 브랜드 가입
-POST https://127.0.0.1:8000/accounts/signup/
+POST http://127.0.0.1:8000/accounts/signup/
 Content-Type: application/json
 
 {
@@ -29,7 +29,7 @@ Content-Type: application/json
 }
 
 ### Case 3: [실패] 이미 존재하는 아이디(username)로 가입 시도
-POST https://127.0.0.1:8000/accounts/signup/
+POST http://127.0.0.1:8000/accounts/signup/
 Content-Type: application/json
 
 {
@@ -41,7 +41,7 @@ Content-Type: application/json
 }
 
 ### Case 4: [실패] 필수 항목(email) 누락
-POST https://127.0.0.1:8000/accounts/signup/
+POST http://127.0.0.1:8000/accounts/signup/
 Content-Type: application/json
 
 {

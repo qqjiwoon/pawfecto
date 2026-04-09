@@ -3,7 +3,7 @@
     <nav class="pf-left-menu">
       <router-link to="/brand">Brand</router-link>
       <router-link to="/creator">Creator</router-link>
-      <router-link to="/dashboard" @click.prevent="goDashboard">
+      <router-link to="/dashboard">
         Dashboard
       </router-link>
     </nav>
@@ -46,7 +46,16 @@ const fetchMe = async () => {
   try {
     const res = await api.get('/accounts/me/')
     me.value = res.data
+    console.log('[Header] current user', {
+      id: res.data?.id,
+      username: res.data?.username,
+      name: res.data?.name,
+      account_type: res.data?.account_type,
+      route: route.fullPath,
+      fullUser: res.data,
+    })
   } catch (err) {
+    console.error('[Header] failed to fetch /accounts/me/', err)
     localStorage.removeItem('access_token')
     me.value = null
   }
@@ -70,28 +79,6 @@ const logout = () => {
 }
 
 /* 대시보드 이동 */
-const goDashboard = async () => {
-  const token = localStorage.getItem('access_token')
-  if (!token) {
-    router.push('/login')
-    return
-  }
-
-  try {
-    const res = await api.get('/accounts/me/')
-    const user = res.data
-
-    if (user.account_type === 'creator') {
-      router.push(`/dashboard/creator/${user.id}`)
-    } else if (user.account_type === 'brand') {
-      router.push(`/dashboard/brand/${user.id}`)
-    }
-  } catch (err) {
-    localStorage.removeItem('access_token')
-    me.value = null
-    router.push('/login')
-  }
-}
 </script>
 
 <style scoped>

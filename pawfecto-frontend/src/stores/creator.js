@@ -1,39 +1,42 @@
-import { defineStore } from 'pinia';
-import api from '@/plugins/axios'; // API 요청을 위한 axios 임포트
-import { useWarningStore } from './warning'; // 경고 메시지 관리용 store
+import { defineStore } from "pinia"
+import api from "@/plugins/axios"
+import { useWarningStore } from "./warning"
 
-export const useCreatorStore = defineStore('creator', {
+export const useCreatorStore = defineStore("creator", {
   state: () => ({
-    creators: [], // 기존 크리에이터 목록
-    recommendedCreators: [], // 추천된 크리에이터 목록
-    loading: false, // 로딩 상태
+    creator: null,
+    creators: [],
+    recommendedCreators: [],
+    isLoaded: false,
+    loading: false,
   }),
-  actions: {
 
-    // 1. 기존에 삭제된 함수 복구
+  actions: {
     async loadCreator() {
-      if (this.isLoaded) return;
-      try {
-        const res = await api.get("/accounts/me/");
-        this.creator = res.data;
-        this.isLoaded = true;
-      } catch (error) {
-        console.error("크리에이터 정보 로드 실패:", error);
-      }
+      if (this.isLoaded && this.creator) return
+
+      const res = await api.get("/accounts/me/")
+      this.creator = res.data
+      this.isLoaded = true
     },
 
-    // 2. 신규 추가된 함수 유지
-    // 크리에이터 추천 API 호출
+    async fetchCreator(creatorId) {
+      const res = await api.get(`/accounts/creator/${creatorId}/`)
+      this.creator = res.data
+      this.isLoaded = true
+    },
+
     async recommendCreators(campaignId, brandId) {
-      const warningStore = useWarningStore();
+      const warningStore = useWarningStore()
+
       try {
-        this.loading = true; // 로딩 시작
+        this.loading = true
 
-        // 서버로 추천 크리에이터 API 요청
-        const response = await api.post(`/api/v1/brand/${brandId}/campaign/${campaignId}/auto-match/`);
+        const response = await api.post(
+          `/api/v1/brand/${brandId}/campaign/${campaignId}/auto-match/`
+        )
 
-        // 추천된 크리에이터 리스트를 저장
-        this.recommendedCreators = response.data.map(creator => ({
+        this.recommendedCreators = response.data.map((creator) => ({
           id: creator.campaign_acceptance_id,
           name: creator.creator.name,
           handle: creator.creator.sns_handle || creator.creator.username,
@@ -43,20 +46,19 @@ export const useCreatorStore = defineStore('creator', {
           styleTags: creator.creator.style_tags || [],
           brandStatus: creator.brand_decision_status,
           creatorStatus: creator.acceptance_status,
-        }));
+        }))
 
-        warningStore.open('크리에이터 추천이 완료되었습니다!');
+        warningStore.open("크리에이터 추천이 완료되었습니다.")
       } catch (error) {
-        console.error(error);
-        warningStore.open('추천 과정에서 오류가 발생했습니다.');
+        console.error(error)
+        warningStore.open("추천 작업 중 오류가 발생했습니다.")
       } finally {
-        this.loading = false; // 로딩 종료
+        this.loading = false
       }
     },
 
-    // 추천 크리에이터 목록 추가
     addRecommendedCreators(newCreators) {
-      this.recommendedCreators = [...this.recommendedCreators, ...newCreators];
+      this.recommendedCreators = [...this.recommendedCreators, ...newCreators]
     },
   },
-});
+})

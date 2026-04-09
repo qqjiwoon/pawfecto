@@ -28,14 +28,14 @@ Content-Type: application/json
 }
 
 ### 크리에이터 캠페인 수락 테스트
-POST https://127.0.0.1:8000/api/v1/campaigns/1/accept/
+POST http://127.0.0.1:8000/api/v1/campaigns/1/accept/
 Content-Type: application/json
 
 {
   "creator_id": 1
 }
 ### 크리에이터 캠페인 거절
-POST https://127.0.0.1:8000/api/v1/campaigns/1/reject/
+POST http://127.0.0.1:8000/api/v1/campaigns/1/reject/
 Content-Type: application/json
 
 {
@@ -44,8 +44,8 @@ Content-Type: application/json
 
 
 ### 크리에이터 오퍼 조회
-GET https://127.0.0.1:8000/api/v1/creators/1/offers/
+GET http://127.0.0.1:8000/api/v1/creators/1/offers/
 
 
 ### 브랜드 캠페인 목록
-GET https://127.0.0.1:8000/api/v1/brands/6/campaigns/
+GET http://127.0.0.1:8000/api/v1/brands/6/campaigns/

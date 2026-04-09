@@ -11,13 +11,7 @@
     <CreatorDashboardTabs v-if="showSubTabs" />
 
     <!-- 하위 라우트 출력 (정상) -->
-    <router-view v-slot="{ Component }">
-      <component
-        :is="Component"
-        :offers="acceptanceStore.acceptances"
-        :items="acceptanceStore.acceptances"
-      />
-    </router-view>
+    <router-view />
 
   </div>
 
@@ -35,12 +29,10 @@ import CreatorProfileHeader from '@/components/creator/CreatorProfileHeader.vue'
 import CreatorDashboardButtons from '@/components/creator/CreatorDashboardButtons.vue'
 import CreatorDashboardTabs from '@/components/creator/CreatorDashboardTabs.vue'
 
-import { useCampaignAcceptanceStore } from '@/stores/campaignAcceptance'
 import { useCreatorStore } from '@/stores/creator'
 
 const route = useRoute()
 const creatorStore = useCreatorStore()
-const acceptanceStore = useCampaignAcceptanceStore()
 
 // URL 파라미터
 const creatorId = computed(() => Number(route.params.creator_id))
@@ -50,13 +42,11 @@ const creator = computed(() => creatorStore.creator)
 // 최초 로드
 onMounted(async () => {
   await creatorStore.loadCreator()
-  await acceptanceStore.fetchCreatorAcceptances(creatorId.value)
 })
 
 // creator_id 변경 시 대응
-watch(creatorId, (newId) => {
-  creatorStore.fetchCreator(newId)
-  acceptanceStore.fetchCreatorAcceptances(newId)
+watch(creatorId, async (newId) => {
+  await creatorStore.fetchCreator(newId)
 })
 
 // 탭 노출 여부
